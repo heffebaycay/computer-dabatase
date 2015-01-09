@@ -58,6 +58,13 @@ public class Computer {
 		this.company = company;
 	}
 	
+	@Override
+	public String toString() {
+		
+		return String.format("Computer: id[%d], name[%s], introduced[], discontinued[], company[%s]", getId(), getName(), getCompany());
+		
+	}
+	
 	
 	public static class Builder {
 		

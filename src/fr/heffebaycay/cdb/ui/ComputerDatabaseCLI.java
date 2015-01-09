@@ -13,6 +13,7 @@ public class ComputerDatabaseCLI {
 	public static final int CLI_MENUOPTION_COMPUTER_LIST = 2;
 	
 	protected static CompanyCLIUI companyUI;
+	protected static ComputerCLIUI computerUI;
 	
 	public static void main(String[] args){
 		
@@ -30,6 +31,7 @@ public class ComputerDatabaseCLI {
 	
 	protected static void initServices() {
 		companyUI = new CompanyCLIUI();
+		computerUI = new ComputerCLIUI();
 	}
 	
 	protected static void menuLogic() {
@@ -65,10 +67,14 @@ public class ComputerDatabaseCLI {
 		
 		Scanner sc = new Scanner(System.in);
 		int iChoice = sc.nextInt();
+		sc.close();
 		
 		switch(iChoice) {
 		case CLI_MENUOPTION_COMPANY_LIST:
 			companyUI.printCompanies();
+			return true;
+		case CLI_MENUOPTION_COMPUTER_LIST:
+			computerUI.printComputers();
 			return true;
 			default:
 				System.out.println("The option you picked isn't available.");
