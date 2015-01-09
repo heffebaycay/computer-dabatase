@@ -12,7 +12,8 @@ public class ComputerDatabaseCLI {
 		public static final int COMPUTER_LIST = 2;
 		public static final int COMPUTER_SHOWDETAILS = 3;
 		public static final int COMPUTER_REMOVE = 4;
-		public static final int EXIT = 5;
+		public static final int COMPUTER_CREATE = 5;
+		public static final int EXIT = 6;
 	}
 	
 	protected static CompanyCLIUI companyUI;
@@ -67,6 +68,7 @@ public class ComputerDatabaseCLI {
 		System.out.printf("\t#%d - List Computers\n", MenuOption.COMPUTER_LIST);
 		System.out.printf("\t#%d - Show details for a specific computer\n", MenuOption.COMPUTER_SHOWDETAILS);
 		System.out.printf("\t#%d - Remove a specific computer\n", MenuOption.COMPUTER_REMOVE);
+		System.out.printf("\t#%d - Create a new computer\n", MenuOption.COMPUTER_CREATE);
 		System.out.printf("\t#%d - Exit this application\n", MenuOption.EXIT);
 		
 		System.out.println("\nPlease type the identifier of the action you want to perform: ");
@@ -76,6 +78,7 @@ public class ComputerDatabaseCLI {
 	protected static boolean handleMenuChoice(Scanner sc) {
 		
 		int iChoice = sc.nextInt();
+		sc.nextLine(); // Clearing Scanner buffer
 		long computerId;
 		
 		switch(iChoice) {
@@ -94,6 +97,9 @@ public class ComputerDatabaseCLI {
 			System.out.println("Please type the identifier of the computer to be removed:");
 			computerId = sc.nextLong();
 			computerUI.printRemoveComputer(computerId);
+			return false;
+		case MenuOption.COMPUTER_CREATE:
+			computerUI.createComputer(sc);
 			return false;
 		case MenuOption.EXIT:
 			return true;

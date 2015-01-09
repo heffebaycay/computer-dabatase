@@ -31,6 +31,12 @@ public interface IComputerDao {
 	 */
 	boolean remove(long id);
 	
+	/**
+	 * Create a Computer in the DataSource based on an instance of Computer
+	 * 
+	 * @param computer The computer object that should be persisted
+	 */
+	void create(Computer computer);
 	
 
 }

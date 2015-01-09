@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
@@ -71,12 +72,18 @@ public class ComputerDaoMockImpl implements IComputerDao {
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<Computer> getComputers() {
 
 		return computers;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Computer findById(long id) {
 		for(Computer c : computers) {
@@ -88,6 +95,9 @@ public class ComputerDaoMockImpl implements IComputerDao {
 		return null;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean remove(long id) {
 		
@@ -99,6 +109,42 @@ public class ComputerDaoMockImpl implements IComputerDao {
 		}
 		
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void create(Computer computer) {
+		
+		if(computer.getCompany() == null) {
+			throw new IllegalArgumentException("The 'company' property cannot be null");
+		} else if( computer.getCompany().getId() == 0) {
+			// Company doesn't exist
+			throw new NotImplementedException();
+		}
+		
+		/**
+		 * Since we're in a mock class, we need to increment Ids on our own :(
+		 * Look elsewhere, this isn't going to be pretty o/
+		 */
+		long nextAvailableId = 1;
+		
+		for(Computer c : computers) {
+			if(c.getId() > nextAvailableId) {
+				nextAvailableId = c.getId();
+			}
+		}
+		
+		nextAvailableId++;
+		
+		computer.setId(nextAvailableId);
+		
+		
+		computers.add(computer);
+	}
+	
+	
 	
 	
 	

@@ -54,6 +54,32 @@ public class CompanyDaoMockImpl implements ICompanyDao  {
 		
 		return null;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void create(Company company) {
+		/**
+		 * Since we're in a mock class, we need to increment Ids on our own :(
+		 * Look elsewhere, this isn't going to be pretty o/
+		 */
+		
+		long nextAvailableId = 1;
+		
+		for(Company c : companies) {
+			if(c.getId() > nextAvailableId) {
+				nextAvailableId = c.getId();
+			}
+		}
+		
+		nextAvailableId++;
+		
+		company.setId(nextAvailableId);
+		
+		companies.add(company);
+		
+	}
 	
 	
 	

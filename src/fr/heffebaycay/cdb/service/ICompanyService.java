@@ -12,5 +12,8 @@ public interface ICompanyService {
 	
 	Company findById(long id);
 	
+	
+	void create(Company company);
+	
 
 }

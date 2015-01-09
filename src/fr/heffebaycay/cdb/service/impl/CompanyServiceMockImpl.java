@@ -28,4 +28,11 @@ public class CompanyServiceMockImpl implements ICompanyService {
 		return companyDao.findById(id);
 	}
 
+	@Override
+	public void create(Company company) {
+		companyDao.create(company);
+	}
+	
+	
+
 }

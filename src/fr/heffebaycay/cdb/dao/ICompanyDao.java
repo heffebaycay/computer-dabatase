@@ -21,4 +21,10 @@ public interface ICompanyDao {
 	 */
 	Company findById(long id);
 	
+	/**
+	 * Create a Company in the DataSource based on an instance of Company
+	 * 
+	 * @param company The company object that should be created
+	 */
+	void create(Company company);
 }

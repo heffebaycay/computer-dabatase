@@ -12,5 +12,7 @@ public interface IComputerService {
 	Computer findById(long id);
 	
 	boolean remove(long id);
+	
+	void create(Computer computer);
 
 }

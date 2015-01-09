@@ -26,10 +26,16 @@ public class ComputerServiceMockImpl implements IComputerService {
 		return computerDao.findById(id);
 	}
 	
+	@Override
 	public boolean remove(long id) {
 		
 		return computerDao.remove(id);
 		
+	}
+	
+	@Override
+	public void create(Computer computer) {
+		computerDao.create(computer);
 	}
 	
 
