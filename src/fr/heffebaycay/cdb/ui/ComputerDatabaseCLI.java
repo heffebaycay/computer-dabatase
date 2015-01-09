@@ -2,15 +2,16 @@ package fr.heffebaycay.cdb.ui;
 
 import java.util.Scanner;
 
-import fr.heffebaycay.cdb.service.ICompanyService;
-import fr.heffebaycay.cdb.service.manager.ServiceManager;
-
 public class ComputerDatabaseCLI {
 
 	public static final String CLI_VERSION = "1.0";
+
 	
-	public static final int CLI_MENUOPTION_COMPANY_LIST = 1;
-	public static final int CLI_MENUOPTION_COMPUTER_LIST = 2;
+	public class MenuOption {
+		public static final int COMPANY_LIST = 1;
+		public static final int COMPUTER_LIST = 2;
+		public static final int COMPUTER_SHOWDETAILS = 3;
+	}
 	
 	protected static CompanyCLIUI companyUI;
 	protected static ComputerCLIUI computerUI;
@@ -38,17 +39,21 @@ public class ComputerDatabaseCLI {
 		
 		boolean bMenuLoop = true;
 		
+		Scanner sc = new Scanner(System.in);
+		
 		while(bMenuLoop) {
 			
 			printMenu();
 			
-			if(handleMenuChoice() == true) {
+			if(handleMenuChoice(sc) == true) {
 				bMenuLoop = false;
 			}
 			
 		}
 		
-		System.out.println("\tThanks for using our CLI application \\o/");
+		sc.close();
+		
+		System.out.println("\n\n*** \tThanks for using our CLI application \\o/ ***");
 		
 		
 	}
@@ -56,33 +61,37 @@ public class ComputerDatabaseCLI {
 	protected static void printMenu() {
 		System.out.println("The following actions are available to choose:");
 		
-		System.out.printf("\t#%d - List Companies\n", CLI_MENUOPTION_COMPANY_LIST);
-		System.out.printf("\t#%d - List Computers\n", CLI_MENUOPTION_COMPUTER_LIST);
+		System.out.printf("\t#%d - List Companies\n", MenuOption.COMPANY_LIST);
+		System.out.printf("\t#%d - List Computers\n", MenuOption.COMPUTER_LIST);
+		System.out.printf("\t#%d - Show details for a specific computer\n", MenuOption.COMPUTER_SHOWDETAILS);
 		
 		System.out.println("\nPlease type the identifier of the action you want to perform: ");
 		
 	}
 	
-	protected static boolean handleMenuChoice() {
+	protected static boolean handleMenuChoice(Scanner sc) {
 		
-		Scanner sc = new Scanner(System.in);
 		int iChoice = sc.nextInt();
-		sc.close();
 		
 		switch(iChoice) {
-		case CLI_MENUOPTION_COMPANY_LIST:
+		case MenuOption.COMPANY_LIST:
 			companyUI.printCompanies();
 			return true;
-		case CLI_MENUOPTION_COMPUTER_LIST:
+		case MenuOption.COMPUTER_LIST:
 			computerUI.printComputers();
 			return true;
+		case MenuOption.COMPUTER_SHOWDETAILS:
+			System.out.println("Please type the identifier of the computer:");
+			long computerId = sc.nextLong();
+			computerUI.printComputerDetails(computerId);
+			return true;
+			
 			default:
 				System.out.println("The option you picked isn't available.");
 				return false;
 		}
 		
-	}
-	
+	}	
 	
 	
 	

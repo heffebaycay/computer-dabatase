@@ -1,5 +1,6 @@
 package fr.heffebaycay.cdb.dao.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,12 +51,14 @@ public class ComputerDaoMockImpl implements IComputerDao {
 										.id(5)
 										.name("CM-5")
 										.company(thinkingMachines)
+										.introduced(LocalDateTime.parse("1991-01-01T00:00:00"))
 										.build();
 		
 		Computer c6 = new Computer.Builder()
 										.id(6)
 										.name("MacBook Pro")
 										.company(apple)
+										.introduced(LocalDateTime.parse("2006-01-10T00:00:00"))
 										.build();
 		
 		computers.add(c1);

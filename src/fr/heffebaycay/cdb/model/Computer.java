@@ -61,7 +61,7 @@ public class Computer {
 	@Override
 	public String toString() {
 		
-		return String.format("Computer: id[%d], name[%s], introduced[], discontinued[], company[%s]", getId(), getName(), getCompany());
+		return String.format("Computer: id[%1$d], name[%2$s], introduced[%4$s], discontinued[%5$s], company[%3$s]", getId(), getName(), getCompany(), getIntroduced(), getDiscontinued());
 		
 	}
 	
