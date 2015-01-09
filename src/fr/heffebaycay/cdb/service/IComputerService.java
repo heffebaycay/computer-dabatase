@@ -10,5 +10,7 @@ public interface IComputerService {
 	List<Computer> getComputers();
 	
 	Computer findById(long id);
+	
+	boolean remove(long id);
 
 }

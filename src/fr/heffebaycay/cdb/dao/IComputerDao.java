@@ -17,10 +17,19 @@ public interface IComputerDao {
 	/**
 	 * Find a given Computer from the DataSource
 	 * 
-	 * @param id
+	 * @param id The Id of the Computer object that should be returned
 	 * @return An instance of Computer or null if there's no match
 	 */
 	Computer findById(long id);
+	
+	
+	/**
+	 * This method removes a Computer from the DataSource based on its Id
+	 * 
+	 * @param id Id of the computer object to be removed
+	 * @return boolean indicating success (true) or failure (false) of the removal operation
+	 */
+	boolean remove(long id);
 	
 	
 

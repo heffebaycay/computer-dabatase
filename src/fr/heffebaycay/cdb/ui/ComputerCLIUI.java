@@ -34,7 +34,15 @@ public class ComputerCLIUI {
 		
 	}
 	
-	
-	
-	
+	public void printRemoveComputer(long id) {
+		
+		boolean result = computerService.remove(id);
+		
+		if(result) {
+			System.out.printf("Computer with id '%d' was successfully removed\n", id);
+		} else {
+			System.out.printf("[Error] Failed to remove computer with id '%d'\n", id);
+		}
+		
+	}
 }

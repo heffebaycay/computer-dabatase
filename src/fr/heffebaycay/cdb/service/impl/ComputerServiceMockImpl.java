@@ -26,7 +26,11 @@ public class ComputerServiceMockImpl implements IComputerService {
 		return computerDao.findById(id);
 	}
 	
-	
+	public boolean remove(long id) {
+		
+		return computerDao.remove(id);
+		
+	}
 	
 
 }

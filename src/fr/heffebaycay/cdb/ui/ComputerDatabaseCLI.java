@@ -11,6 +11,8 @@ public class ComputerDatabaseCLI {
 		public static final int COMPANY_LIST = 1;
 		public static final int COMPUTER_LIST = 2;
 		public static final int COMPUTER_SHOWDETAILS = 3;
+		public static final int COMPUTER_REMOVE = 4;
+		public static final int EXIT = 5;
 	}
 	
 	protected static CompanyCLIUI companyUI;
@@ -59,11 +61,13 @@ public class ComputerDatabaseCLI {
 	}
 	
 	protected static void printMenu() {
-		System.out.println("The following actions are available to choose:");
+		System.out.println("\nThe following actions are available to choose:");
 		
 		System.out.printf("\t#%d - List Companies\n", MenuOption.COMPANY_LIST);
 		System.out.printf("\t#%d - List Computers\n", MenuOption.COMPUTER_LIST);
 		System.out.printf("\t#%d - Show details for a specific computer\n", MenuOption.COMPUTER_SHOWDETAILS);
+		System.out.printf("\t#%d - Remove a specific computer\n", MenuOption.COMPUTER_REMOVE);
+		System.out.printf("\t#%d - Exit this application\n", MenuOption.EXIT);
 		
 		System.out.println("\nPlease type the identifier of the action you want to perform: ");
 		
@@ -72,20 +76,27 @@ public class ComputerDatabaseCLI {
 	protected static boolean handleMenuChoice(Scanner sc) {
 		
 		int iChoice = sc.nextInt();
+		long computerId;
 		
 		switch(iChoice) {
 		case MenuOption.COMPANY_LIST:
 			companyUI.printCompanies();
-			return true;
+			return false;
 		case MenuOption.COMPUTER_LIST:
 			computerUI.printComputers();
-			return true;
+			return false;
 		case MenuOption.COMPUTER_SHOWDETAILS:
 			System.out.println("Please type the identifier of the computer:");
-			long computerId = sc.nextLong();
+			computerId = sc.nextLong();
 			computerUI.printComputerDetails(computerId);
+			return false;
+		case MenuOption.COMPUTER_REMOVE:
+			System.out.println("Please type the identifier of the computer to be removed:");
+			computerId = sc.nextLong();
+			computerUI.printRemoveComputer(computerId);
+			return false;
+		case MenuOption.EXIT:
 			return true;
-			
 			default:
 				System.out.println("The option you picked isn't available.");
 				return false;

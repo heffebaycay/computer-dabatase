@@ -88,6 +88,20 @@ public class ComputerDaoMockImpl implements IComputerDao {
 		return null;
 	}
 	
+	@Override
+	public boolean remove(long id) {
+		
+		Computer computer = findById(id);
+		if(computer == null) {
+			return false;
+		} else {
+			return computers.remove(computer);
+		}
+		
+	}
+	
+	
+	
 	
 	
 
