@@ -6,6 +6,7 @@ import java.util.List;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import fr.heffebaycay.cdb.dao.IComputerDao;
+import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 
@@ -142,6 +143,45 @@ public class ComputerDaoMockImpl implements IComputerDao {
 		
 		
 		computers.add(computer);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void update(Computer computer) {
+		
+		if(computer == null || computer.getId() == 0) {
+			throw new IllegalArgumentException("Attempted to update an invalid computer object");
+		}
+		
+		for(Computer source : computers) {
+			if(source.getId() == computer.getId()) {
+				// Found the matching computer in the mock database
+				
+				if(source.getCompany() != computer.getCompany() && computer.getCompany() != null) {
+					
+					Company company = DaoManager.INSTANCE.getCompanyDao().findById(computer.getCompany().getId());
+					if(company != null) 
+					{
+						source.setCompany(company);
+					}
+					else
+					{
+						throw new IllegalArgumentException("Attempted to update a computer with an unknown company");
+					}
+				}
+				
+				source.setIntroduced(computer.getIntroduced());
+				source.setDiscontinued(computer.getDiscontinued());
+				source.setName(computer.getName());
+				
+				
+				break;
+			}
+		}
+		
 	}
 	
 	

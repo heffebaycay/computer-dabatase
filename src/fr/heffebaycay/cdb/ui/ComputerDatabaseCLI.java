@@ -13,7 +13,8 @@ public class ComputerDatabaseCLI {
 		public static final int COMPUTER_SHOWDETAILS = 3;
 		public static final int COMPUTER_REMOVE = 4;
 		public static final int COMPUTER_CREATE = 5;
-		public static final int EXIT = 6;
+		public static final int COMPUTER_UPDATE = 6;
+		public static final int EXIT = 7;
 	}
 	
 	protected static CompanyCLIUI companyUI;
@@ -50,6 +51,9 @@ public class ComputerDatabaseCLI {
 			
 			if(handleMenuChoice(sc) == true) {
 				bMenuLoop = false;
+			} else {
+				System.out.println("Press 'Enter' to continue ");
+				sc.nextLine();
 			}
 			
 		}
@@ -69,6 +73,7 @@ public class ComputerDatabaseCLI {
 		System.out.printf("\t#%d - Show details for a specific computer\n", MenuOption.COMPUTER_SHOWDETAILS);
 		System.out.printf("\t#%d - Remove a specific computer\n", MenuOption.COMPUTER_REMOVE);
 		System.out.printf("\t#%d - Create a new computer\n", MenuOption.COMPUTER_CREATE);
+		System.out.printf("\t#%d - Update an existing computer\n", MenuOption.COMPUTER_UPDATE);
 		System.out.printf("\t#%d - Exit this application\n", MenuOption.EXIT);
 		
 		System.out.println("\nPlease type the identifier of the action you want to perform: ");
@@ -100,6 +105,12 @@ public class ComputerDatabaseCLI {
 			return false;
 		case MenuOption.COMPUTER_CREATE:
 			computerUI.createComputer(sc);
+			return false;
+		case MenuOption.COMPUTER_UPDATE:
+			System.out.println("Please type the identifier of the computer:");
+			computerId = sc.nextLong();
+			sc.nextLine(); // clearing Scanner buffer
+			computerUI.updateComputer(sc, computerId);
 			return false;
 		case MenuOption.EXIT:
 			return true;

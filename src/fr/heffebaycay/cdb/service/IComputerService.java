@@ -14,5 +14,7 @@ public interface IComputerService {
 	boolean remove(long id);
 	
 	void create(Computer computer);
+	
+	void update(Computer computer);
 
 }

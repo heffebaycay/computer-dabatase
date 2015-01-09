@@ -38,5 +38,13 @@ public interface IComputerDao {
 	 */
 	void create(Computer computer);
 	
+	
+	/**
+	 * Update an already existing Computer in the DataSource
+	 * 
+	 * @param computer The computer object that should be updated
+	 */
+	void update(Computer computer);
+	
 
 }

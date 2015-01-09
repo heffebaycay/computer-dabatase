@@ -37,6 +37,14 @@ public class ComputerServiceMockImpl implements IComputerService {
 	public void create(Computer computer) {
 		computerDao.create(computer);
 	}
+
+	@Override
+	public void update(Computer computer) {
+		
+		computerDao.update(computer);
+		
+	}
+	
 	
 
 }
