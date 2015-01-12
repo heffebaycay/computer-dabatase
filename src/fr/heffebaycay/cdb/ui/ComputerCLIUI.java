@@ -76,7 +76,7 @@ public class ComputerCLIUI {
       System.out.printf("[Error] %s - Canceling creation\n", iae.getMessage());
       return;
     }
-
+    
     System.out.println("On what date was the computer introduced (format: year-month-day)?");
     String introduced = sc.nextLine();
 
@@ -98,7 +98,7 @@ public class ComputerCLIUI {
     }
 
     System.out
-        .println("Last step: we need to tie this computer to a Company. Please enter the id of the Company (-1 to create a new Company).");
+        .println("Last step: we need to tie this computer to a Company. Please enter the id of the Company (-1 to create a new Company, 0 for no Company).");
     long companyId = sc.nextLong();
     sc.nextLine(); // clearing Scanner buffer
 
@@ -120,7 +120,7 @@ public class ComputerCLIUI {
 
       computer.setCompany(company);
 
-    } else {
+    } else if(companyId > 0) {
       // Need to fetch company with requested Id
       Company company = companyService.findById(companyId);
       if (company == null) {
@@ -208,7 +208,7 @@ public class ComputerCLIUI {
 
     System.out
         .printf(
-            "Last step: we need to tie this computer to a Company. Please enter the id of the Company (0 to keep current value). (%d)\n",
+            "Last step: we need to tie this computer to a Company. Please enter the id of the Company (-1 to keep current value, 0 for no company). (%d)\n",
             computer.getCompany().getId());
     long companyId = sc.nextLong();
     sc.nextLine(); // clearing Scanner buffer
@@ -221,6 +221,8 @@ public class ComputerCLIUI {
       } else {
         computer.setCompany(company);
       }
+    } else if(companyId == 0) {
+      computer.setCompany(null);
     }
 
     computerService.update(computer);

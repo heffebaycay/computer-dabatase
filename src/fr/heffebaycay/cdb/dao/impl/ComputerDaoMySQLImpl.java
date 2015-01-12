@@ -119,14 +119,20 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       
       if(computer.getIntroduced() != null) {
         ps.setTimestamp(2, Timestamp.valueOf(computer.getIntroduced()));
+      } else {
+        ps.setTimestamp(2, null);
       }
       
       if(computer.getDiscontinued() != null) {
         ps.setTimestamp(3, Timestamp.valueOf(computer.getDiscontinued()));
+      } else {
+        ps.setTimestamp(3, null);
       }
       
       if(computer.getCompany() != null) {
         ps.setLong(4, computer.getCompany().getId());
+      } else {
+        ps.setLong(4, 0);
       }
       
       ps.executeUpdate();
@@ -141,7 +147,44 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
 
   @Override
   public void update(Computer computer) {
-    // TODO Auto-generated method stub
+    
+    String query = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
+    Connection conn = getConnection();
+    
+    
+    try {
+       
+      PreparedStatement ps = conn.prepareStatement(query);
+      ps.setString(1, computer.getName());
+      
+      if(computer.getIntroduced() == null) {
+        ps.setTimestamp(2, null);
+      } else {
+        ps.setTimestamp(2, Timestamp.valueOf(computer.getIntroduced()));
+      }
+      
+      if(computer.getDiscontinued() == null) {
+        ps.setTimestamp(3, null);
+      } else {
+        ps.setTimestamp(3, Timestamp.valueOf(computer.getDiscontinued()));
+      }
+      
+      
+      if(computer.getCompany() != null) {
+        ps.setLong(4, computer.getCompany().getId());
+      } else {
+        ps.setLong(4, 0);
+      }
+      
+      ps.setLong(5, computer.getId());
+      
+      ps.executeUpdate();
+      
+    } catch(SQLException e) {
+      System.out.printf("[Error] SQLException: %s\n", e.getMessage());
+    } finally {
+      closeConnection(conn);
+    }
     
   }
   

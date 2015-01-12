@@ -50,6 +50,7 @@ public class Computer {
 	public void setIntroduced(String strIntroduced) {
 		if(strIntroduced == null || strIntroduced.length() == 0 ) {
 			this.introduced = null;
+			return;
 		}
 		
 		strIntroduced += "T00:00:00";
@@ -73,6 +74,7 @@ public class Computer {
 	public void setDiscontinued(String strDiscontinued) {
 		if(strDiscontinued == null || strDiscontinued.length() == 0) {
 			this.discontinued = null;
+			return;
 		}
 		
 		strDiscontinued += "T00:00:00";
