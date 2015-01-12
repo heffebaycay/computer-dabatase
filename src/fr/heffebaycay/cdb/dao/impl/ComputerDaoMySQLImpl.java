@@ -42,11 +42,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch(SQLException e) {
       System.out.printf("[Error] SQLException: %s\n", e.getMessage());
     } finally {
-      try {
-        conn.close();
-      } catch (SQLException e) {
-        System.out.printf("[Error] Failed to close DB connection: %s", e.getMessage());
-      }
+      closeConnection(conn);
     }
     
     return computers;
@@ -77,11 +73,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch(SQLException e) {
       System.out.printf("[Error] SQLException: %s\n", e.getMessage());
     } finally {
-      try {
-        conn.close();
-      } catch (SQLException e) {
-        System.out.printf("[Error] Failed to close DB connection: %s", e.getMessage());
-      }
+      closeConnection(conn);
     }
     
     return computer;
@@ -89,8 +81,27 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
 
   @Override
   public boolean remove(long id) {
-    // TODO Auto-generated method stub
-    return false;
+   
+    Connection conn = getConnection();
+    String query = "DELETE FROM computer WHERE id = ?";
+    
+    try {
+      
+      PreparedStatement ps = conn.prepareStatement(query);
+      ps.setLong(1, id);
+      
+      ps.executeUpdate();
+      
+      return true;
+      
+    } catch(SQLException e) {
+      System.out.printf("[Error] SQLException: %s\n", e.getMessage());
+      return false;
+    } finally {
+      closeConnection(conn);
+    }
+    
+    
   }
 
   @Override
@@ -105,6 +116,15 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     
   }
   
+  private void closeConnection(Connection conn) {
+    try {
+      if(conn != null) {
+        conn.close();
+      }
+    } catch(SQLException e) {
+      System.out.printf("[Error] Failed to close DB connection: %s", e.getMessage());
+    }
+  }
   
   private Connection getConnection() {
     Connection conn = null;
