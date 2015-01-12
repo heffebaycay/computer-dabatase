@@ -109,8 +109,14 @@ public class ComputerDatabaseCLI {
    */
   protected static boolean handleMenuChoice(Scanner sc) {
 
-    int iChoice = sc.nextInt();
-    sc.nextLine(); // Clearing Scanner buffer
+    int iChoice;
+    if(sc.hasNextInt()) {
+      iChoice = sc.nextInt();
+      sc.nextLine();
+    } else {
+      iChoice = -1;
+    }
+    
     long computerId, pageNumber;
 
     switch (iChoice) {
@@ -122,34 +128,56 @@ public class ComputerDatabaseCLI {
         return false;
       case MenuOption.COMPUTER_SHOWDETAILS:
         System.out.println("Please type the identifier of the computer:");
-        computerId = sc.nextLong();
-        computerUI.printComputerDetails(computerId);
+        if(sc.hasNextLong()) {
+          computerId = sc.nextLong();
+          sc.nextLine(); // clearing Scanner buffer
+          computerUI.printComputerDetails(computerId);
+        } else {
+          System.out.println("Invalid identifier. Exiting routine.");
+        }
         return false;
       case MenuOption.COMPUTER_REMOVE:
         System.out.println("Please type the identifier of the computer to be removed:");
-        computerId = sc.nextLong();
-        computerUI.printRemoveComputer(computerId);
+        if(sc.hasNextLong()) {
+          computerId = sc.nextLong();
+          sc.nextLine(); // clearing Scanner buffer
+          computerUI.printRemoveComputer(computerId);
+        } else {
+          System.out.println("Invalid identifier. Exiting routine.");
+        }
         return false;
       case MenuOption.COMPUTER_CREATE:
         computerUI.createComputer(sc);
         return false;
       case MenuOption.COMPUTER_UPDATE:
         System.out.println("Please type the identifier of the computer:");
-        computerId = sc.nextLong();
-        sc.nextLine(); // clearing Scanner buffer
-        computerUI.updateComputer(sc, computerId);
+        if(sc.hasNextLong()) {
+          computerId = sc.nextLong();
+          sc.nextLine(); // clearing Scanner buffer
+          computerUI.updateComputer(sc, computerId);
+        } else {
+          System.out.println("Invalid identifier. Exiting routine.");
+        }
         return false;
       case MenuOption.COMPANY_LIST_PAGE:
         System.out.println("Please type the number of the page you wish to displayed");
-        pageNumber = sc.nextLong();
-        sc.nextLine(); // clearing Scanner buffer
-        companyUI.printCompaniesWithPage(pageNumber);
+        if(sc.hasNextLong()) {
+          pageNumber = sc.nextLong();
+          sc.nextLine(); // clearing Scanner buffer
+          companyUI.printCompaniesWithPage(pageNumber);
+        } else {
+          System.out.println("Invalid page number. Exiting routine.");
+        }
         return false;
       case MenuOption.COMPUTER_LIST_PAGE:
         System.out.println("Please type the number of the page you wish to be displayed");
-        pageNumber = sc.nextLong();
-        sc.nextLine(); // clearing Scanner buffer
-        computerUI.printComputersWithPage(pageNumber);
+        if(sc.hasNextLong()) {
+          pageNumber = sc.nextLong();
+          sc.nextLine(); // clearing Scanner buffer
+          computerUI.printComputersWithPage(pageNumber);
+        } else {
+          System.out.println("Invalid page number. Exiting routine.");
+        }
         return false;
       case MenuOption.EXIT:
         return true;
