@@ -108,6 +108,35 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
   public void create(Computer computer) {
     // TODO Auto-generated method stub
     
+    String query = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?,?,?,?)";
+    
+    Connection conn = getConnection();
+    
+    try {
+      
+      PreparedStatement ps = conn.prepareStatement(query);
+      ps.setString(1, computer.getName());
+      
+      if(computer.getIntroduced() != null) {
+        ps.setTimestamp(2, Timestamp.valueOf(computer.getIntroduced()));
+      }
+      
+      if(computer.getDiscontinued() != null) {
+        ps.setTimestamp(3, Timestamp.valueOf(computer.getDiscontinued()));
+      }
+      
+      if(computer.getCompany() != null) {
+        ps.setLong(4, computer.getCompany().getId());
+      }
+      
+      ps.executeUpdate();
+      
+    } catch(SQLException e) {
+      System.out.printf("[Error] SQLException: %s\n", e.getMessage());
+    } finally {
+      closeConnection(conn);
+    }
+    
   }
 
   @Override
