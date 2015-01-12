@@ -2,6 +2,7 @@ package fr.heffebaycay.cdb.dao.impl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -53,8 +54,37 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
 
   @Override
   public Computer findById(long id) {
-    // TODO Auto-generated method stub
-    return null;
+    
+    Computer computer = null;
+    Connection conn = getConnection();
+    
+    String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id WHERE c.id = ?";
+    
+    ResultSet results;
+    
+    try {
+      
+      PreparedStatement ps = conn.prepareStatement(query);
+      ps.setLong(1, id);
+      
+      results = ps.executeQuery();
+      if(results.first()) {
+        
+       computer = createComputer(results);
+        
+      }
+      
+    } catch(SQLException e) {
+      System.out.printf("[Error] SQLException: %s\n", e.getMessage());
+    } finally {
+      try {
+        conn.close();
+      } catch (SQLException e) {
+        System.out.printf("[Error] Failed to close DB connection: %s", e.getMessage());
+      }
+    }
+    
+    return computer;
   }
 
   @Override
