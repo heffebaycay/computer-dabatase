@@ -111,6 +111,18 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
     List<Company> companies = new ArrayList<Company>();
     
+    if(offset < 0 || nbRequested < 0) {
+      searchWrapper.setResults(companies);
+      searchWrapper.setCurrentPage(0);
+      searchWrapper.setTotalPage(0);
+      searchWrapper.setTotalQueryCount(0);
+      
+      return searchWrapper;
+    }
+    
+    
+    
+    
     String query = "SELECT id, name FROM company LIMIT ?, ?";
     String countQuery = "SELECT COUNT(id) AS count FROM company";
     

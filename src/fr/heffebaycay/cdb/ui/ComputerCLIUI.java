@@ -9,6 +9,8 @@ import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.IComputerService;
 import fr.heffebaycay.cdb.service.manager.ServiceManager;
+import fr.heffebaycay.cdb.util.AppSettings;
+import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class ComputerCLIUI {
 
@@ -227,6 +229,20 @@ public class ComputerCLIUI {
 
     computerService.update(computer);
 
+  }
+  
+  public void printComputersWithPage(long pageNumber) {
+    
+    long offset = (pageNumber - 1) * AppSettings.NB_RESULTS_PAGE;
+    
+    SearchWrapper<Computer> sw = computerService.getComputers(offset, AppSettings.NB_RESULTS_PAGE);
+    
+    System.out.printf("Displaying page %d of %d:\n", sw.getCurrentPage(), sw.getTotalPage());
+    
+    for(Computer c : sw.getResults()) {
+      System.out.println(c);
+    }
+    
   }
 
 }

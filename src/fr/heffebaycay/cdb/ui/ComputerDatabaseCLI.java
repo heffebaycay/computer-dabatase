@@ -14,7 +14,8 @@ public class ComputerDatabaseCLI {
     public static final int COMPUTER_CREATE      = 5;
     public static final int COMPUTER_UPDATE      = 6;
     public static final int COMPANY_LIST_PAGE    = 7;
-    public static final int EXIT                 = 8;
+    public static final int COMPUTER_LIST_PAGE   = 8;
+    public static final int EXIT                 = 9;
   }
 
   protected static CompanyCLIUI  companyUI;
@@ -75,6 +76,7 @@ public class ComputerDatabaseCLI {
     System.out.printf("\t#%d - Create a new computer\n", MenuOption.COMPUTER_CREATE);
     System.out.printf("\t#%d - Update an existing computer\n", MenuOption.COMPUTER_UPDATE);
     System.out.printf("\t#%d - List Companies (w/ page)\n", MenuOption.COMPANY_LIST_PAGE);
+    System.out.printf("\t#%d - List Computers (w/ page)\n", MenuOption.COMPUTER_LIST_PAGE);
     System.out.printf("\t#%d - Exit this application\n", MenuOption.EXIT);
 
     System.out.println("\nPlease type the identifier of the action you want to perform: ");
@@ -85,7 +87,7 @@ public class ComputerDatabaseCLI {
 
     int iChoice = sc.nextInt();
     sc.nextLine(); // Clearing Scanner buffer
-    long computerId;
+    long computerId, pageNumber;
 
     switch (iChoice) {
       case MenuOption.COMPANY_LIST:
@@ -115,9 +117,15 @@ public class ComputerDatabaseCLI {
         return false;
       case MenuOption.COMPANY_LIST_PAGE:
         System.out.println("Please type the number of the page you wish to displayed");
-        long pageNumber = sc.nextLong();
+        pageNumber = sc.nextLong();
         sc.nextLine(); // clearing Scanner buffer
         companyUI.printCompaniesWithPage(pageNumber);
+        return false;
+      case MenuOption.COMPUTER_LIST_PAGE:
+        System.out.println("Please type the number of the page you wish to be displayed");
+        pageNumber = sc.nextLong();
+        sc.nextLine(); // clearing Scanner buffer
+        computerUI.printComputersWithPage(pageNumber);
         return false;
       case MenuOption.EXIT:
         return true;
