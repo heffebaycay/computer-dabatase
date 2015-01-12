@@ -8,7 +8,7 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 public interface IComputerDao {
 	
 	/**
-	 * This method returns the list of all computers stored in the DataSource
+	 * This method returns the list of all computers stored in the data source
 	 * 
 	 * @return
 	 */
@@ -16,7 +16,7 @@ public interface IComputerDao {
 	
 	
 	/**
-	 * Find a given Computer from the DataSource
+	 * Find a given Computer from the data source
 	 * 
 	 * @param id The Id of the Computer object that should be returned
 	 * @return An instance of Computer or null if there's no match
@@ -25,7 +25,7 @@ public interface IComputerDao {
 	
 	
 	/**
-	 * This method removes a Computer from the DataSource based on its Id
+	 * This method removes a Computer from the data source based on its Id
 	 * 
 	 * @param id Id of the computer object to be removed
 	 * @return boolean indicating success (true) or failure (false) of the removal operation
@@ -33,7 +33,7 @@ public interface IComputerDao {
 	boolean remove(long id);
 	
 	/**
-	 * Create a Computer in the DataSource based on an instance of Computer
+	 * Create a Computer in the data source based on an instance of Computer
 	 * 
 	 * @param computer The computer object that should be persisted
 	 */
@@ -41,7 +41,7 @@ public interface IComputerDao {
 	
 	
 	/**
-	 * Update an already existing Computer in the DataSource
+	 * Update an already existing Computer in the data source
 	 * 
 	 * @param computer The computer object that should be updated
 	 */

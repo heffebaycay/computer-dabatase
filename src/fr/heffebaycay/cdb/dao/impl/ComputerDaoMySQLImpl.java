@@ -19,6 +19,9 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class ComputerDaoMySQLImpl implements IComputerDao {
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<Computer> getComputers() {
 
@@ -49,6 +52,9 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     return computers;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Computer findById(long id) {
     
@@ -80,6 +86,9 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     return computer;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean remove(long id) {
    
@@ -105,6 +114,9 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void create(Computer computer) {
     // TODO Auto-generated method stub
@@ -146,6 +158,9 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void update(Computer computer) {
     
@@ -189,6 +204,11 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     
   }
   
+  /**
+   * Closes a <i>Connection</i> object, with error handling.
+   * 
+   * @param conn The <i>Connection</i> object that should be closed.
+   */
   private void closeConnection(Connection conn) {
     try {
       if(conn != null) {
@@ -199,6 +219,11 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     }
   }
   
+  /**
+   * Return an instance of <i>Connection</i>, to connect to the database
+   * 
+   * @return An instance of Connection
+   */
   private Connection getConnection() {
     Connection conn = null;
     
@@ -212,6 +237,13 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     
   }
   
+  /**
+   * Creates a <i>Computer</i> object for the current ResultSet cursor
+   * 
+   * @param computerSet         A <i>ResultSet</i> containing computers
+   * @return                    A computer created from the data in the <i>ResultSet</i> object
+   * @throws SQLException
+   */
   private Computer createComputer(ResultSet computerSet) throws SQLException {
     
     Computer computer;

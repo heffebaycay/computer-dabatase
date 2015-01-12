@@ -22,6 +22,9 @@ public class ComputerCLIUI {
     companyService = ServiceManager.INSTANCE.getCompanyService();
   }
 
+  /**
+   * Prints the list of all computers
+   */
   public void printComputers() {
     List<Computer> computers = computerService.getComputers();
 
@@ -30,6 +33,11 @@ public class ComputerCLIUI {
     }
   }
 
+  /**
+   * Prints details about a specific computer, identified by its identifier (you don't say :O)
+   * 
+   * @param id  The identifier of the computer object
+   */
   public void printComputerDetails(long id) {
 
     Computer computer = computerService.findById(id);
@@ -42,6 +50,11 @@ public class ComputerCLIUI {
 
   }
 
+  /**
+   * Removes a computer from the data source and prints the result of the operation
+   * 
+   * @param id  The identifier of the Computer
+   */
   public void printRemoveComputer(long id) {
 
     boolean result = computerService.remove(id);
@@ -54,6 +67,11 @@ public class ComputerCLIUI {
 
   }
 
+  /**
+   * Prints the interactive computer creation text interface
+   * 
+   * @param sc  A <i>Scanner</i> object, used to prompt the user about the details of the computer
+   */
   public void createComputer(Scanner sc) {
     /** In order to create a valid computer, we need the following info:
      *  - name
@@ -138,6 +156,12 @@ public class ComputerCLIUI {
 
   }
 
+  /**
+   * Prints the interactive Computer update text interface
+   * 
+   * @param sc  A <i>Scanner</i> object, used to prompt the user for details about the computer
+   * @param id  The identifier of the computer that should be updated
+   */
   public void updateComputer(Scanner sc, long id) {
 
     System.out.println("\n\t** Welcome to the Computer update wizard ** ");
@@ -231,6 +255,11 @@ public class ComputerCLIUI {
 
   }
   
+  /**
+   * Prints the list of Computers located on a given page
+   * 
+   * @param pageNumber
+   */
   public void printComputersWithPage(long pageNumber) {
     
     long offset = (pageNumber - 1) * AppSettings.NB_RESULTS_PAGE;

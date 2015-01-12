@@ -16,16 +16,25 @@ public class ComputerServiceMockImpl implements IComputerService {
     computerDao = DaoManager.INSTANCE.getComputerDao();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<Computer> getComputers() {
     return computerDao.getComputers();
   }
-
+  
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Computer findById(long id) {
     return computerDao.findById(id);
   }
-
+  
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean remove(long id) {
 
@@ -33,11 +42,17 @@ public class ComputerServiceMockImpl implements IComputerService {
 
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void create(Computer computer) {
     computerDao.create(computer);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void update(Computer computer) {
 

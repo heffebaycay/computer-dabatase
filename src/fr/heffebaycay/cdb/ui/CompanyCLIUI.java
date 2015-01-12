@@ -17,6 +17,9 @@ public class CompanyCLIUI {
 		companyService = ServiceManager.INSTANCE.getCompanyService();
 	}
 	
+	/**
+	 * Prints the list of all companies
+	 */
 	public void printCompanies() {
 		
 		List<Company> companies = companyService.getCompanies();
@@ -27,6 +30,11 @@ public class CompanyCLIUI {
 		
 	}
 	
+	/**
+	 * Prints the list of all companies listed on page #<strong>pageNumber</strong>
+	 * 
+	 * @param pageNumber   The number of the page for which the companies should be listed
+	 */
 	public void printCompaniesWithPage(long pageNumber) {
 	  
 	  long offset = (pageNumber - 1) * AppSettings.NB_RESULTS_PAGE;

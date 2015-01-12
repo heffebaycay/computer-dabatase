@@ -12,6 +12,11 @@ public class CompanyDaoMockImpl implements ICompanyDao  {
 	protected List<Company> companies;
 	
 	
+	/**
+	 * Company Mock constructor
+	 * 
+	 * Some sample companies are defined in this constructor.
+	 */
 	public CompanyDaoMockImpl() {
 	
 		companies = new ArrayList<Company>();

@@ -24,16 +24,25 @@ public class CompanyServiceMockImpl implements ICompanyService {
     return companyDao.getCompanies();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Company findById(long id) {
     return companyDao.findById(id);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void create(Company company) {
     companyDao.create(company);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public SearchWrapper<Company> getCompanies(long offset, long nbRequested) {
     return companyDao.getCompanies(offset, nbRequested);

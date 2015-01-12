@@ -7,7 +7,10 @@ import fr.heffebaycay.cdb.dao.impl.CompanyDaoMySQLImpl;
 import fr.heffebaycay.cdb.dao.impl.ComputerDaoMockImpl;
 import fr.heffebaycay.cdb.dao.impl.ComputerDaoMySQLImpl;
 
-
+/**
+ * The <i>DaoManager</i> object can be used to access the various objects that
+ * allow some CRUD actions on the <i>Computer</i> and <i>Company</i> objects 
+ */
 public enum DaoManager {
 	
 	INSTANCE;

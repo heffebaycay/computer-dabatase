@@ -14,6 +14,11 @@ public class ComputerDaoMockImpl implements IComputerDao {
 
   protected List<Computer> computers;
 
+  /**
+   * Computer Mock constructor
+   * 
+   * Some sample computers are created in this constructor.
+   */
   public ComputerDaoMockImpl() {
     computers = new ArrayList<Computer>();
 

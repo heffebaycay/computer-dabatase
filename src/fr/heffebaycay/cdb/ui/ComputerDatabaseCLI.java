@@ -7,6 +7,10 @@ public class ComputerDatabaseCLI {
   public static final String CLI_VERSION = "1.0";
 
   public class MenuOption {
+    /**
+     * Here are the list of options available in the application
+     * Each option value must be unique!
+     */
     public static final int COMPANY_LIST         = 1;
     public static final int COMPUTER_LIST        = 2;
     public static final int COMPUTER_SHOWDETAILS = 3;
@@ -29,17 +33,26 @@ public class ComputerDatabaseCLI {
 
   }
 
+  /**
+   * Prints the "Welcome" header in the console
+   */
   protected static void printWelcome() {
     System.out.println("-------------------------------------------");
     System.out.printf("       Computer Database CLI - v%s         \n", CLI_VERSION);
     System.out.println("-------------------------------------------");
   }
 
+  /**
+   * Initializes the basic UI services the CLI application requires
+   */
   protected static void initServices() {
     companyUI = new CompanyCLIUI();
     computerUI = new ComputerCLIUI();
   }
 
+  /**
+   * Handles the logic of the application menu.
+   */
   protected static void menuLogic() {
 
     boolean bMenuLoop = true;
@@ -65,6 +78,9 @@ public class ComputerDatabaseCLI {
 
   }
 
+  /**
+   * Prints the list of options offered by the CLI application
+   */
   protected static void printMenu() {
     System.out.println("\nThe following actions are available to choose:");
 
@@ -83,6 +99,14 @@ public class ComputerDatabaseCLI {
 
   }
 
+  /**
+   * Prompts the user for a choice from the menu options and dispatches the request to the right UI handlers.
+   * 
+   * @param sc A <i>Scanner</i> object, used to prompt the user. 
+   * 
+   * @return A boolean indicating whether the main application should exit the menu loop
+   * (<strong>true</strong>: the loop should be exited ; <strong>false</strong>: the loop should not be exited)
+   */
   protected static boolean handleMenuChoice(Scanner sc) {
 
     int iChoice = sc.nextInt();

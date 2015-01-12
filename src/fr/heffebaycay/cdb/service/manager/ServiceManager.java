@@ -26,6 +26,11 @@ public enum ServiceManager {
 		return companyService;
 	}
 	
+	/**
+	 * Returns an instance of ComputerService
+	 * 
+	 * @return
+	 */
 	public IComputerService getComputerService() {
 		return computerService;
 	}
