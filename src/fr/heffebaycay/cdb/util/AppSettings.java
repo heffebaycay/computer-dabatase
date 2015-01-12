@@ -18,7 +18,7 @@ public class AppSettings {
   
   private static String getMySQLConnectionURL() {
     
-    String url = String.format("jdbc:mysql://127.0.0.1:3306/%s", DB_NAME );
+    String url = String.format("jdbc:mysql://127.0.0.1:3306/%s?zeroDateTimeBehavior=convertToNull", DB_NAME );
     
     return url;
     
