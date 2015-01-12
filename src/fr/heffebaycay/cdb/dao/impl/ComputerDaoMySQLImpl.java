@@ -124,7 +124,6 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    */
   @Override
   public void create(Computer computer) {
-    // TODO Auto-generated method stub
     
     String query = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?,?,?,?)";
     
@@ -150,7 +149,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       if(computer.getCompany() != null) {
         ps.setLong(4, computer.getCompany().getId());
       } else {
-        ps.setLong(4, 0);
+        ps.setObject(4, null);
       }
       
       ps.executeUpdate();
@@ -194,7 +193,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       if(computer.getCompany() != null) {
         ps.setLong(4, computer.getCompany().getId());
       } else {
-        ps.setLong(4, 0);
+        ps.setObject(4, null);
       }
       
       ps.setLong(5, computer.getId());
