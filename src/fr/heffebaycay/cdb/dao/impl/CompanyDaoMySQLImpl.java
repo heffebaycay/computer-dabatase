@@ -9,6 +9,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.util.AppSettings;
@@ -16,6 +19,8 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class CompanyDaoMySQLImpl implements ICompanyDao {
 
+  private final Logger logger = LoggerFactory.getLogger(CompanyDaoMySQLImpl.class);
+  
   /**
    * {@inheritDoc}
    */
@@ -43,16 +48,10 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       }
 
     } catch (SQLException e) {
-
-      System.out.printf("[Error] SQLException: %s\n", e.getMessage());
+      logger.error("SQLException: {}", e);
 
     } finally {
-
-      try {
-        conn.close();
-      } catch (SQLException e) {
-        System.out.printf("[Error] Failed to close DB connection: %s", e.getMessage());
-      }
+      closeConnection(conn);
     }
 
     return companies;
@@ -84,15 +83,10 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       }
 
     } catch (SQLException e) {
-
-      System.out.printf("[Error] SQLException: %s\n", e.getMessage());
+      logger.error("SQLException: {}", e);
 
     } finally {
-      try {
-        conn.close();
-      } catch (SQLException e) {
-        System.out.printf("[Error] Failed to close DB connection: %s", e.getMessage());
-      }
+      closeConnection(conn);
     }
 
     return company;
@@ -153,7 +147,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       searchWrapper.setResults(companies);
 
     } catch (SQLException e) {
-      System.out.printf("[Error] %s\n", e.getMessage());
+      logger.error("SQLException: {}", e);
     } finally {
       closeConnection(conn);
     }
@@ -163,9 +157,8 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
 
   @Override
   public void create(Company company) {
-
     // Not implemented
-
+    logger.warn("Call to an unimplemented method");
   }
 
   /**
@@ -181,7 +174,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       conn = DriverManager.getConnection(AppSettings.DB_URL, AppSettings.DB_USER,
           AppSettings.DB_PASSWORD);
     } catch (SQLException e) {
-      System.out.printf("[Error] Failed to get SQL Connection - %s\n", e.getMessage());
+      logger.error("Failed to get SQL connection: {}", e);
     }
 
     return conn;
@@ -198,7 +191,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
         conn.close();
       }
     } catch (SQLException e) {
-      System.out.printf("[Error] Failed to close DB connection: %s", e.getMessage());
+      logger.error("Failed to close DB connection: {}", e);
     }
   }
 

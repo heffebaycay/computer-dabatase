@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
@@ -19,6 +22,8 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class ComputerDaoMySQLImpl implements IComputerDao {
 
+  private final Logger logger = LoggerFactory.getLogger(ComputerDaoMySQLImpl.class);
+  
   /**
    * {@inheritDoc}
    */
@@ -44,7 +49,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
         
       }
     } catch(SQLException e) {
-      System.out.printf("[Error] SQLException: %s\n", e.getMessage());
+      logger.error("SQLException: {}", e);
     } finally {
       closeConnection(conn);
     }
@@ -78,7 +83,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       }
       
     } catch(SQLException e) {
-      System.out.printf("[Error] SQLException: %s\n", e.getMessage());
+      logger.error("SQLException: {}", e);
     } finally {
       closeConnection(conn);
     }
@@ -105,7 +110,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       return true;
       
     } catch(SQLException e) {
-      System.out.printf("[Error] SQLException: %s\n", e.getMessage());
+      logger.error("SQLException: {}", e);
       return false;
     } finally {
       closeConnection(conn);
@@ -151,7 +156,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       ps.executeUpdate();
       
     } catch(SQLException e) {
-      System.out.printf("[Error] SQLException: %s\n", e.getMessage());
+      logger.error("SQLException: {}", e);
     } finally {
       closeConnection(conn);
     }
@@ -197,7 +202,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       ps.executeUpdate();
       
     } catch(SQLException e) {
-      System.out.printf("[Error] SQLException: %s\n", e.getMessage());
+      logger.error("SQLException: {}", e);
     } finally {
       closeConnection(conn);
     }
@@ -215,7 +220,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
         conn.close();
       }
     } catch(SQLException e) {
-      System.out.printf("[Error] Failed to close DB connection: %s", e.getMessage());
+      logger.error("Failed to close DB connection: {}", e);
     }
   }
   
@@ -230,7 +235,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     try {
       conn = DriverManager.getConnection(AppSettings.DB_URL, AppSettings.DB_USER, AppSettings.DB_PASSWORD);
     } catch(SQLException e) {
-      System.out.printf("[Error] Failed to get SQL Connection - %s\n", e.getMessage());
+      logger.error("Failed to get SQL connection: {}", e);
     }
     
     return conn;
@@ -339,7 +344,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       searchWrapper.setResults(computers);
       
     } catch(SQLException e) {
-      System.out.printf("[Error] SQLException: %s\n", e.getMessage());
+      logger.error("SQL Exception: {}", e);
     } finally {
       closeConnection(conn);
     }
