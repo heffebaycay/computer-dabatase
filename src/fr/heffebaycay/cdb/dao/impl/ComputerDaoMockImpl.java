@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
@@ -122,7 +121,7 @@ public class ComputerDaoMockImpl implements IComputerDao {
 			throw new IllegalArgumentException("The 'company' property cannot be null");
 		} else if( computer.getCompany().getId() == 0) {
 			// Company doesn't exist
-			throw new NotImplementedException();
+			throw new RuntimeException("Not implemented");
 		}
 		
 		/**
