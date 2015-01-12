@@ -12,6 +12,7 @@ import java.util.List;
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.util.AppSettings;
+import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class CompanyDaoMySQLImpl implements ICompanyDao {
 
@@ -101,6 +102,63 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     
   }
 
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public SearchWrapper<Company> getCompanies(long offset, long nbRequested) {
+    SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
+    List<Company> companies = new ArrayList<Company>();
+    
+    String query = "SELECT id, name FROM company LIMIT ?, ?";
+    String countQuery = "SELECT COUNT(id) AS count FROM company";
+    
+    Connection conn = getConnection();
+    
+    try {
+      
+      Statement stmt = conn.createStatement();
+      ResultSet countResult = stmt.executeQuery(countQuery);
+      countResult.first();
+      searchWrapper.setTotalQueryCount(countResult.getLong("count"));
+      
+      long currentPage = (long) Math.ceil(offset * 1.0 / AppSettings.NB_RESULTS_PAGE) + 1;
+      searchWrapper.setCurrentPage(currentPage);
+      
+      long totalPage = (long) Math.ceil(searchWrapper.getTotalQueryCount() * 1.0 / AppSettings.NB_RESULTS_PAGE);
+      searchWrapper.setTotalPage(totalPage);
+      
+      
+      PreparedStatement ps = conn.prepareStatement(query);
+      ps.setLong(1, offset);
+      ps.setLong(2, nbRequested); 
+      ResultSet rs = ps.executeQuery();
+      
+      while(rs.next()) {
+        long id = rs.getLong("id");
+        String name = rs.getString("name");
+        
+        Company company = new Company.Builder()
+                                          .id(id)
+                                          .name(name)
+                                          .build();
+        
+        companies.add(company);
+        
+      }
+      
+      searchWrapper.setResults(companies);
+      
+    } catch(SQLException e) {
+      System.out.printf("[Error] %s\n", e.getMessage());
+    } finally {
+      closeConnection(conn);
+    }
+    
+    return searchWrapper;
+  }
+
   @Override
   public void create(Company company) {
 
@@ -120,11 +178,18 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     }
     
     return conn;
-    
-    
-    
-    
   }
+  
+  private void closeConnection(Connection conn) {
+    try {
+      if(conn != null) {
+        conn.close();
+      }
+    } catch(SQLException e) {
+      System.out.printf("[Error] Failed to close DB connection: %s", e.getMessage());
+    }
+  }
+  
 
   
   

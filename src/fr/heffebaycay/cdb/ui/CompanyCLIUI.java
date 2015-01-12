@@ -3,6 +3,8 @@ package fr.heffebaycay.cdb.ui;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.manager.ServiceManager;
+import fr.heffebaycay.cdb.util.AppSettings;
+import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 import java.util.List;
 
@@ -23,6 +25,20 @@ public class CompanyCLIUI {
 			System.out.println(c);
 		}
 		
+	}
+	
+	public void printCompaniesWithPage(long pageNumber) {
+	  
+	  long offset = (pageNumber - 1) * AppSettings.NB_RESULTS_PAGE;
+	  
+	  SearchWrapper<Company> sw = companyService.getCompanies(offset, AppSettings.NB_RESULTS_PAGE);
+	  
+	  System.out.printf("Displaying page %d of %d:\n", sw.getCurrentPage(), sw.getTotalPage());
+	  
+	  for(Company c : sw.getResults()) {
+	    System.out.println(c);
+	  }
+	  
 	}
 	
 

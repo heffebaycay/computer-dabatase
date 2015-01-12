@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.heffebaycay.cdb.model.Company;
+import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 
 public class CompanyDaoMockImpl implements ICompanyDao  {
@@ -80,6 +81,16 @@ public class CompanyDaoMockImpl implements ICompanyDao  {
 		companies.add(company);
 		
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+  @Override
+  public SearchWrapper<Company> getCompanies(long offset, long nbRequested) {
+    return null;
+  }
+	
+	
 	
 	
 	
