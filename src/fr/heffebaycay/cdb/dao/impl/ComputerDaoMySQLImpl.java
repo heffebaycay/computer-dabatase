@@ -44,7 +44,8 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       
       while(results.next()) {
         
-        Computer computer = createComputer(results);
+        ComputerMySQLRowMapper mapper = new ComputerMySQLRowMapper();
+        Computer computer = mapper.mapRow(results);
         
         computers.add(computer);
         
@@ -79,7 +80,8 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       results = ps.executeQuery();
       if(results.first()) {
         
-       computer = createComputer(results);
+        ComputerMySQLRowMapper mapper = new ComputerMySQLRowMapper();
+        computer = mapper.mapRow(results);
         
       }
       
@@ -208,58 +210,6 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     }
     
   }
-  
-  /**
-   * Creates a <i>Computer</i> object for the current ResultSet cursor
-   * 
-   * @param computerSet         A <i>ResultSet</i> containing computers
-   * @return                    A computer created from the data in the <i>ResultSet</i> object
-   * @throws SQLException
-   */
-  private Computer createComputer(ResultSet computerSet) throws SQLException {
-    
-    Computer computer;
-    Company company = null;
-    
-    long computerId = computerSet.getLong("id");
-    String computerName = computerSet.getString("name");
-    
-    LocalDateTime introduced = null;
-    Timestamp introducedStamp = computerSet.getTimestamp("introduced");
-    if(introducedStamp != null) {
-      introduced = introducedStamp.toLocalDateTime();
-    }
-    
-    LocalDateTime discontinued = null;
-    Timestamp discontinuedStamp = computerSet.getTimestamp("discontinued");
-    if(discontinuedStamp != null) {
-      discontinued = discontinuedStamp.toLocalDateTime();
-    }
-
-    long companyId = computerSet.getLong("cpId");
-    String companyName = computerSet.getString("cpName");
-    
-    if(companyId > 0) {
-      company = new Company.Builder()
-                              .id(companyId)
-                              .name(companyName)
-                              .build();
-    }
-    
-    
-    
-    computer = new Computer.Builder()
-                                .id(computerId)
-                                .name(computerName)
-                                .introduced(introduced)
-                                .discontinued(discontinued)
-                                .company(company)
-                                .build();
-    
-    
-    return computer;
-    
-  }
 
   /**
    * {@inheritDoc}
@@ -303,7 +253,8 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       ResultSet rs = ps.executeQuery();
       
       while(rs.next()) {
-        Computer computer = createComputer(rs);
+        ComputerMySQLRowMapper mapper = new ComputerMySQLRowMapper();
+        Computer computer = mapper.mapRow(rs);
         
         computers.add(computer);
       }
