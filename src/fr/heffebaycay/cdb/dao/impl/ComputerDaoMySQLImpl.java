@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.dao.IComputerDao;
+import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.util.AppSettings;
@@ -30,7 +31,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
   @Override
   public List<Computer> getComputers() {
 
-    Connection conn = getConnection();
+    Connection conn = MySQLUtils.getConnection();
     
     String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id";
     
@@ -51,7 +52,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch(SQLException e) {
       logger.error("SQLException: {}", e);
     } finally {
-      closeConnection(conn);
+      MySQLUtils.closeConnection(conn);
     }
     
     return computers;
@@ -64,7 +65,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
   public Computer findById(long id) {
     
     Computer computer = null;
-    Connection conn = getConnection();
+    Connection conn = MySQLUtils.getConnection();
     
     String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id WHERE c.id = ?";
     
@@ -85,7 +86,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch(SQLException e) {
       logger.error("SQLException: {}", e);
     } finally {
-      closeConnection(conn);
+      MySQLUtils.closeConnection(conn);
     }
     
     return computer;
@@ -97,7 +98,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
   @Override
   public boolean remove(long id) {
    
-    Connection conn = getConnection();
+    Connection conn = MySQLUtils.getConnection();
     String query = "DELETE FROM computer WHERE id = ?";
     
     try {
@@ -113,7 +114,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       logger.error("SQLException: {}", e);
       return false;
     } finally {
-      closeConnection(conn);
+      MySQLUtils.closeConnection(conn);
     }
     
     
@@ -127,7 +128,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     
     String query = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?,?,?,?)";
     
-    Connection conn = getConnection();
+    Connection conn = MySQLUtils.getConnection();
     
     try {
       
@@ -157,7 +158,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch(SQLException e) {
       logger.error("SQLException: {}", e);
     } finally {
-      closeConnection(conn);
+      MySQLUtils.closeConnection(conn);
     }
     
   }
@@ -169,7 +170,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
   public void update(Computer computer) {
     
     String query = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
-    Connection conn = getConnection();
+    Connection conn = MySQLUtils.getConnection();
     
     
     try {
@@ -203,41 +204,8 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch(SQLException e) {
       logger.error("SQLException: {}", e);
     } finally {
-      closeConnection(conn);
+      MySQLUtils.closeConnection(conn);
     }
-    
-  }
-  
-  /**
-   * Closes a <i>Connection</i> object, with error handling.
-   * 
-   * @param conn The <i>Connection</i> object that should be closed.
-   */
-  private void closeConnection(Connection conn) {
-    try {
-      if(conn != null) {
-        conn.close();
-      }
-    } catch(SQLException e) {
-      logger.error("Failed to close DB connection: {}", e);
-    }
-  }
-  
-  /**
-   * Return an instance of <i>Connection</i>, to connect to the database
-   * 
-   * @return An instance of Connection
-   */
-  private Connection getConnection() {
-    Connection conn = null;
-    
-    try {
-      conn = DriverManager.getConnection(AppSettings.DB_URL, AppSettings.DB_USER, AppSettings.DB_PASSWORD);
-    } catch(SQLException e) {
-      logger.error("Failed to get SQL connection: {}", e);
-    }
-    
-    return conn;
     
   }
   
@@ -314,7 +282,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id LIMIT ?, ?";
     String countQuery = "SELECT COUNT(c.id) AS count FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id";
     
-    Connection conn = getConnection();
+    Connection conn = MySQLUtils.getConnection();
     
     try {
       Statement stmt = conn.createStatement();
@@ -345,7 +313,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch(SQLException e) {
       logger.error("SQL Exception: {}", e);
     } finally {
-      closeConnection(conn);
+      MySQLUtils.closeConnection(conn);
     }
     
     return searchWrapper;

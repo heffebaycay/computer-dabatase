@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
+import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.util.AppSettings;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
@@ -27,7 +28,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
   @Override
   public List<Company> getCompanies() {
 
-    Connection conn = getConnection();
+    Connection conn = MySQLUtils.getConnection();
 
     final String query = "SELECT id, name FROM company";
     ResultSet results;
@@ -51,7 +52,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       logger.error("SQLException: {}", e);
 
     } finally {
-      closeConnection(conn);
+      MySQLUtils.closeConnection(conn);
     }
 
     return companies;
@@ -65,7 +66,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
   public Company findById(long id) {
 
     Company company = null;
-    Connection conn = getConnection();
+    Connection conn = MySQLUtils.getConnection();
 
     String query = "SELECT name FROM company WHERE id = ?";
     ResultSet results;
@@ -86,7 +87,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       logger.error("SQLException: {}", e);
 
     } finally {
-      closeConnection(conn);
+      MySQLUtils.closeConnection(conn);
     }
 
     return company;
@@ -113,7 +114,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     String query = "SELECT id, name FROM company LIMIT ?, ?";
     String countQuery = "SELECT COUNT(id) AS count FROM company";
 
-    Connection conn = getConnection();
+    Connection conn = MySQLUtils.getConnection();
 
     try {
 
@@ -149,7 +150,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     } catch (SQLException e) {
       logger.error("SQLException: {}", e);
     } finally {
-      closeConnection(conn);
+      MySQLUtils.closeConnection(conn);
     }
 
     return searchWrapper;
@@ -159,40 +160,6 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
   public void create(Company company) {
     // Not implemented
     logger.warn("Call to an unimplemented method");
-  }
-
-  /**
-   * Return an instance of <i>Connection</i>, to connect to the database
-   * 
-   * @return An instance of Connection
-   */
-  private Connection getConnection() {
-
-    Connection conn = null;
-
-    try {
-      conn = DriverManager.getConnection(AppSettings.DB_URL, AppSettings.DB_USER,
-          AppSettings.DB_PASSWORD);
-    } catch (SQLException e) {
-      logger.error("Failed to get SQL connection: {}", e);
-    }
-
-    return conn;
-  }
-
-  /**
-   * Closes a <i>Connection</i> object, with error handling.
-   * 
-   * @param conn The <i>Connection</i> object that should be closed.
-   */
-  private void closeConnection(Connection conn) {
-    try {
-      if (conn != null) {
-        conn.close();
-      }
-    } catch (SQLException e) {
-      logger.error("Failed to close DB connection: {}", e);
-    }
   }
 
 }
