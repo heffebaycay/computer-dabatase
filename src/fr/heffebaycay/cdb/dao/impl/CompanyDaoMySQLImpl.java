@@ -39,10 +39,9 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       results = stmt.executeQuery(query);
 
       while (results.next()) {
-        long id = results.getLong("id");
-        String name = results.getString("name");
-
-        Company company = new Company.Builder().id(id).name(name).build();
+        
+        CompanyMySQLRowMapper mapper = new CompanyMySQLRowMapper();
+        Company company = mapper.mapRow(results);
 
         companies.add(company);
 
@@ -68,7 +67,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     Company company = null;
     Connection conn = MySQLUtils.getConnection();
 
-    String query = "SELECT name FROM company WHERE id = ?";
+    String query = "SELECT id, name FROM company WHERE id = ?";
     ResultSet results;
 
     try {
@@ -78,9 +77,8 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       results = ps.executeQuery();
       if (results.first()) {
 
-        String name = results.getString("name");
-
-        company = new Company.Builder().id(id).name(name).build();
+        CompanyMySQLRowMapper mapper = new CompanyMySQLRowMapper();
+        company = mapper.mapRow(results);
       }
 
     } catch (SQLException e) {
@@ -136,10 +134,9 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       ResultSet rs = ps.executeQuery();
 
       while (rs.next()) {
-        long id = rs.getLong("id");
-        String name = rs.getString("name");
-
-        Company company = new Company.Builder().id(id).name(name).build();
+        
+        CompanyMySQLRowMapper mapper = new CompanyMySQLRowMapper();
+        Company company = mapper.mapRow(rs);
 
         companies.add(company);
 

@@ -21,7 +21,7 @@ public class ComputerMySQLRowMapper implements IRowMapper<Computer> {
    * 
    * @param resultSet   The <i>ResultSet</i> object, whose cursor is set so the method is able to directly read the object attributes
    * 
-   * @return An instance of Computer, mapped with the data from <strong>resultSet</strong>
+   * @return An instance of <i>Computer</i>, mapped with the data from <strong>resultSet</strong>
    * 
    */
   @Override
