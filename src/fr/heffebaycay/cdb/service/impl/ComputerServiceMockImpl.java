@@ -20,8 +20,8 @@ public class ComputerServiceMockImpl implements IComputerService {
    * {@inheritDoc}
    */
   @Override
-  public List<Computer> getComputers() {
-    return computerDao.getComputers();
+  public List<Computer> findAll() {
+    return computerDao.findAll();
   }
   
   /**
@@ -64,8 +64,8 @@ public class ComputerServiceMockImpl implements IComputerService {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Computer> getComputers(long offset, long nbRequested) {
-    return computerDao.getComputers(offset, nbRequested);
+  public SearchWrapper<Computer> findAll(long offset, long nbRequested) {
+    return computerDao.findAll(offset, nbRequested);
   }
 
 }

@@ -12,7 +12,7 @@ public interface IComputerService {
    * 
    * @return
    */
-  List<Computer> getComputers();
+  List<Computer> findAll();
 
   /**
    * Find a given Computer from the data source
@@ -51,6 +51,6 @@ public interface IComputerService {
      * @param nbRequested      The number of elements requested
      * @return                 A SearchWrapper element containing the results as well as page information
      */
-  SearchWrapper<Computer> getComputers(long offset, long nbRequested);
+  SearchWrapper<Computer> findAll(long offset, long nbRequested);
 
 }

@@ -12,7 +12,7 @@ public interface ICompanyService {
    * 
    * @return The list of all Companies
    */
-  List<Company> getCompanies();
+  List<Company> findAll();
 
   /**
    * Find a Company from the data source
@@ -35,6 +35,6 @@ public interface ICompanyService {
      * @param nbRequested      The total number of elements requested
      * @return                 A SearchWrapper element containing both the results as a List and the total number of elements matched by the query
      */
-  SearchWrapper<Company> getCompanies(long offset, long nbRequested);
+  SearchWrapper<Company> findAll(long offset, long nbRequested);
 
 }

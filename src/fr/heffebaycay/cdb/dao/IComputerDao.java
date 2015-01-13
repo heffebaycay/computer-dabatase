@@ -12,7 +12,7 @@ public interface IComputerDao {
 	 * 
 	 * @return
 	 */
-	List<Computer> getComputers();
+	List<Computer> findAll();
 	
 	
 	/**
@@ -54,7 +54,7 @@ public interface IComputerDao {
 	 * @param nbRequested      The number of elements requested
 	 * @return                 A SearchWrapper element containing the results as well as page information
 	 */
-	SearchWrapper<Computer> getComputers(long offset, long nbRequested);
+	SearchWrapper<Computer> findAll(long offset, long nbRequested);
 	
 
 }

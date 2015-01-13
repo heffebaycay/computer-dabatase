@@ -41,7 +41,7 @@ public class CompanyDaoMockImpl implements ICompanyDao  {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Company> getCompanies() {
+	public List<Company> findAll() {
 		return companies;
 	}
 
@@ -91,7 +91,7 @@ public class CompanyDaoMockImpl implements ICompanyDao  {
 	 * {@inheritDoc}
 	 */
   @Override
-  public SearchWrapper<Company> getCompanies(long offset, long nbRequested) {
+  public SearchWrapper<Company> findAll(long offset, long nbRequested) {
     return null;
   }
 	

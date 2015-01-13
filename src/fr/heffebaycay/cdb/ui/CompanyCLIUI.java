@@ -22,7 +22,7 @@ public class CompanyCLIUI {
 	 */
 	public void printCompanies() {
 		
-		List<Company> companies = companyService.getCompanies();
+		List<Company> companies = companyService.findAll();
 		
 		for(Company c : companies) {
 			System.out.println(c);
@@ -39,7 +39,7 @@ public class CompanyCLIUI {
 	  
 	  long offset = (pageNumber - 1) * AppSettings.NB_RESULTS_PAGE;
 	  
-	  SearchWrapper<Company> sw = companyService.getCompanies(offset, AppSettings.NB_RESULTS_PAGE);
+	  SearchWrapper<Company> sw = companyService.findAll(offset, AppSettings.NB_RESULTS_PAGE);
 	  
 	  System.out.printf("Displaying page %d of %d:\n", sw.getCurrentPage(), sw.getTotalPage());
 	  

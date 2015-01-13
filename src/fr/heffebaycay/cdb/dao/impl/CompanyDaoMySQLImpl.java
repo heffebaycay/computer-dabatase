@@ -26,7 +26,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public List<Company> getCompanies() {
+  public List<Company> findAll() {
 
     Connection conn = MySQLUtils.getConnection();
 
@@ -96,7 +96,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Company> getCompanies(long offset, long nbRequested) {
+  public SearchWrapper<Company> findAll(long offset, long nbRequested) {
     SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
     List<Company> companies = new ArrayList<Company>();
 

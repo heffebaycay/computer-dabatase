@@ -29,7 +29,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public List<Computer> getComputers() {
+  public List<Computer> findAll() {
 
     Connection conn = MySQLUtils.getConnection();
     
@@ -215,7 +215,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Computer> getComputers(long offset, long nbRequested) {
+  public SearchWrapper<Computer> findAll(long offset, long nbRequested) {
     
     SearchWrapper<Computer> searchWrapper = new SearchWrapper<Computer>();
     List<Computer> computers = new ArrayList<Computer>();

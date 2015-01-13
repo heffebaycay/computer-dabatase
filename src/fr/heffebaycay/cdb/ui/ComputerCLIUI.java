@@ -26,7 +26,7 @@ public class ComputerCLIUI {
    * Prints the list of all computers
    */
   public void printComputers() {
-    List<Computer> computers = computerService.getComputers();
+    List<Computer> computers = computerService.findAll();
 
     for (Computer c : computers) {
       System.out.println(c);
@@ -264,7 +264,7 @@ public class ComputerCLIUI {
     
     long offset = (pageNumber - 1) * AppSettings.NB_RESULTS_PAGE;
     
-    SearchWrapper<Computer> sw = computerService.getComputers(offset, AppSettings.NB_RESULTS_PAGE);
+    SearchWrapper<Computer> sw = computerService.findAll(offset, AppSettings.NB_RESULTS_PAGE);
     
     System.out.printf("Displaying page %d of %d:\n", sw.getCurrentPage(), sw.getTotalPage());
     

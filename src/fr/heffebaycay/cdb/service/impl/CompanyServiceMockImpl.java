@@ -20,8 +20,8 @@ public class CompanyServiceMockImpl implements ICompanyService {
    * {@inheritDoc}
    */
   @Override
-  public List<Company> getCompanies() {
-    return companyDao.getCompanies();
+  public List<Company> findAll() {
+    return companyDao.findAll();
   }
 
   /**
@@ -44,8 +44,8 @@ public class CompanyServiceMockImpl implements ICompanyService {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Company> getCompanies(long offset, long nbRequested) {
-    return companyDao.getCompanies(offset, nbRequested);
+  public SearchWrapper<Company> findAll(long offset, long nbRequested) {
+    return companyDao.findAll(offset, nbRequested);
   }
 
 }

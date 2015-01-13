@@ -51,7 +51,7 @@ public class ComputerDaoMockImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public List<Computer> getComputers() {
+  public List<Computer> findAll() {
 
     return computers;
   }
@@ -157,7 +157,7 @@ public class ComputerDaoMockImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Computer> getComputers(long offset, long nbRequested) {
+  public SearchWrapper<Computer> findAll(long offset, long nbRequested) {
     // Not implemented
     return null;
   }
