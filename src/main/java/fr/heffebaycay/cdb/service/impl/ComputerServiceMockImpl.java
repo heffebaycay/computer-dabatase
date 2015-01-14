@@ -16,6 +16,10 @@ public class ComputerServiceMockImpl implements IComputerService {
     computerDao = DaoManager.INSTANCE.getComputerDao();
   }
 
+  public ComputerServiceMockImpl(IComputerDao computerDao) {
+    this.computerDao = computerDao;
+  }
+  
   /**
    * {@inheritDoc}
    */
