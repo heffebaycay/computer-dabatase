@@ -23,9 +23,6 @@ public class Company {
   }
 
   public void setName(String name) {
-    if (name == null || name.length() == 0) {
-      throw new IllegalArgumentException("The 'name' property cannot be null nor empty");
-    }
     this.name = name;
   }
 
@@ -96,6 +93,19 @@ public class Company {
     public Builder name(String name) {
       company.setName(name);
       return this;
+    }
+    
+    /**
+     * Validates the "name" attribute of the Company
+     * 
+     * @return <strong>true</strong> if name is valid, <strong>false</false> otherwise.
+     */
+    public boolean checkName() {
+      if(company == null || company.getName() == null || company.getName().length() == 0 ) {
+        return false;
+      } else {
+        return true;
+      }
     }
 
     /**

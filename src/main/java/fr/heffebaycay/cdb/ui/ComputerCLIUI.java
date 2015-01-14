@@ -124,17 +124,22 @@ public class ComputerCLIUI {
 
     if (companyId == -1) {
       // Creating new company
-      Company company = new Company();
+      Company.Builder companyBuilder = new Company.Builder();
+      Company company;
+      
 
       System.out.println("What is the name of the Company that created this computer?");
       String companyName = sc.nextLine();
 
-      try {
-        company.setName(companyName);
-      } catch (IllegalArgumentException iae) {
-        System.out.printf("[Error] %s - Canceling creation\n", iae.getMessage());
+      companyBuilder.name(companyName);
+      if(companyBuilder.checkName() == false) {
+        // Validating "name" attribute
+        System.out.println("[Error] Invalid name provided for Company. Canceling creation.");
         return;
       }
+      
+      // Validation succeeded, Company object can be built
+      company = companyBuilder.build();
 
       companyService.create(company);
 
