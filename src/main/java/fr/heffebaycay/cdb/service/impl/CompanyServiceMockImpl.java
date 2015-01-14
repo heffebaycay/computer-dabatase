@@ -11,9 +11,13 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 public class CompanyServiceMockImpl implements ICompanyService {
 
   ICompanyDao companyDao;
-
+  
   public CompanyServiceMockImpl() {
     companyDao = DaoManager.INSTANCE.getCompanyDao();
+  }
+  
+  public CompanyServiceMockImpl(ICompanyDao companyDao) {
+    this.companyDao = companyDao;
   }
 
   /**
