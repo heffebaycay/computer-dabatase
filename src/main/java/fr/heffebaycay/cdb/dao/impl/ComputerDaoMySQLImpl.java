@@ -137,7 +137,13 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public void create(Computer computer) {
+  public long create(Computer computer) {
+    
+    if(computer == null) {
+      throw new IllegalArgumentException("'computer' argument cannot be null");
+    }
+    
+    long newComputerId = -1;
     
     String query = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?,?,?,?)";
     
@@ -145,7 +151,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     
     try {
       
-      PreparedStatement ps = conn.prepareStatement(query);
+      PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
       ps.setString(1, computer.getName());
       
       if(computer.getIntroduced() != null) {
@@ -167,12 +173,19 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       }
       
       ps.executeUpdate();
+      ResultSet resultSet = ps.getGeneratedKeys();
+      if(resultSet.next() ) {
+        newComputerId = resultSet.getLong(1);
+      }
+      
       
     } catch(SQLException e) {
       logger.error("SQLException: {}", e);
     } finally {
       sqlUtils.closeConnection(conn);
     }
+    
+    return newComputerId;
     
   }
 
@@ -181,6 +194,10 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    */
   @Override
   public void update(Computer computer) {
+    
+    if(computer == null) {
+      throw new IllegalArgumentException("'computer' argument cannot be null");
+    }
     
     String query = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
     Connection conn = sqlUtils.getConnection();

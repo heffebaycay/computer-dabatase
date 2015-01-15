@@ -89,7 +89,7 @@ public class ComputerDaoMockImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public void create(Computer computer) {
+  public long create(Computer computer) {
 
     if (computer.getCompany() == null) {
       throw new IllegalArgumentException("The 'company' property cannot be null");
@@ -115,6 +115,8 @@ public class ComputerDaoMockImpl implements IComputerDao {
     computer.setId(nextAvailableId);
 
     computers.add(computer);
+    
+    return nextAvailableId;
   }
 
   /**
