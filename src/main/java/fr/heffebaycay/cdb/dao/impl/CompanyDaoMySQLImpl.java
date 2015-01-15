@@ -111,7 +111,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
     List<Company> companies = new ArrayList<Company>();
 
-    if (offset < 0 || nbRequested < 0) {
+    if (offset < 0 || nbRequested <= 0) {
       searchWrapper.setResults(companies);
       searchWrapper.setCurrentPage(0);
       searchWrapper.setTotalPage(0);
@@ -132,11 +132,12 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       countResult.first();
       searchWrapper.setTotalQueryCount(countResult.getLong("count"));
 
-      long currentPage = (long) Math.ceil(offset * 1.0 / AppSettings.NB_RESULTS_PAGE) + 1;
+      long currentPage = (long) Math.ceil(offset * 1.0 / nbRequested) + 1;
       searchWrapper.setCurrentPage(currentPage);
 
       long totalPage = (long) Math.ceil(searchWrapper.getTotalQueryCount() * 1.0
-          / AppSettings.NB_RESULTS_PAGE);
+          / nbRequested);
+     
       searchWrapper.setTotalPage(totalPage);
 
       PreparedStatement ps = conn.prepareStatement(query);
@@ -166,8 +167,26 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
 
   @Override
   public void create(Company company) {
-    // Not implemented
-    logger.warn("Call to an unimplemented method");
+    
+    String query = "INSERT INTO company(name) VALUES(?)";
+    
+    Connection conn = sqlUtils.getConnection();
+    
+    try {
+      
+      PreparedStatement ps = conn.prepareStatement(query);
+      ps.setString(1, company.getName());
+      
+      ps.executeUpdate();
+      
+    } catch(SQLException e) {
+      
+      logger.error("SQLException: {}", e);
+      
+    } finally {
+      sqlUtils.closeConnection(conn);
+    }
+    
   }
 
 }

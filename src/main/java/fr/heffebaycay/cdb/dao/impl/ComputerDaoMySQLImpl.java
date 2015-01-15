@@ -231,7 +231,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     SearchWrapper<Computer> searchWrapper = new SearchWrapper<Computer>();
     List<Computer> computers = new ArrayList<Computer>();
     
-    if(offset < 0 || nbRequested < 0) {
+    if(offset < 0 || nbRequested <= 0) {
       searchWrapper.setResults(computers);
       searchWrapper.setCurrentPage(0);
       searchWrapper.setTotalPage(0);
@@ -252,10 +252,10 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       
       searchWrapper.setTotalQueryCount(countResult.getLong("count"));
       
-      long currentPage = (long) Math.ceil(offset * 1.0 / AppSettings.NB_RESULTS_PAGE) + 1;
+      long currentPage = (long) Math.ceil(offset * 1.0 / nbRequested) + 1;
       searchWrapper.setCurrentPage(currentPage);
       
-      long totalPage = (long) Math.ceil(searchWrapper.getTotalQueryCount() * 1.0 / AppSettings.NB_RESULTS_PAGE);
+      long totalPage = (long) Math.ceil(searchWrapper.getTotalQueryCount() * 1.0 / nbRequested);
       searchWrapper.setTotalPage(totalPage);
       
       PreparedStatement ps = conn.prepareStatement(query);

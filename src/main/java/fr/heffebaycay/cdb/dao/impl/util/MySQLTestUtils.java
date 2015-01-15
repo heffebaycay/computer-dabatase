@@ -3,6 +3,7 @@ package fr.heffebaycay.cdb.dao.impl.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,5 +56,26 @@ public class MySQLTestUtils implements IMySQLUtils {
     return url;
     
   }
+  
+  public void truncateTables() {
+    
+    Connection conn = getConnection();
+    
+    final String queryComputer = "DELETE FROM computer";
+    final String queryCompany = "DELETE FROM company";
+    
+    try {
+      Statement stmt = conn.createStatement();
+      stmt.executeUpdate(queryComputer);
+      stmt.executeUpdate(queryCompany);
+      
+    } catch(SQLException e) {
+      logger.error("SQL Exception in trucateTables(): {}", e);
+    }
+
+    closeConnection(conn);
+  }
+  
+  
   
 }
