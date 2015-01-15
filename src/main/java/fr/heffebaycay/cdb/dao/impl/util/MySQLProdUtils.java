@@ -11,21 +11,21 @@ import fr.heffebaycay.cdb.util.AppSettings;
 
 
 
-public class MySQLUtils {
+public class MySQLProdUtils implements IMySQLUtils {
   
-  private final static Logger logger = LoggerFactory.getLogger(MySQLUtils.class);
+  private final Logger logger = LoggerFactory.getLogger(MySQLProdUtils.class);
 
   /**
    * Return an instance of <i>Connection</i>, to connect to the database
    * 
    * @return An instance of Connection
    */
-  public static Connection getConnection() {
+  public Connection getConnection() {
 
     Connection conn = null;
 
     try {
-      conn = DriverManager.getConnection(AppSettings.DB_URL, AppSettings.DB_USER,
+      conn = DriverManager.getConnection(getMySQLConnectionURL(), AppSettings.DB_USER,
           AppSettings.DB_PASSWORD);
     } catch (SQLException e) {
       logger.error("Failed to get SQL connection: {}", e);
@@ -39,7 +39,7 @@ public class MySQLUtils {
    * 
    * @param conn The <i>Connection</i> object that should be closed.
    */
-  public static void closeConnection(Connection conn) {
+  public void closeConnection(Connection conn) {
     try {
       if (conn != null) {
         conn.close();
@@ -48,5 +48,16 @@ public class MySQLUtils {
       logger.error("Failed to close DB connection: {}", e);
     }
   }
+
+  @Override
+  public String getMySQLConnectionURL() {
+    
+    String url = String.format("jdbc:mysql://127.0.0.1:3306/%s?zeroDateTimeBehavior=convertToNull", AppSettings.DB_PROD_NAME );
+    
+    return url;
+    
+  }
+  
+  
   
 }

@@ -13,7 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
-import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
+import fr.heffebaycay.cdb.dao.impl.util.IMySQLUtils;
+import fr.heffebaycay.cdb.dao.impl.util.MySQLProdUtils;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.util.AppSettings;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
@@ -22,13 +23,23 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
 
   private final Logger logger = LoggerFactory.getLogger(CompanyDaoMySQLImpl.class);
   
+  private IMySQLUtils sqlUtils;
+  
+  public CompanyDaoMySQLImpl() {
+    sqlUtils = new MySQLProdUtils(); 
+  }
+  
+  public CompanyDaoMySQLImpl(IMySQLUtils sqlUtils) {
+    this.sqlUtils = sqlUtils;
+  }
+  
   /**
    * {@inheritDoc}
    */
   @Override
   public List<Company> findAll() {
 
-    Connection conn = MySQLUtils.getConnection();
+    Connection conn = sqlUtils.getConnection();
 
     final String query = "SELECT id, name FROM company";
     ResultSet results;
@@ -51,7 +62,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       logger.error("SQLException: {}", e);
 
     } finally {
-      MySQLUtils.closeConnection(conn);
+      sqlUtils.closeConnection(conn);
     }
 
     return companies;
@@ -65,7 +76,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
   public Company findById(long id) {
 
     Company company = null;
-    Connection conn = MySQLUtils.getConnection();
+    Connection conn = sqlUtils.getConnection();
 
     String query = "SELECT id, name FROM company WHERE id = ?";
     ResultSet results;
@@ -85,7 +96,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       logger.error("SQLException: {}", e);
 
     } finally {
-      MySQLUtils.closeConnection(conn);
+      sqlUtils.closeConnection(conn);
     }
 
     return company;
@@ -112,7 +123,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     String query = "SELECT id, name FROM company LIMIT ?, ?";
     String countQuery = "SELECT COUNT(id) AS count FROM company";
 
-    Connection conn = MySQLUtils.getConnection();
+    Connection conn = sqlUtils.getConnection();
 
     try {
 
@@ -147,7 +158,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     } catch (SQLException e) {
       logger.error("SQLException: {}", e);
     } finally {
-      MySQLUtils.closeConnection(conn);
+      sqlUtils.closeConnection(conn);
     }
 
     return searchWrapper;
