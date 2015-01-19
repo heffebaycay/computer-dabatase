@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="u" uri="/WEB-INF/utils.tld" %>
 
 <jsp:include page="include/header.jsp" />
 
@@ -71,8 +72,8 @@
                 			<td>
                 				<a href="<c:url value="/computers/edit?id=${ computer.id }"/>" onclick="">${computer.name}</a>
                 			</td>
-                			<td>${ computer.introduced }</td>
-                			<td>${ computer.discontinued }</td>
+                			<td>${ u:formatDateTime(computer.introduced) }</td>
+                			<td>${ u:formatDateTime(computer.discontinued) }</td>
                 			<c:choose>
                 				<c:when test="${computer.company != null}">
                 					<td>${ computer.company.name }</td>
