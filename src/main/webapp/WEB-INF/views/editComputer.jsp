@@ -31,6 +31,12 @@
                    	</c:choose>
                    </c:if>
                    
+                   <c:if test="${ bAddSuccess != null && bAddSuccess == true }">
+                   		<div class="alert alert-success">
+                   			<strong>Success!</strong> Computer was added successfully. Feel free to take a moment to check for any typo!
+                   		</div>
+                   </c:if>
+                   
                     <form action="<c:url value="/computers/edit?id=${ computer.id }" />" method="POST">
                         <input type="hidden" value="0"/>
                         <fieldset>
@@ -49,7 +55,7 @@
                             <div class="form-group">
                                 <label for="companyId">Company</label>
                                 <select class="form-control" id="companyId" name="companyId">
-                                    <option value="0">--</option>
+                                    <option value="-1">--</option>
                                     <c:forEach items="${ companies }" var="company">
                                     	<option value="${ company.id }"
                                     		<c:choose>

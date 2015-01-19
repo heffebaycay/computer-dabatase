@@ -58,6 +58,11 @@ public class EditComputerController extends HttpServlet {
 	    return;
 	  }
 	  
+	  String addOk = request.getParameter("msg");
+	  if( "addSuccess".equals(addOk) ) {
+	    request.setAttribute("bAddSuccess", true);
+	  }
+	  
 	  String strComputerId = request.getParameter("id");
 	  if(strComputerId == null) {
 	    strComputerId = (String) request.getAttribute("id");
@@ -151,6 +156,7 @@ public class EditComputerController extends HttpServlet {
 	  }
 	  
 	  String uCompanyId = request.getParameter("companyId");
+	  request.setAttribute("companyIdValue", uCompanyId);
 	  
 	  Company company = null;
 	  long companyId;

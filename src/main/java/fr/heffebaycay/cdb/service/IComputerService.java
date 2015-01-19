@@ -34,8 +34,10 @@ public interface IComputerService {
    * Create a Computer in the data source based on an instance of Computer
    * 
    * @param computer The computer object that should be persisted
+   * 
+   * @return id of the created computer
    */
-  void create(Computer computer);
+  long create(Computer computer);
 
   /**
    * Update an already existing Computer in the data source

@@ -50,8 +50,8 @@ public class ComputerServiceMockImpl implements IComputerService {
    * {@inheritDoc}
    */
   @Override
-  public void create(Computer computer) {
-    computerDao.create(computer);
+  public long create(Computer computer) {
+    return computerDao.create(computer);
   }
 
   /**
