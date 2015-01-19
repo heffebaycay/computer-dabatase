@@ -69,7 +69,7 @@
                 				<input type="checkbox" name="cb" class="cb" value="${computer.id}" />
                 			</td>
                 			<td>
-                				<a href="editComputer.html" onclick="">${computer.name}</a>
+                				<a href="<c:url value="/computers/edit?id=${ computer.id }"/>" onclick="">${computer.name}</a>
                 			</td>
                 			<td>${ computer.introduced }</td>
                 			<td>${ computer.discontinued }</td>
@@ -93,14 +93,14 @@
             <ul class="pagination">
                 <c:if test="${ currentPage gt 1 }">
                 	<li>
-                		<a href="<c:url value="/computers/list?p=${ currentPage - 1 }" />" aria-label="Previous">
+                		<a href="<c:url value="/?p=${ currentPage - 1 }" />" aria-label="Previous">
                 			<span aria-hidden="true">&laquo;</span>
                 		</a>
                 	</li>
                 </c:if>
                 <c:if test="${currentPage > 3 }">
                 	<li>
-                		<a href="<c:url value="/computers/list?p=1" />">1</a>
+                		<a href="<c:url value="/?p=1" />">1</a>
                 	</li>
                 </c:if>
                 <c:if test="${ currentPage > 4 }">
@@ -110,12 +110,12 @@
                 </c:if>
                 <c:if test="${ currentPage > 2}">
                 	<li>
-                		<a href="<c:url value="/computers/list?p=${ currentPage - 2 }"/>">${ currentPage - 2 }</a>
+                		<a href="<c:url value="/?p=${ currentPage - 2 }"/>">${ currentPage - 2 }</a>
                 	</li>
                 </c:if>
                 <c:if test="${ currentPage > 1 } ">
                 	<li>
-                		<a href="<c:url value="/computers/list?p=${ currentPage - 1}" />">${ currentPage - 1 }</a>
+                		<a href="<c:url value="/?p=${ currentPage - 1}" />">${ currentPage - 1 }</a>
                 	</li>
                 </c:if>
                 
@@ -125,13 +125,13 @@
                 
                 <c:if test="${ currentPage + 1 < totalPage }">
                 	<li>
-                		<a href="<c:url value="/computers/list?p=${ currentPage + 1 }" />">${ currentPage + 1 }</a>
+                		<a href="<c:url value="/?p=${ currentPage + 1 }" />">${ currentPage + 1 }</a>
                 	</li>
                 </c:if>
                 
                 <c:if test="${ currentPage + 2 < totalPage }">
                 	<li>
-                		<a href="<c:url value="/computers/list?p=${ currentPage + 2 }" />">${ currentPage + 2 }</a>
+                		<a href="<c:url value="/?p=${ currentPage + 2 }" />">${ currentPage + 2 }</a>
                 	</li>
                 </c:if>
                 
@@ -143,13 +143,13 @@
                 
                 <c:if test="${ currentPage != totalPage }">
                 	<li>
-                		<a href="<c:url value="/computers/list?p=${ totalPage }" />">${ totalPage }</a>
+                		<a href="<c:url value="/?p=${ totalPage }" />">${ totalPage }</a>
                 	</li>
                 </c:if>
                 
                 <c:if test="${ currentPage lt totalPage }">
                		<li>
-               			<a href="<c:url value="/computers/list?p=${ currentPage + 1 }" />" aria-label="Next">
+               			<a href="<c:url value="/?p=${ currentPage + 1 }" />" aria-label="Next">
                				<span aria-hidden="true">&raquo;</span>
                			</a>
                		</li>
