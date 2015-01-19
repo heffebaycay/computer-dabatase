@@ -17,7 +17,7 @@
                    <c:if test="${ errors != null }">
                    	<c:choose>
                    		<c:when test="${ errors.size() > 0 }">
-                   			<div class="alert alert-danger">
+                   			<div id="msgErrors" class="alert alert-danger">
                    				<strong>Oh snap!</strong> It seems you left some mistakes on our sweet form.
                    				<c:forEach items="${ errors }" var="error">
                    					<p>${ error }</p>
@@ -25,7 +25,7 @@
                    			</div>
                    		</c:when>
                    		<c:otherwise>
-                   			<div class="alert alert-success">
+                   			<div id="msgComputerUpdated" class="alert alert-success">
                    				<strong>Success!</strong> Your modifications were saved successfully.
                    			</div>
                    		</c:otherwise>
@@ -33,7 +33,7 @@
                    </c:if>
                    
                    <c:if test="${ bAddSuccess != null && bAddSuccess == true }">
-                   		<div class="alert alert-success">
+                   		<div id="msgComputerAdded" class="alert alert-success">
                    			<strong>Success!</strong> Computer was added successfully. Feel free to take a moment to check for any typo!
                    		</div>
                    </c:if>
@@ -76,7 +76,7 @@
                             </div>            
                         </fieldset>
                         <div class="actions pull-right">
-                        	<input type="hidden" name="computerId" value="${ computer.id }" />
+                        	<input type="hidden" name="computerId" id="computerId" value="${ computer.id }" />
                             <input type="submit" value="Edit" class="btn btn-primary">
                             or
                             <a href="dashboard.html" class="btn btn-default">Cancel</a>

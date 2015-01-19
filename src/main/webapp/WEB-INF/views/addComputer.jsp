@@ -8,10 +8,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
-                    <div class="label label-default pull-right">
-                        id: ${ computer.id }
-                    </div>
-                    <h1>Edit Computer</h1>
+                    <h1>Add computer</h1>
                    
                    <c:if test="${ errors != null && errors.size() > 0}">
 	                   	<div class="alert alert-danger">
@@ -48,7 +45,7 @@
                             </div>            
                         </fieldset>
                         <div class="actions pull-right">
-                            <input type="submit" value="Add" class="btn btn-primary">
+                            <input type="submit" value="Add" class="btn btn-primary" id="submit">
                             or
                             <a href="<c:url value="/" />" class="btn btn-default">Cancel</a>
                         </div>
