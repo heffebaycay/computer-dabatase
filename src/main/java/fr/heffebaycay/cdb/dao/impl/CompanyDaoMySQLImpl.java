@@ -1,7 +1,6 @@
 package fr.heffebaycay.cdb.dao.impl;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +15,6 @@ import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.impl.util.IMySQLUtils;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLProdUtils;
 import fr.heffebaycay.cdb.model.Company;
-import fr.heffebaycay.cdb.util.AppSettings;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class CompanyDaoMySQLImpl implements ICompanyDao {

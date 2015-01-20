@@ -52,10 +52,7 @@ public class MySQLProdUtils implements IMySQLUtils {
   @Override
   public String getMySQLConnectionURL() {
     
-    String url = String.format("jdbc:mysql://127.0.0.1:3306/%s?zeroDateTimeBehavior=convertToNull", AppSettings.DB_PROD_NAME );
-    
-    return url;
-    
+    return String.format("jdbc:mysql://127.0.0.1:3306/%s?zeroDateTimeBehavior=convertToNull", AppSettings.DB_PROD_NAME );
   }
   
   

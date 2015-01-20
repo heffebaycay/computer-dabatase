@@ -43,7 +43,7 @@ public class ComputerDatabaseCLI {
   protected static void printWelcome() {
     LOGGER.debug("Starting application v{}", CLI_VERSION);
     System.out.println("-------------------------------------------");
-    System.out.printf("       Computer Database CLI - v%s         \n", CLI_VERSION);
+    System.out.printf("       Computer Database CLI - v%s         %n", CLI_VERSION);
     System.out.println("-------------------------------------------");
   }
 
@@ -79,7 +79,7 @@ public class ComputerDatabaseCLI {
 
     sc.close();
 
-    System.out.println("\n\n*** \tThanks for using our CLI application \\o/ ***");
+    System.out.println("%n%n*** \tThanks for using our CLI application \\o/ ***");
 
   }
 
@@ -87,20 +87,20 @@ public class ComputerDatabaseCLI {
    * Prints the list of options offered by the CLI application
    */
   protected static void printMenu() {
-    System.out.println("\nThe following actions are available to choose:");
+    System.out.println("%nThe following actions are available to choose:");
 
-    System.out.printf("\t#%d - List Companies\n", MenuOption.COMPANY_LIST);
-    System.out.printf("\t#%d - List Computers\n", MenuOption.COMPUTER_LIST);
-    System.out.printf("\t#%d - Show details for a specific computer\n",
+    System.out.printf("\t#%d - List Companies%n", MenuOption.COMPANY_LIST);
+    System.out.printf("\t#%d - List Computers%n", MenuOption.COMPUTER_LIST);
+    System.out.printf("\t#%d - Show details for a specific computer%n",
         MenuOption.COMPUTER_SHOWDETAILS);
-    System.out.printf("\t#%d - Remove a specific computer\n", MenuOption.COMPUTER_REMOVE);
-    System.out.printf("\t#%d - Create a new computer\n", MenuOption.COMPUTER_CREATE);
-    System.out.printf("\t#%d - Update an existing computer\n", MenuOption.COMPUTER_UPDATE);
-    System.out.printf("\t#%d - List Companies (w/ page)\n", MenuOption.COMPANY_LIST_PAGE);
-    System.out.printf("\t#%d - List Computers (w/ page)\n", MenuOption.COMPUTER_LIST_PAGE);
-    System.out.printf("\t#%d - Exit this application\n", MenuOption.EXIT);
+    System.out.printf("\t#%d - Remove a specific computer%n", MenuOption.COMPUTER_REMOVE);
+    System.out.printf("\t#%d - Create a new computer%n", MenuOption.COMPUTER_CREATE);
+    System.out.printf("\t#%d - Update an existing computer%n", MenuOption.COMPUTER_UPDATE);
+    System.out.printf("\t#%d - List Companies (w/ page)%n", MenuOption.COMPANY_LIST_PAGE);
+    System.out.printf("\t#%d - List Computers (w/ page)%n", MenuOption.COMPUTER_LIST_PAGE);
+    System.out.printf("\t#%d - Exit this application%n", MenuOption.EXIT);
 
-    System.out.println("\nPlease type the identifier of the action you want to perform: ");
+    System.out.println("%nPlease type the identifier of the action you want to perform: ");
 
   }
 

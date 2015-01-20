@@ -99,7 +99,7 @@ public class ComputerCLIUI {
       computer.setName(name);
     } catch (IllegalArgumentException iae) {
       LOGGER.debug("createComputer(): Invalid name for computer. {}", iae);
-      System.out.printf("[Error] %s - Canceling creation%c", iae.getMessage());
+      System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
       return;
     }
     
@@ -110,7 +110,7 @@ public class ComputerCLIUI {
       computer.setIntroduced(introduced);
     } catch (IllegalArgumentException iae) {
       LOGGER.debug("createComputer(): Invalid date introduced for computer. {}", iae);
-      System.out.printf("[Error] %s - Canceling creation", iae.getMessage());
+      System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
       return;
     }
 

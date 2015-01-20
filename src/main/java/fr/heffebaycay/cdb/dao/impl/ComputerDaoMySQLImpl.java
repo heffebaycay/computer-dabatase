@@ -1,13 +1,11 @@
 package fr.heffebaycay.cdb.dao.impl;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +15,7 @@ import org.slf4j.LoggerFactory;
 import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.impl.util.IMySQLUtils;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLProdUtils;
-import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
-import fr.heffebaycay.cdb.util.AppSettings;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class ComputerDaoMySQLImpl implements IComputerDao {
