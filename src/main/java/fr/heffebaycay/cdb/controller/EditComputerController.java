@@ -27,7 +27,7 @@ import fr.heffebaycay.cdb.service.manager.ServiceManager;
 public class EditComputerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	private static final Logger logger = LoggerFactory.getLogger(EditComputerController.class.getSimpleName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(EditComputerController.class.getSimpleName());
 	
 	protected IComputerService mComputerService;
 	protected ICompanyService mCompanyService;
@@ -46,15 +46,15 @@ public class EditComputerController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	  
-	  logger.debug("Received call to EditComputerController::doGet()");
+	  LOGGER.debug("Received call to EditComputerController::doGet()");
 	  
 	  if(mComputerService == null) {
-	    logger.error("doGet() : IComputerService instance is null");
+	    LOGGER.error("doGet() : IComputerService instance is null");
 	    return;
 	  }
 	  
 	  if(mCompanyService == null) {
-	    logger.error("doGet() : ICompanyService instance is null");
+	    LOGGER.error("doGet() : ICompanyService instance is null");
 	    return;
 	  }
 	  
@@ -73,14 +73,14 @@ public class EditComputerController extends HttpServlet {
 	    computerId = Long.parseLong(strComputerId);
 	  } catch(NumberFormatException e) {
 	    // Id parameter provided isn't of type long
-	    logger.warn("doGet() : Invalid id provided by user");
+	    LOGGER.warn("doGet() : Invalid id provided by user");
 	    return;
 	  }
 	  
 	  Computer computer = mComputerService.findById(computerId);
 	  if(computer == null) {
 	    // Unable to find any computer based on the given Id
-	    logger.warn("doGet() : Inexisting computer requested by user");
+	    LOGGER.warn("doGet() : Inexisting computer requested by user");
 	    return;
 	  }
 	  
@@ -99,7 +99,7 @@ public class EditComputerController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	  
-	  logger.debug("Received call to EditComputerController:doPost()");
+	  LOGGER.debug("Received call to EditComputerController:doPost()");
 	  
 	  List<String> errors = new ArrayList<>();
 	  
@@ -108,15 +108,15 @@ public class EditComputerController extends HttpServlet {
 	  try {
 	    computerId = Long.parseLong(uComputerId);
 	  } catch(NumberFormatException e) {
-	    logger.warn("doPost() :: User supplied an invalid computer id.");
+	    LOGGER.warn("doPost() :: User supplied an invalid computer id.");
 	    return;
 	  }
 	  
-	  logger.debug("doPost() :: ComputerId: " + computerId);
+	  LOGGER.debug("doPost() :: ComputerId: " + computerId);
 	  
 	  Computer computer = mComputerService.findById(computerId);
 	  if(computer == null) {
-	    logger.warn("doPost() :: User supplied an Id for a non-existing computer.");
+	    LOGGER.warn("doPost() :: User supplied an Id for a non-existing computer.");
 	    return;
 	  }
 	   
@@ -126,7 +126,7 @@ public class EditComputerController extends HttpServlet {
 	  // Storing given value in case something goes wrong and we need to display it back to the user
 	  request.setAttribute("computerNameValue", uName);
 	  
-	  logger.debug("doPost() :: computerName: " + uName);
+	  LOGGER.debug("doPost() :: computerName: " + uName);
 	  
 	  if( uName == null || uName.isEmpty()) {
 	    // Error: invalid computer name
@@ -134,24 +134,26 @@ public class EditComputerController extends HttpServlet {
 	  }
 	  
 	  String uIntroduced = request.getParameter("introduced");
-	  logger.debug("doPost() :: dateIntroduced: " + uIntroduced);
+	  LOGGER.debug("doPost() :: dateIntroduced: " + uIntroduced);
 	  
 	  // Storing given value in case something goes wrong and we need to display it back to the user
 	  request.setAttribute("dateIntroducedValue", uIntroduced);
 	  try {
 	    computer.setIntroduced(uIntroduced);
 	  } catch(Exception e) {
+	    LOGGER.warn("Invalid value for date introduced. Exception: {}", e);
 	    errors.add("Invalid value for date introduced. Valid format is: YYYY-MM-DD.");
 	  }
 	  
 	  
 	  String uDiscontinued = request.getParameter("discontinued");
-	  logger.debug("doPost() :: dateDiscontinued: " + uDiscontinued);
+	  LOGGER.debug("doPost() :: dateDiscontinued: " + uDiscontinued);
 	  
 	  request.setAttribute("dateDiscontinuedValue", uDiscontinued);
 	  try {
 	    computer.setDiscontinued(uDiscontinued);
 	  } catch(Exception e) {
+	    LOGGER.warn("Invalid value for date discontinued. Exception: {}", e);
 	    errors.add("Invalid value for date discontinued. Valid format is: YYYY-MM-DD.");
 	  }
 	  
@@ -164,11 +166,11 @@ public class EditComputerController extends HttpServlet {
 	    companyId = Long.parseLong(uCompanyId);
 	    company = mCompanyService.findById(companyId);
 	    if(company == null) {
-	      logger.warn("doPost() :: Company does not exist");
+	      LOGGER.warn("doPost() :: Company does not exist");
 	      errors.add("Company does not exist");
 	    }
 	  } catch(NumberFormatException e) {
-	    logger.warn("doPost() :: User supplied an invalid company id");
+	    LOGGER.warn("doPost() :: User supplied an invalid company id");
 	    errors.add("Invalid company Id");
 	  }
 	  

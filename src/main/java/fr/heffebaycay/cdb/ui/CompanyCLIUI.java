@@ -41,7 +41,7 @@ public class CompanyCLIUI {
 	  
 	  SearchWrapper<Company> sw = companyService.findAll(offset, AppSettings.NB_RESULTS_PAGE);
 	  
-	  System.out.printf("Displaying page %d of %d:\n", sw.getCurrentPage(), sw.getTotalPage());
+	  System.out.printf("Displaying page %d of %d:%n", sw.getCurrentPage(), sw.getTotalPage());
 	  
 	  for(Company c : sw.getResults()) {
 	    System.out.println(c);

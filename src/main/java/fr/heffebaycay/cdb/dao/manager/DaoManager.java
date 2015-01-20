@@ -21,7 +21,7 @@ public enum DaoManager {
     try {
       Class.forName("com.mysql.jdbc.Driver");
     } catch (ClassNotFoundException e) {
-      throw new DaoException("Failed to load MySQL JDBC driver.");
+      throw new DaoException("Failed to load MySQL JDBC driver.", e);
     }
   }
 

@@ -8,7 +8,7 @@ public class ComputerDatabaseCLI {
 
   public static final String CLI_VERSION = "1.0";
   
-  private static final Logger logger = LoggerFactory.getLogger(ComputerDatabaseCLI.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDatabaseCLI.class);
   
   public class MenuOption {
     /**
@@ -41,7 +41,7 @@ public class ComputerDatabaseCLI {
    * Prints the "Welcome" header in the console
    */
   protected static void printWelcome() {
-    logger.debug("Starting application v{}", CLI_VERSION);
+    LOGGER.debug("Starting application v{}", CLI_VERSION);
     System.out.println("-------------------------------------------");
     System.out.printf("       Computer Database CLI - v%s         \n", CLI_VERSION);
     System.out.println("-------------------------------------------");

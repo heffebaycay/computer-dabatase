@@ -12,7 +12,7 @@ import fr.heffebaycay.cdb.util.AppSettings;
 
 public class MySQLTestUtils implements IMySQLUtils {
 
-  private final Logger logger = LoggerFactory.getLogger(MySQLProdUtils.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MySQLProdUtils.class);
 
   /**
    * Return an instance of <i>Connection</i>, to connect to the database
@@ -27,7 +27,7 @@ public class MySQLTestUtils implements IMySQLUtils {
       conn = DriverManager.getConnection(getMySQLConnectionURL(), AppSettings.DB_USER,
           AppSettings.DB_PASSWORD);
     } catch (SQLException e) {
-      logger.error("Failed to get SQL connection: {}", e);
+      LOGGER.error("Failed to get SQL connection: {}", e);
     }
 
     return conn;
@@ -44,7 +44,7 @@ public class MySQLTestUtils implements IMySQLUtils {
         conn.close();
       }
     } catch (SQLException e) {
-      logger.error("Failed to close DB connection: {}", e);
+      LOGGER.error("Failed to close DB connection: {}", e);
     }
   }
   
@@ -70,7 +70,7 @@ public class MySQLTestUtils implements IMySQLUtils {
       stmt.executeUpdate(queryCompany);
       
     } catch(SQLException e) {
-      logger.error("SQL Exception in trucateTables(): {}", e);
+      LOGGER.error("SQL Exception in trucateTables(): {}", e);
     }
 
     closeConnection(conn);

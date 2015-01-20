@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.ICompanyService;
@@ -17,6 +20,8 @@ public class ComputerCLIUI {
   IComputerService computerService;
   ICompanyService  companyService;
 
+  private static Logger logger = LoggerFactory.getLogger(ComputerCLIUI.class.getSimpleName());
+  
   public ComputerCLIUI() {
     computerService = ServiceManager.INSTANCE.getComputerService();
     companyService = ServiceManager.INSTANCE.getCompanyService();
@@ -43,9 +48,9 @@ public class ComputerCLIUI {
     Computer computer = computerService.findById(id);
 
     if (computer == null) {
-      System.out.printf("[Error] Failed to find a computer for id '%d'\n", id);
+      System.out.printf("[Error] Failed to find a computer for id '%d'%n", id);
     } else {
-      System.out.printf("Here is the details of computer with id '%d'\n:\t%s\n", id, computer);
+      System.out.printf("Here is the details of computer with id '%d'%n:\t%s%n", id, computer);
     }
 
   }
@@ -60,9 +65,9 @@ public class ComputerCLIUI {
     boolean result = computerService.remove(id);
 
     if (result) {
-      System.out.printf("Computer with id '%d' was successfully removed\n", id);
+      System.out.printf("Computer with id '%d' was successfully removed%n", id);
     } else {
-      System.out.printf("[Error] Failed to remove computer with id '%d'\n", id);
+      System.out.printf("[Error] Failed to remove computer with id '%d'%n", id);
     }
 
   }
@@ -82,7 +87,7 @@ public class ComputerCLIUI {
      *  If the company doesn't exist, we need to let the user create it.
      */
 
-    System.out.println("\n\t** Welcome to the Computer creation wizard ** ");
+    System.out.println("%n\t** Welcome to the Computer creation wizard ** ");
     System.out.println("Please answer the following questions in order to create a new computer:");
 
     Computer computer = new Computer();
@@ -93,7 +98,8 @@ public class ComputerCLIUI {
     try {
       computer.setName(name);
     } catch (IllegalArgumentException iae) {
-      System.out.printf("[Error] %s - Canceling creation\n", iae.getMessage());
+      logger.debug("createComputer(): Invalid name for computer. {}", iae);
+      System.out.printf("[Error] %s - Canceling creation%c", iae.getMessage());
       return;
     }
     
@@ -103,6 +109,7 @@ public class ComputerCLIUI {
     try {
       computer.setIntroduced(introduced);
     } catch (IllegalArgumentException iae) {
+      logger.debug("createComputer(): Invalid date introduced for computer. {}", iae);
       System.out.printf("[Error] %s - Canceling creation", iae.getMessage());
       return;
     }
@@ -113,7 +120,8 @@ public class ComputerCLIUI {
     try {
       computer.setDiscontinued(discontinued);
     } catch (IllegalArgumentException iae) {
-      System.out.printf("[Error] %s - Canceling creation\n", iae.getMessage());
+      logger.debug("createComputer(): Invalid date discontinued for computer. {}", iae);
+      System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
       return;
     }
 
@@ -132,7 +140,8 @@ public class ComputerCLIUI {
       try {
         company.setName(companyName);
       } catch (IllegalArgumentException iae) {
-        System.out.printf("[Error] %s - Canceling creation\n", iae.getMessage());
+        logger.debug("createComputer(): Invalid name for company. {}", iae);
+        System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
         return;
       }
 
@@ -145,7 +154,7 @@ public class ComputerCLIUI {
       Company company = companyService.findById(companyId);
       if (company == null) {
         System.out
-            .printf("[Error] No company matches the id '%d'. Canceling creation\n", companyId);
+            .printf("[Error] No company matches the id '%d'. Canceling creation%n", companyId);
         return;
       } else {
         computer.setCompany(company);
@@ -164,16 +173,16 @@ public class ComputerCLIUI {
    */
   public void updateComputer(Scanner sc, long id) {
 
-    System.out.println("\n\t** Welcome to the Computer update wizard ** ");
+    System.out.println("%n\t** Welcome to the Computer update wizard ** ");
     System.out.println("Please answer the following questions in order to update an existing:");
 
     Computer computer = computerService.findById(id);
     if (computer == null) {
-      System.out.printf("[Error] No computer matches the id '%d'\n. Canceling update\n", id);
+      System.out.printf("[Error] No computer matches the id '%d'%n. Canceling update%n", id);
       return;
     }
 
-    System.out.printf("What's the name of the computer? ('%s')\n", computer.getName());
+    System.out.printf("What's the name of the computer? ('%s')%n", computer.getName());
     String name = sc.nextLine();
 
     if (name != null && name.length() > 0) {
@@ -181,7 +190,8 @@ public class ComputerCLIUI {
       try {
         computer.setName(name);
       } catch (IllegalArgumentException iae) {
-        System.out.printf("[Error] %s - Canceling creation\n", iae.getMessage());
+        logger.debug("updateComputer(): Invalid name for computer. {}", iae);
+        System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
         return;
       }
     }
@@ -191,7 +201,7 @@ public class ComputerCLIUI {
      */
 
     System.out.printf(
-        "On what date was the computer introduced (type null for a null value)? ('%s')\n",
+        "On what date was the computer introduced (type null for a null value)? ('%s')%n",
         computer.getIntroduced());
     String introduced = sc.nextLine();
 
@@ -203,7 +213,8 @@ public class ComputerCLIUI {
         try {
           computer.setIntroduced(introduced);
         } catch (IllegalArgumentException iae) {
-          System.out.printf("[Error] %s - Canceling creation\n", iae.getMessage());
+          logger.debug("updateComputer(): Invalid date introduced for computer. {}", iae); 
+          System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
           return;
         }
       }
@@ -214,7 +225,7 @@ public class ComputerCLIUI {
      */
 
     System.out.printf(
-        "On what date was the computer discontinued (type null for a null value)? ('%s')\n",
+        "On what date was the computer discontinued (type null for a null value)? ('%s')%n",
         computer.getDiscontinued());
     String discontinued = sc.nextLine();
 
@@ -226,7 +237,8 @@ public class ComputerCLIUI {
         try {
           computer.setDiscontinued(discontinued);
         } catch (IllegalArgumentException iae) {
-          System.out.printf("[Error] %s - Canceling creation\n", iae.getMessage());
+          logger.debug("updateComputer(): Invalid date discontinued for computer. {}", iae);
+          System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
           return;
         }
       }
@@ -234,7 +246,7 @@ public class ComputerCLIUI {
 
     System.out
         .printf(
-            "Last step: we need to tie this computer to a Company. Please enter the id of the Company (-1 to keep current value, 0 for no company). (%d)\n",
+            "Last step: we need to tie this computer to a Company. Please enter the id of the Company (-1 to keep current value, 0 for no company). (%d)%n",
             computer.getCompany().getId());
     long companyId = sc.nextLong();
     sc.nextLine(); // clearing Scanner buffer
@@ -242,7 +254,7 @@ public class ComputerCLIUI {
       Company company = companyService.findById(companyId);
       if (company == null) {
         System.out
-            .printf("[Error] No company matches the id '%d'. Canceling creation\n", companyId);
+            .printf("[Error] No company matches the id '%d'. Canceling creation%n", companyId);
         return;
       } else {
         computer.setCompany(company);
@@ -266,7 +278,7 @@ public class ComputerCLIUI {
     
     SearchWrapper<Computer> sw = computerService.findAll(offset, AppSettings.NB_RESULTS_PAGE);
     
-    System.out.printf("Displaying page %d of %d:\n", sw.getCurrentPage(), sw.getTotalPage());
+    System.out.printf("Displaying page %d of %d:%n", sw.getCurrentPage(), sw.getTotalPage());
     
     for(Computer c : sw.getResults()) {
       System.out.println(c);

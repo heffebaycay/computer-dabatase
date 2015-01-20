@@ -3,8 +3,12 @@ package fr.heffebaycay.cdb.taglib;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Utils {
   
+  private static Logger logger = LoggerFactory.getLogger(Utils.class.getSimpleName());
   
   /**
    * Returns a String representation of a <i>LocalDateTime</i> object in the format defined by the <strong>format</strong> parameter.
@@ -25,6 +29,7 @@ public class Utils {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
       strDate = date.format(formatter);
     } catch(IllegalArgumentException e) {
+      logger.error("formatDateTime() : Invalid format or date passed: {}", e);
       return "";
     }
     

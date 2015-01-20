@@ -27,7 +27,7 @@ public class ComputerController extends HttpServlet {
 
   private static final long  serialVersionUID = 1L;
 
-  private static final Logger logger = LoggerFactory.getLogger(ComputerController.class.getSimpleName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(ComputerController.class.getSimpleName());
   
   protected IComputerService mComputerService;
 
@@ -45,7 +45,7 @@ public class ComputerController extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    logger.debug("Call to ComputerController::doGet()");
+    LOGGER.debug("Call to ComputerController::doGet()");
     
     List<Computer> computers = null;
     SearchWrapper<Computer> searchWrapper;
@@ -63,7 +63,7 @@ public class ComputerController extends HttpServlet {
     try {
       currentPage = Long.parseLong(strPage);
     } catch (NumberFormatException e) {
-      logger.error("Invalid page argument");
+      LOGGER.error("Invalid page argument");
       currentPage = 1;
     }
     request.setAttribute("currentPage", currentPage);

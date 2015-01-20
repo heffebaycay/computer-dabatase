@@ -14,7 +14,7 @@ import fr.heffebaycay.cdb.dao.IRowMapper;
 
 public class ComputerMySQLRowMapper implements IRowMapper<Computer> {
 
-  private final Logger logger = LoggerFactory.getLogger(ComputerMySQLRowMapper.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ComputerMySQLRowMapper.class);
   
   /**
    * Maps the current <i>ResultSet</i> object to an instance of <i>Computer</i>
@@ -74,7 +74,7 @@ public class ComputerMySQLRowMapper implements IRowMapper<Computer> {
       
     } catch(SQLException e) {
       
-      logger.error("SQLException in mapRow: {}", e);
+      LOGGER.error("SQLException in mapRow: {}", e);
       
     }
     

@@ -21,7 +21,7 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class CompanyDaoMySQLImpl implements ICompanyDao {
 
-  private final Logger logger = LoggerFactory.getLogger(CompanyDaoMySQLImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDaoMySQLImpl.class);
   
   private IMySQLUtils sqlUtils;
   
@@ -59,7 +59,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       }
 
     } catch (SQLException e) {
-      logger.error("SQLException: {}", e);
+      LOGGER.error("SQLException: {}", e);
 
     } finally {
       sqlUtils.closeConnection(conn);
@@ -93,7 +93,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       }
 
     } catch (SQLException e) {
-      logger.error("SQLException: {}", e);
+      LOGGER.error("SQLException: {}", e);
 
     } finally {
       sqlUtils.closeConnection(conn);
@@ -157,7 +157,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       searchWrapper.setResults(companies);
 
     } catch (SQLException e) {
-      logger.error("SQLException: {}", e);
+      LOGGER.error("SQLException: {}", e);
     } finally {
       sqlUtils.closeConnection(conn);
     }
@@ -181,7 +181,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       
     } catch(SQLException e) {
       
-      logger.error("SQLException: {}", e);
+      LOGGER.error("SQLException: {}", e);
       
     } finally {
       sqlUtils.closeConnection(conn);

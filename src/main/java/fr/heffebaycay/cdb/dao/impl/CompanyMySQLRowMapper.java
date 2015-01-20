@@ -11,7 +11,7 @@ import fr.heffebaycay.cdb.model.Company;
 
 public class CompanyMySQLRowMapper implements IRowMapper<Company> {
 
-  private Logger logger = LoggerFactory.getLogger(CompanyMySQLRowMapper.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CompanyMySQLRowMapper.class);
 
   /**
    * Maps the current <i>ResultSet</i> object to an instance of <i>Company</i>
@@ -35,7 +35,7 @@ public class CompanyMySQLRowMapper implements IRowMapper<Company> {
 
     } catch (SQLException e) {
 
-      logger.error("SQLException in mapRow(): {}", e);
+      LOGGER.error("SQLException in mapRow(): {}", e);
 
     }
 

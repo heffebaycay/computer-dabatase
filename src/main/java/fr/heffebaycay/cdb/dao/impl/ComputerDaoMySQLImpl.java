@@ -24,7 +24,7 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class ComputerDaoMySQLImpl implements IComputerDao {
 
-  private final Logger logger = LoggerFactory.getLogger(ComputerDaoMySQLImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDaoMySQLImpl.class);
   
   private IMySQLUtils sqlUtils;
   
@@ -62,7 +62,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
         
       }
     } catch(SQLException e) {
-      logger.error("SQLException: {}", e);
+      LOGGER.error("SQLException: {}", e);
     } finally {
       sqlUtils.closeConnection(conn);
     }
@@ -97,7 +97,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       }
       
     } catch(SQLException e) {
-      logger.error("SQLException: {}", e);
+      LOGGER.error("SQLException: {}", e);
     } finally {
       sqlUtils.closeConnection(conn);
     }
@@ -124,7 +124,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       return true;
       
     } catch(SQLException e) {
-      logger.error("SQLException: {}", e);
+      LOGGER.error("SQLException: {}", e);
       return false;
     } finally {
       sqlUtils.closeConnection(conn);
@@ -180,7 +180,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       
       
     } catch(SQLException e) {
-      logger.error("SQLException: {}", e);
+      LOGGER.error("SQLException: {}", e);
     } finally {
       sqlUtils.closeConnection(conn);
     }
@@ -232,7 +232,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       ps.executeUpdate();
       
     } catch(SQLException e) {
-      logger.error("SQLException: {}", e);
+      LOGGER.error("SQLException: {}", e);
     } finally {
       sqlUtils.closeConnection(conn);
     }
@@ -290,7 +290,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       searchWrapper.setResults(computers);
       
     } catch(SQLException e) {
-      logger.error("SQL Exception: {}", e);
+      LOGGER.error("SQL Exception: {}", e);
     } finally {
       sqlUtils.closeConnection(conn);
     }
