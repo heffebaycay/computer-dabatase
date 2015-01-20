@@ -20,7 +20,7 @@ public class ComputerCLIUI {
   IComputerService computerService;
   ICompanyService  companyService;
 
-  private static Logger logger = LoggerFactory.getLogger(ComputerCLIUI.class.getSimpleName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(ComputerCLIUI.class.getSimpleName());
   
   public ComputerCLIUI() {
     computerService = ServiceManager.INSTANCE.getComputerService();
@@ -98,7 +98,7 @@ public class ComputerCLIUI {
     try {
       computer.setName(name);
     } catch (IllegalArgumentException iae) {
-      logger.debug("createComputer(): Invalid name for computer. {}", iae);
+      LOGGER.debug("createComputer(): Invalid name for computer. {}", iae);
       System.out.printf("[Error] %s - Canceling creation%c", iae.getMessage());
       return;
     }
@@ -109,7 +109,7 @@ public class ComputerCLIUI {
     try {
       computer.setIntroduced(introduced);
     } catch (IllegalArgumentException iae) {
-      logger.debug("createComputer(): Invalid date introduced for computer. {}", iae);
+      LOGGER.debug("createComputer(): Invalid date introduced for computer. {}", iae);
       System.out.printf("[Error] %s - Canceling creation", iae.getMessage());
       return;
     }
@@ -120,7 +120,7 @@ public class ComputerCLIUI {
     try {
       computer.setDiscontinued(discontinued);
     } catch (IllegalArgumentException iae) {
-      logger.debug("createComputer(): Invalid date discontinued for computer. {}", iae);
+      LOGGER.debug("createComputer(): Invalid date discontinued for computer. {}", iae);
       System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
       return;
     }
@@ -140,7 +140,7 @@ public class ComputerCLIUI {
       try {
         company.setName(companyName);
       } catch (IllegalArgumentException iae) {
-        logger.debug("createComputer(): Invalid name for company. {}", iae);
+        LOGGER.debug("createComputer(): Invalid name for company. {}", iae);
         System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
         return;
       }
@@ -190,7 +190,7 @@ public class ComputerCLIUI {
       try {
         computer.setName(name);
       } catch (IllegalArgumentException iae) {
-        logger.debug("updateComputer(): Invalid name for computer. {}", iae);
+        LOGGER.debug("updateComputer(): Invalid name for computer. {}", iae);
         System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
         return;
       }
@@ -213,7 +213,7 @@ public class ComputerCLIUI {
         try {
           computer.setIntroduced(introduced);
         } catch (IllegalArgumentException iae) {
-          logger.debug("updateComputer(): Invalid date introduced for computer. {}", iae); 
+          LOGGER.debug("updateComputer(): Invalid date introduced for computer. {}", iae); 
           System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
           return;
         }
@@ -237,7 +237,7 @@ public class ComputerCLIUI {
         try {
           computer.setDiscontinued(discontinued);
         } catch (IllegalArgumentException iae) {
-          logger.debug("updateComputer(): Invalid date discontinued for computer. {}", iae);
+          LOGGER.debug("updateComputer(): Invalid date discontinued for computer. {}", iae);
           System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
           return;
         }
