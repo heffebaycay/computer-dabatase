@@ -13,7 +13,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 import fr.heffebaycay.cdb.model.Computer;
 
-public class TestAddComputerController {
+public class UITestAddComputerController {
 
   @Test
   public void testAddLegitComputer() {
