@@ -29,7 +29,7 @@
       	<version>2.18.1</version>
       	<configuration>
       		<excludes>
-      		 <exclude>**/UITest*.java</exclude>
+      			<exclude>**/UITest*.java</exclude>
       		</excludes>
       	</configuration>
       </plugin>

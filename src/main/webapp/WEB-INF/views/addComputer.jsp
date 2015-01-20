@@ -11,7 +11,7 @@
                     <h1>Add computer</h1>
                    
                    <c:if test="${ errors != null && errors.size() > 0}">
-	                   	<div class="alert alert-danger">
+	                   	<div class="alert alert-danger" id="msgErrors">
 	             			<strong>Oh snap!</strong> It seems you left some mistakes on our sweet form.
 	             			<c:forEach items="${ errors }" var="error">
 	             				<p>${ error }</p>

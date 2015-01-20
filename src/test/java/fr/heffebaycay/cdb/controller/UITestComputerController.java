@@ -12,24 +12,31 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class UITestComputerController {
 
+  WebDriver driver;
+  
+  @Before
+  public void setUp() {
+    driver = new FirefoxDriver();
+  }
+
+  @After
+  public void tearDown() {
+    driver.quit();
+  }
+
   @Test
   public void test() {
-    
-    WebDriver driver = new FirefoxDriver();
-    
+
     driver.get("http://localhost:8080/computer-database/");
-    
+
     WebElement element = driver.findElement(By.id("homeTitle"));
-    
+
     String homeTitle = element.getText();
-    
-    if(homeTitle == null || !homeTitle.matches("\\d+ Computers found")) {
-      driver.quit();
+
+    if (homeTitle == null || !homeTitle.matches("\\d+ Computers found")) {
       fail("Computer list page is broken");
-    } else {
-      driver.quit();
     }
-    
+
   }
 
 }
