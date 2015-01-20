@@ -47,6 +47,11 @@ public class ComputerController extends HttpServlet {
 
     LOGGER.debug("Call to ComputerController::doGet()");
     
+    String msgResult = request.getParameter("msg");
+    if("removeSuccess".equals(msgResult)) {
+      request.setAttribute("bRemoveSuccess", true);
+    }
+    
     List<Computer> computers = null;
     SearchWrapper<Computer> searchWrapper;
 

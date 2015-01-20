@@ -10,6 +10,13 @@
             <h1 id="homeTitle">
                 ${totalCount} Computers found
             </h1>
+            
+            <c:if test="${ bRemoveSuccess == true }">
+            	<div id="msgComputerAdded" class="alert alert-success">
+            		<strong>Success!</strong> The computers you selected were successfully deleted.
+            	</div>
+            </c:if>
+            
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
                     <form id="searchForm" action="#" method="GET" class="form-inline">
@@ -26,7 +33,7 @@
             </div>
         </div>
 
-        <form id="deleteForm" action="#" method="POST">
+        <form id="deleteForm" action="<c:url value="/computers/delete"/>" method="POST">
             <input type="hidden" name="selection" value="">
         </form>
 
