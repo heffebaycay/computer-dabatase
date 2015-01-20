@@ -207,7 +207,7 @@ public class ComputerCLIUI {
 
     if (introduced != null && introduced.length() > 0) {
       // User typed something
-      if (introduced.equals("null")) {
+      if ( "null".equals(introduced) ) {
         computer.setIntroduced((LocalDateTime) null);
       } else {
         try {
@@ -231,7 +231,7 @@ public class ComputerCLIUI {
 
     if (discontinued != null && discontinued.length() > 0) {
       // User typed something
-      if (discontinued.equals("null")) {
+      if ( "null".equals(discontinued) ) {
         computer.setDiscontinued((LocalDateTime) null);
       } else {
         try {

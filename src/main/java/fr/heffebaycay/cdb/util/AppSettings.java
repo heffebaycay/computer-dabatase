@@ -19,4 +19,9 @@ public class AppSettings {
     NB_RESULTS_PAGE = 10;
   }
   
+  // AppSettings Should never be instanciated
+  private AppSettings() {
+    
+  }
+  
 }

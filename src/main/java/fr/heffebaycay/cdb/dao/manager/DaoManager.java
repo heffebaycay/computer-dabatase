@@ -26,9 +26,7 @@ public enum DaoManager {
   }
 
   private DaoManager() {
-    //companyDao = new CompanyDaoMockImpl();
     companyDao = new CompanyDaoMySQLImpl();
-    //computerDao = new ComputerDaoMockImpl();
     computerDao = new ComputerDaoMySQLImpl();
   }
 

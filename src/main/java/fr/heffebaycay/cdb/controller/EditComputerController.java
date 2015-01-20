@@ -176,7 +176,7 @@ public class EditComputerController extends HttpServlet {
 	  
 	  
 	  
-	  if(errors.size() == 0) {
+	  if(errors.isEmpty()) {
 	    computer.setName(uName);
 	    computer.setCompany(company);
 	    

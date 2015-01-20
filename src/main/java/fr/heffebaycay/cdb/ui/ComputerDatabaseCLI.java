@@ -24,6 +24,8 @@ public class ComputerDatabaseCLI {
     public static final int COMPANY_LIST_PAGE    = 7;
     public static final int COMPUTER_LIST_PAGE   = 8;
     public static final int EXIT                 = 9;
+    
+    private MenuOption() { }
   }
 
   protected static CompanyCLIUI  companyUI;

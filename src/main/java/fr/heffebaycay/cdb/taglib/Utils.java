@@ -10,6 +10,11 @@ public class Utils {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class.getSimpleName());
   
+  // No one should be able to create an instance of Utils.
+  private Utils() {
+    
+  }
+  
   /**
    * Returns a String representation of a <i>LocalDateTime</i> object in the format defined by the <strong>format</strong> parameter.
    * 
