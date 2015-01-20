@@ -99,61 +99,39 @@
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
             <ul class="pagination">
-                <c:if test="${ currentPage gt 1 }">
+            	<c:if test="${ currentPage gt 1 }">
                 	<li>
                 		<a href="<c:url value="/?p=${ currentPage - 1 }" />" aria-label="Previous">
                 			<span aria-hidden="true">&laquo;</span>
                 		</a>
                 	</li>
                 </c:if>
-                <c:if test="${currentPage > 3 }">
-                	<li>
-                		<a href="<c:url value="/?p=1" />">1</a>
-                	</li>
-                </c:if>
-                <c:if test="${ currentPage > 4 }">
-                	<li>
-                		<a href="">...</a>
-                	</li>
-                </c:if>
-                <c:if test="${ currentPage > 2}">
-                	<li>
-                		<a href="<c:url value="/?p=${ currentPage - 2 }"/>">${ currentPage - 2 }</a>
-                	</li>
-                </c:if>
-                <c:if test="${ currentPage > 1 } ">
-                	<li>
-                		<a href="<c:url value="/?p=${ currentPage - 1}" />">${ currentPage - 1 }</a>
-                	</li>
-                </c:if>
-                
-                <li class="active">
-                	<a href="">${ currentPage }</a>
-                </li>
-                
-                <c:if test="${ currentPage + 1 < totalPage }">
-                	<li>
-                		<a href="<c:url value="/?p=${ currentPage + 1 }" />">${ currentPage + 1 }</a>
-                	</li>
-                </c:if>
-                
-                <c:if test="${ currentPage + 2 < totalPage }">
-                	<li>
-                		<a href="<c:url value="/?p=${ currentPage + 2 }" />">${ currentPage + 2 }</a>
-                	</li>
-                </c:if>
-                
-                <c:if test="${ currentPage + 3 < totalPage }">
-                	<li>
-                		<a href="">...</a>
-                	</li>
-                </c:if>
-                
-                <c:if test="${ currentPage != totalPage }">
-                	<li>
-                		<a href="<c:url value="/?p=${ totalPage }" />">${ totalPage }</a>
-                	</li>
-                </c:if>
+            	
+            	<c:set var="begin" value="${ currentPage - 3 }" />
+            	<c:if test="${ begin < 1 }">
+            		<c:set var="begin" value="${ 1 }" />
+            	</c:if>
+            	
+            	<c:forEach var="i" begin="${ begin }" end="${ currentPage - 1 }" >
+            		<li>
+            			<a href="<c:url value="/?p=${ i }" />">${ i }</a>
+            		</li>
+            	</c:forEach>
+            	
+            	<li class="active">
+            		<a href="">${ currentPage }</a>
+            	</li>
+            	
+            	<c:set var="end" value="${ currentPage + 3 }" />
+            	<c:if test="${ currentPage > totalPage }">
+            		<c:set var="end" value="${ totalPage }" />
+            	</c:if>            	
+            	
+            	<c:forEach var="i" begin="${ currentPage + 1 }" end="${ end }">
+            		<li>
+            			<a href="<c:url value="/?p=${ i }" />">${ i }</a>
+            		</li>
+            	</c:forEach>
                 
                 <c:if test="${ currentPage lt totalPage }">
                		<li>
