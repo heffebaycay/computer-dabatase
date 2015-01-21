@@ -12,8 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
-import fr.heffebaycay.cdb.dao.impl.util.IMySQLUtils;
-import fr.heffebaycay.cdb.dao.impl.util.MySQLProdUtils;
+import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
@@ -21,13 +20,13 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDaoMySQLImpl.class);
   
-  private IMySQLUtils sqlUtils;
+  private MySQLUtils sqlUtils;
   
   public CompanyDaoMySQLImpl() {
-    sqlUtils = new MySQLProdUtils(); 
+    sqlUtils = new MySQLUtils(); 
   }
   
-  public CompanyDaoMySQLImpl(IMySQLUtils sqlUtils) {
+  public CompanyDaoMySQLImpl(MySQLUtils sqlUtils) {
     this.sqlUtils = sqlUtils;
   }
   

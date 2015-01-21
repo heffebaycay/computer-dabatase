@@ -13,8 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.dao.IComputerDao;
-import fr.heffebaycay.cdb.dao.impl.util.IMySQLUtils;
-import fr.heffebaycay.cdb.dao.impl.util.MySQLProdUtils;
+import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
@@ -22,13 +21,13 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDaoMySQLImpl.class);
   
-  private IMySQLUtils sqlUtils;
+  private MySQLUtils sqlUtils;
   
   public ComputerDaoMySQLImpl() {
-    this.sqlUtils = new MySQLProdUtils();
+    this.sqlUtils = new MySQLUtils();
   }
   
-  public ComputerDaoMySQLImpl(IMySQLUtils sqlUtils) {
+  public ComputerDaoMySQLImpl(MySQLUtils sqlUtils) {
     this.sqlUtils = sqlUtils;
   }
   

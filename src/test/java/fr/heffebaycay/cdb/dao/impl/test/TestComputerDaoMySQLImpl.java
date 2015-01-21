@@ -14,14 +14,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fr.heffebaycay.cdb.dao.impl.ComputerDaoMySQLImpl;
-import fr.heffebaycay.cdb.dao.impl.util.MySQLTestUtils;
+import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class TestComputerDaoMySQLImpl {
 
-  MySQLTestUtils sqlUtils = new MySQLTestUtils();
+  MySQLUtils sqlUtils = new MySQLUtils();
   
   //Passing a reference to the test SQL utils class to the DAO
   ComputerDaoMySQLImpl computerDao = new ComputerDaoMySQLImpl(sqlUtils);

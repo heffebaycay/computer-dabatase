@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.util.AppSettings;
 
-public class MySQLTestUtils implements IMySQLUtils {
+public class MySQLUtils {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(MySQLProdUtils.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MySQLUtils.class);
 
   /**
    * Return an instance of <i>Connection</i>, to connect to the database
@@ -32,7 +32,7 @@ public class MySQLTestUtils implements IMySQLUtils {
 
     return conn;
   }
-  
+
   /**
    * Closes a <i>Connection</i> object, with error handling.
    * 
@@ -47,33 +47,24 @@ public class MySQLTestUtils implements IMySQLUtils {
       LOGGER.error("Failed to close DB connection: {}", e);
     }
   }
-  
-  @Override
+
   public String getMySQLConnectionURL() {
-    
-    return String.format("jdbc:mysql://127.0.0.1:3306/%s?zeroDateTimeBehavior=convertToNull", AppSettings.DB_TEST_NAME );
-    
+    return String.format("jdbc:mysql://127.0.0.1:3306/%s?zeroDateTimeBehavior=convertToNull",
+        AppSettings.DB_NAME);
   }
-  
+
   public void truncateTables() {
-    
     Connection conn = getConnection();
-    
     final String queryComputer = "DELETE FROM computer";
     final String queryCompany = "DELETE FROM company";
-    
     try {
       Statement stmt = conn.createStatement();
       stmt.executeUpdate(queryComputer);
       stmt.executeUpdate(queryCompany);
-      
-    } catch(SQLException e) {
+    } catch (SQLException e) {
       LOGGER.error("SQL Exception in trucateTables(): {}", e);
     }
-
     closeConnection(conn);
   }
-  
-  
-  
+
 }

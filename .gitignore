@@ -15,3 +15,7 @@ hs_err_pid*
 .classpath
 bin/
 /target/
+
+# Application config files
+src/main/resources/config.properties
+src/test/resources/config.properties
