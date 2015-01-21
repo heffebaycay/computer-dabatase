@@ -2,12 +2,20 @@ package fr.heffebaycay.cdb.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.dao.exception.ConfigFileException;
+import fr.heffebaycay.cdb.model.Route;
+import fr.heffebaycay.cdb.taglib.Utils;
 
 public class AppSettings {
 
@@ -20,6 +28,8 @@ public class AppSettings {
   public static String        DB_PASSWORD;
   public static String        DB_NAME;
 
+  public static List<Route>   APP_ROUTES;
+
   public static final long    NB_RESULTS_PAGE;
 
   private static final Logger LOGGER          = LoggerFactory.getLogger(AppSettings.class
@@ -29,6 +39,7 @@ public class AppSettings {
     NB_RESULTS_PAGE = 10;
 
     readProperties();
+    populateRoutes();
   }
 
   // AppSettings Should never be instanciated
@@ -36,6 +47,10 @@ public class AppSettings {
 
   }
 
+  /**
+   * Read the application configuration file and set the application 
+   * parameters according to its content.
+   */
   private static void readProperties() {
 
     Properties prop = new Properties();
@@ -56,6 +71,24 @@ public class AppSettings {
     DB_USER = prop.getProperty(KEY_DB_USER);
     DB_PASSWORD = prop.getProperty(KEY_DB_PASSWORD);
     DB_NAME = prop.getProperty(KEY_DB_NAME);
+
+  }
+
+  /**
+   * Populate the list of routes in the application, so URLs can
+   * be dynamically generated.
+   */
+  private static void populateRoutes() {
+
+    APP_ROUTES = new ArrayList<>();
+
+    Set<String> params = new HashSet();
+    params.add("p");
+
+    Route dashboardRoute = new Route.Builder().name("dashboard").path("/").parameters(params)
+        .build();
+
+    APP_ROUTES.add(dashboardRoute);
 
   }
 

@@ -3,12 +3,13 @@
 <%@ attribute name="currentPage" required="true" %>
 <%@ attribute name="totalPage" required="true"  %>
 <%@ attribute name="delta" required="true"  %>
+<%@ attribute name="urlPattern" required="true" %>
 
 <ul class="pagination">
 	
 	<c:if test="${ currentPage gt 1 }">
 		<li>
-			<a href="<c:url value="/?p=${ currentPage - 1 }" />" aria-label="Previous">
+			<a href="<c:url value="${ String.format(urlPattern, currentPage - 1) }" />" aria-label="Previous">
             	<span aria-hidden="true">&laquo;</span>
            	</a>
 		</li>
@@ -21,7 +22,7 @@
 	
 	<c:forEach var="i" begin="${ begin }" end="${ currentPage - 1 }" >
 		<li>
-			<a href="<c:url value="/?p=${ i }" />">${ i }</a>
+			<a href="<c:url value="${ String.format(urlPattern, i) }" />">${ i }</a>
 		</li>
 	</c:forEach>
 	
@@ -36,13 +37,13 @@
 	
 	<c:forEach var="i" begin="${ currentPage + 1 }" end="${ end }">
 		<li>
-			<a href="<c:url value="/?p=${ i }" />">${ i }</a>
+			<a href="<c:url value="${ String.format(urlPattern, i) }" />">${ i }</a>
 		</li>
 	</c:forEach>
 	
 	<c:if test="${ currentPage lt totalPage }">
 		<li>
-			<a href="<c:url value="/?p=${ currentPage + 1 }" />" aria-label="Next">
+			<a href="<c:url value="${ String.format(urlPattern, currentPage + 1) }" />" aria-label="Next">
 				<span aria-hidden="true">&raquo;</span>
 			</a>
 		</li>

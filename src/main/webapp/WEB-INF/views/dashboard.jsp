@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="u" uri="/WEB-INF/utils.tld" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
-
+.
 <jsp:include page="include/header.jsp" />
 
 <section id="main">
@@ -99,7 +99,9 @@
 
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
-            <t:pagination totalPage="${ totalPage }" currentPage="${ currentPage }" delta="${ 3 }"></t:pagination>
+        
+        	<c:set var="urlPattern" value="${ u:generateDashboardRoute(\"%d\") }" />
+        	<t:pagination urlPattern="${ urlPattern }" totalPage="${ totalPage }" currentPage="${ currentPage }" delta="${ 3 }"></t:pagination>
 
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
 	            <button type="button" class="btn btn-default">10</button>
