@@ -1,4 +1,4 @@
-package fr.heffebaycay.cdb.dao.impl;
+package fr.heffebaycay.cdb.dao.impl.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

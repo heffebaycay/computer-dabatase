@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.dao.IComputerDao;
+import fr.heffebaycay.cdb.dao.impl.mapper.ComputerMySQLRowMapper;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;

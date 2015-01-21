@@ -134,6 +134,7 @@ public class AddComputerController extends HttpServlet {
       // Tough luck, the user didn't fill the form with valid input
       // Let's just redirect him back to the form and show him what he did wrong
       request.setAttribute("errors", errors);
+      
       doGet(request, response);
     }
 
