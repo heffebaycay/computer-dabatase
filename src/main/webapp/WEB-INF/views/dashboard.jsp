@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="u" uri="/WEB-INF/utils.tld" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <jsp:include page="include/header.jsp" />
 
@@ -98,55 +99,13 @@
 
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
-            <ul class="pagination">
-            	<c:if test="${ currentPage gt 1 }">
-                	<li>
-                		<a href="<c:url value="/?p=${ currentPage - 1 }" />" aria-label="Previous">
-                			<span aria-hidden="true">&laquo;</span>
-                		</a>
-                	</li>
-                </c:if>
-            	
-            	<c:set var="begin" value="${ currentPage - 3 }" />
-            	<c:if test="${ begin < 1 }">
-            		<c:set var="begin" value="${ 1 }" />
-            	</c:if>
-            	
-            	<c:forEach var="i" begin="${ begin }" end="${ currentPage - 1 }" >
-            		<li>
-            			<a href="<c:url value="/?p=${ i }" />">${ i }</a>
-            		</li>
-            	</c:forEach>
-            	
-            	<li class="active">
-            		<a href="">${ currentPage }</a>
-            	</li>
-            	
-            	<c:set var="end" value="${ currentPage + 3 }" />
-            	<c:if test="${ currentPage > totalPage }">
-            		<c:set var="end" value="${ totalPage }" />
-            	</c:if>            	
-            	
-            	<c:forEach var="i" begin="${ currentPage + 1 }" end="${ end }">
-            		<li>
-            			<a href="<c:url value="/?p=${ i }" />">${ i }</a>
-            		</li>
-            	</c:forEach>
-                
-                <c:if test="${ currentPage lt totalPage }">
-               		<li>
-               			<a href="<c:url value="/?p=${ currentPage + 1 }" />" aria-label="Next">
-               				<span aria-hidden="true">&raquo;</span>
-               			</a>
-               		</li>
-               	</c:if>
-        </ul>
+            <t:pagination totalPage="${ totalPage }" currentPage="${ currentPage }" delta="${ 3 }"></t:pagination>
 
-        <div class="btn-group btn-group-sm pull-right" role="group" >
-            <button type="button" class="btn btn-default">10</button>
-            <button type="button" class="btn btn-default">50</button>
-            <button type="button" class="btn btn-default">100</button>
-        </div>
+	        <div class="btn-group btn-group-sm pull-right" role="group" >
+	            <button type="button" class="btn btn-default">10</button>
+	            <button type="button" class="btn btn-default">50</button>
+	            <button type="button" class="btn btn-default">100</button>
+	        </div>
         
         </div>
 
