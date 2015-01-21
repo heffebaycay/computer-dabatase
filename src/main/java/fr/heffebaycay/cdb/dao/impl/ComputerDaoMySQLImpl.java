@@ -38,6 +38,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
   public List<Computer> findAll() {
 
     Connection conn = sqlUtils.getConnection();
+    Statement stmt = null;
     
     String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id";
     
@@ -45,7 +46,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     List<Computer> computers = new ArrayList<Computer>();
     
     try {
-      Statement stmt = conn.createStatement();
+      stmt = conn.createStatement();
       results = stmt.executeQuery(query);
       
       while(results.next()) {
@@ -59,7 +60,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch(SQLException e) {
       LOGGER.error("SQLException: {}", e);
     } finally {
-      sqlUtils.closeConnection(conn);
+      sqlUtils.closeConnectionAndStatement(conn, stmt);
     }
     
     return computers;
@@ -73,6 +74,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     
     Computer computer = null;
     Connection conn = sqlUtils.getConnection();
+    PreparedStatement ps = null;
     
     String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id WHERE c.id = ?";
     
@@ -80,7 +82,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     
     try {
       
-      PreparedStatement ps = conn.prepareStatement(query);
+      ps = conn.prepareStatement(query);
       ps.setLong(1, id);
       
       results = ps.executeQuery();
@@ -94,7 +96,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch(SQLException e) {
       LOGGER.error("SQLException: {}", e);
     } finally {
-      sqlUtils.closeConnection(conn);
+      sqlUtils.closeConnectionAndStatement(conn, ps);
     }
     
     return computer;
@@ -108,10 +110,11 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    
     Connection conn = sqlUtils.getConnection();
     String query = "DELETE FROM computer WHERE id = ?";
+    PreparedStatement ps = null;
     
     try {
       
-      PreparedStatement ps = conn.prepareStatement(query);
+      ps = conn.prepareStatement(query);
       ps.setLong(1, id);
       
       ps.executeUpdate();
@@ -122,7 +125,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       LOGGER.error("SQLException: {}", e);
       return false;
     } finally {
-      sqlUtils.closeConnection(conn);
+      sqlUtils.closeConnectionAndStatement(conn, ps);
     }
     
     
@@ -143,10 +146,11 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     String query = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?,?,?,?)";
     
     Connection conn = sqlUtils.getConnection();
+    PreparedStatement ps = null;
     
     try {
       
-      PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+      ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
       ps.setString(1, computer.getName());
       
       if(computer.getIntroduced() != null) {
@@ -177,7 +181,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch(SQLException e) {
       LOGGER.error("SQLException: {}", e);
     } finally {
-      sqlUtils.closeConnection(conn);
+      sqlUtils.closeConnectionAndStatement(conn, ps);
     }
     
     return newComputerId;
@@ -196,11 +200,12 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     
     String query = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
     Connection conn = sqlUtils.getConnection();
+    PreparedStatement ps = null;
     
     
     try {
        
-      PreparedStatement ps = conn.prepareStatement(query);
+      ps = conn.prepareStatement(query);
       ps.setString(1, computer.getName());
       
       if(computer.getIntroduced() == null) {
@@ -230,6 +235,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       LOGGER.error("SQLException: {}", e);
     } finally {
       sqlUtils.closeConnection(conn);
+      sqlUtils.closeConnectionAndStatement(conn, ps);
     }
     
   }
@@ -256,13 +262,16 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     String countQuery = "SELECT COUNT(c.id) AS count FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id";
     
     Connection conn = sqlUtils.getConnection();
+    PreparedStatement ps = null;
     
     try {
+      
+      // First, we need to know exactly how many results they are, agregated
       Statement stmt = conn.createStatement();
       ResultSet countResult = stmt.executeQuery(countQuery);
       countResult.first();
-      
       searchWrapper.setTotalQueryCount(countResult.getLong("count"));
+      sqlUtils.closeStatement(stmt);
       
       long currentPage = (long) Math.ceil(offset * 1.0 / nbRequested) + 1;
       searchWrapper.setCurrentPage(currentPage);
@@ -270,7 +279,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       long totalPage = (long) Math.ceil(searchWrapper.getTotalQueryCount() * 1.0 / nbRequested);
       searchWrapper.setTotalPage(totalPage);
       
-      PreparedStatement ps = conn.prepareStatement(query);
+      ps = conn.prepareStatement(query);
       ps.setLong(1, offset);
       ps.setLong(2, nbRequested);
       ResultSet rs = ps.executeQuery();
@@ -287,7 +296,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch(SQLException e) {
       LOGGER.error("SQL Exception: {}", e);
     } finally {
-      sqlUtils.closeConnection(conn);
+      sqlUtils.closeConnectionAndStatement(conn, ps);
     }
     
     return searchWrapper;

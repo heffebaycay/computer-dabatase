@@ -13,8 +13,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import fr.heffebaycay.cdb.model.Computer;
-
 public class UITestAddComputerController {
 
   WebDriver driver;
@@ -35,7 +33,6 @@ public class UITestAddComputerController {
     String computerName = "SeleniumTestingComputer";
     String dateIntroduced = "1985-12-14";
     String dateDiscontinued = "2000-05-03";
-    String companyId;
 
     driver.get("http://localhost:8080/computer-database/computers/add");
 

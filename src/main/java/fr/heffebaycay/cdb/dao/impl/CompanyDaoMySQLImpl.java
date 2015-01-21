@@ -37,13 +37,14 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
   public List<Company> findAll() {
 
     Connection conn = sqlUtils.getConnection();
+    Statement stmt = null;
 
     final String query = "SELECT id, name FROM company";
     ResultSet results;
     List<Company> companies = new ArrayList<Company>();
 
     try {
-      Statement stmt = conn.createStatement();
+      stmt = conn.createStatement();
       results = stmt.executeQuery(query);
 
       while (results.next()) {
@@ -59,7 +60,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       LOGGER.error("SQLException: {}", e);
 
     } finally {
-      sqlUtils.closeConnection(conn);
+      sqlUtils.closeConnectionAndStatement(conn, stmt);
     }
 
     return companies;
@@ -74,12 +75,13 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
 
     Company company = null;
     Connection conn = sqlUtils.getConnection();
+    PreparedStatement ps = null;
 
     String query = "SELECT id, name FROM company WHERE id = ?";
     ResultSet results;
 
     try {
-      PreparedStatement ps = conn.prepareStatement(query);
+      ps = conn.prepareStatement(query);
       ps.setLong(1, id);
 
       results = ps.executeQuery();
@@ -93,7 +95,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       LOGGER.error("SQLException: {}", e);
 
     } finally {
-      sqlUtils.closeConnection(conn);
+      sqlUtils.closeConnectionAndStatement(conn, ps);
     }
 
     return company;
@@ -121,13 +123,18 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     String countQuery = "SELECT COUNT(id) AS count FROM company";
 
     Connection conn = sqlUtils.getConnection();
-
+    PreparedStatement ps = null;
+    
     try {
 
+      // Counting the total number of elements first
       Statement stmt = conn.createStatement();
       ResultSet countResult = stmt.executeQuery(countQuery);
       countResult.first();
       searchWrapper.setTotalQueryCount(countResult.getLong("count"));
+      
+      // Closing the first statement
+      sqlUtils.closeStatement(stmt);
 
       long currentPage = (long) Math.ceil(offset * 1.0 / nbRequested) + 1;
       searchWrapper.setCurrentPage(currentPage);
@@ -137,7 +144,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
      
       searchWrapper.setTotalPage(totalPage);
 
-      PreparedStatement ps = conn.prepareStatement(query);
+      ps = conn.prepareStatement(query);
       ps.setLong(1, offset);
       ps.setLong(2, nbRequested);
       ResultSet rs = ps.executeQuery();
@@ -156,7 +163,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     } catch (SQLException e) {
       LOGGER.error("SQLException: {}", e);
     } finally {
-      sqlUtils.closeConnection(conn);
+      sqlUtils.closeConnectionAndStatement(conn, ps);
     }
 
     return searchWrapper;
@@ -168,10 +175,11 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     String query = "INSERT INTO company(name) VALUES(?)";
     
     Connection conn = sqlUtils.getConnection();
+    PreparedStatement ps = null;
     
     try {
       
-      PreparedStatement ps = conn.prepareStatement(query);
+      ps = conn.prepareStatement(query);
       ps.setString(1, company.getName());
       
       ps.executeUpdate();
@@ -181,7 +189,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       LOGGER.error("SQLException: {}", e);
       
     } finally {
-      sqlUtils.closeConnection(conn);
+      sqlUtils.closeConnectionAndStatement(conn, ps);
     }
     
   }

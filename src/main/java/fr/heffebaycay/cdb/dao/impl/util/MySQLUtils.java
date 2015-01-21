@@ -48,6 +48,41 @@ public class MySQLUtils {
     }
   }
 
+  /**
+   * Closes a <i>Statement</i> object.
+   * 
+   * @param stmt    The <i>Statement</i> object that should be closed.
+   */
+  public void closeStatement(Statement stmt) {
+    try {
+      if (stmt != null) {
+        stmt.close();
+      }
+    } catch (SQLException e) {
+      LOGGER.error("closeStatement(): SQL Exception : ", e);
+    }
+  }
+
+  /**
+   * Closes both a <i>Connection</i> and a <i>Statement</i> object.
+   * 
+   * @param conn    The <i>Connection</i> object that should be closed.
+   * @param stmt    The <i>Statement</i> object that should be closed.
+   */
+  public void closeConnectionAndStatement(Connection conn, Statement stmt) {
+
+    try {
+      if (stmt != null) {
+        stmt.close();
+      }
+    } catch (SQLException e) {
+      LOGGER.error("closeConnectionAndStatement(): SQL Exception: ", e);
+    }
+
+    closeConnection(conn);
+
+  }
+
   public String getMySQLConnectionURL() {
     return String.format("jdbc:mysql://127.0.0.1:3306/%s?zeroDateTimeBehavior=convertToNull",
         AppSettings.DB_NAME);
