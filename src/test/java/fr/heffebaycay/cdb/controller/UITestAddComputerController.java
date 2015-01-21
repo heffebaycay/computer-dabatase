@@ -54,7 +54,7 @@ public class UITestAddComputerController {
     int randomIndex = rand.nextInt(companies.size());
 
     WebElement companyOption = companies.get(randomIndex);
-    companyId = companyOption.getAttribute("value");
+    String companyId = companyOption.getAttribute("value");
     // Selecting the company option
     companyOption.click();
 
