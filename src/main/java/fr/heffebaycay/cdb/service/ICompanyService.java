@@ -36,5 +36,12 @@ public interface ICompanyService {
      * @return                 A SearchWrapper element containing both the results as a List and the total number of elements matched by the query
      */
   SearchWrapper<Company> findAll(long offset, long nbRequested);
+  
+  /**
+   * Removes a Company from the data source
+   * 
+   * @param id      Identifier of the company that should be removed.
+   */
+  void remove(long id);
 
 }

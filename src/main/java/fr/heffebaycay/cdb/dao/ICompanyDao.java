@@ -1,5 +1,6 @@
 package fr.heffebaycay.cdb.dao;
 
+import java.sql.Connection;
 import java.util.List;
 
 import fr.heffebaycay.cdb.model.Company;
@@ -27,6 +28,13 @@ public interface ICompanyDao {
    * @param company The company object that should be created
    */
   void create(Company company);
+  
+  /**
+   * Removes a Company from the data source along with all the Computers tied to it
+   * 
+   * @param id      Identifier of the company that should be removed.
+   */
+  int remove(long id, Connection conn);
 
   /**
    * Queries the data source for nbRequested elements starting at the offset defined by the parameter with the same name
@@ -36,5 +44,7 @@ public interface ICompanyDao {
    * @return                 A SearchWrapper element containing both the results as a List and the total number of elements matched by the query
    */
   SearchWrapper<Company> findAll(long offset, long nbRequested);
+  
+  
 
 }

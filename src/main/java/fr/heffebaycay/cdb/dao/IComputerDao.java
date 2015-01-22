@@ -1,5 +1,6 @@
 package fr.heffebaycay.cdb.dao;
 
+import java.sql.Connection;
 import java.util.List;
 
 import fr.heffebaycay.cdb.model.Computer;
@@ -31,7 +32,7 @@ public interface IComputerDao {
 	 * @return boolean indicating success (true) or failure (false) of the removal operation
 	 */
 	boolean remove(long id);
-	
+		
 	/**
 	 * Create a Computer in the data source based on an instance of Computer
 	 * 
@@ -57,6 +58,15 @@ public interface IComputerDao {
 	 * @return                 A SearchWrapper element containing the results as well as page information
 	 */
 	SearchWrapper<Computer> findAll(long offset, long nbRequested);
+	
+	/**
+	 * Removes all computers matching a given company from the data source
+	 * 
+	 * @param companyId        The id of the Company for which associated Computers should be removed
+	 * @param conn             
+	 * @return                 The number of rows affected by the operation, or <strong>-1</strong> on error.
+	 */
+	int removeForCompany(long companyId, Connection conn);
 	
 
 }

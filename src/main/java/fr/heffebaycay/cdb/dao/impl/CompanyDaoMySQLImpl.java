@@ -20,17 +20,17 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 public class CompanyDaoMySQLImpl implements ICompanyDao {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDaoMySQLImpl.class);
-  
-  private MySQLUtils sqlUtils;
-  
+
+  private MySQLUtils          sqlUtils;
+
   public CompanyDaoMySQLImpl() {
-    sqlUtils = new MySQLUtils(); 
+    sqlUtils = new MySQLUtils();
   }
-  
+
   public CompanyDaoMySQLImpl(MySQLUtils sqlUtils) {
     this.sqlUtils = sqlUtils;
   }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -49,7 +49,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       results = stmt.executeQuery(query);
 
       while (results.next()) {
-        
+
         CompanyMySQLRowMapper mapper = new CompanyMySQLRowMapper();
         Company company = mapper.mapRow(results);
 
@@ -125,7 +125,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
 
     Connection conn = sqlUtils.getConnection();
     PreparedStatement ps = null;
-    
+
     try {
 
       // Counting the total number of elements first
@@ -133,16 +133,15 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       ResultSet countResult = stmt.executeQuery(countQuery);
       countResult.first();
       searchWrapper.setTotalQueryCount(countResult.getLong("count"));
-      
+
       // Closing the first statement
       sqlUtils.closeStatement(stmt);
 
       long currentPage = (long) Math.ceil(offset * 1.0 / nbRequested) + 1;
       searchWrapper.setCurrentPage(currentPage);
 
-      long totalPage = (long) Math.ceil(searchWrapper.getTotalQueryCount() * 1.0
-          / nbRequested);
-     
+      long totalPage = (long) Math.ceil(searchWrapper.getTotalQueryCount() * 1.0 / nbRequested);
+
       searchWrapper.setTotalPage(totalPage);
 
       ps = conn.prepareStatement(query);
@@ -151,7 +150,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       ResultSet rs = ps.executeQuery();
 
       while (rs.next()) {
-        
+
         CompanyMySQLRowMapper mapper = new CompanyMySQLRowMapper();
         Company company = mapper.mapRow(rs);
 
@@ -172,27 +171,48 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
 
   @Override
   public void create(Company company) {
-    
+
     String query = "INSERT INTO company(name) VALUES(?)";
-    
+
     Connection conn = sqlUtils.getConnection();
     PreparedStatement ps = null;
-    
+
     try {
-      
+
       ps = conn.prepareStatement(query);
       ps.setString(1, company.getName());
-      
+
       ps.executeUpdate();
-      
-    } catch(SQLException e) {
-      
+
+    } catch (SQLException e) {
+
       LOGGER.error("SQLException: {}", e);
-      
+
     } finally {
       sqlUtils.closeConnectionAndStatement(conn, ps);
     }
-    
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int remove(long id, Connection conn) {
+
+    String removeCompanyQuery = "DELETE FROM company WHERE id = ?";
+    try {
+      PreparedStatement ps = conn.prepareStatement(removeCompanyQuery);
+      ps.setLong(1, id);
+      int nbCompany = ps.executeUpdate();
+      ps.close();
+      return nbCompany;
+      
+    } catch(SQLException e) {
+      LOGGER.warn("remove(): SQLException: ", e);
+      return -1;
+    }
+
   }
 
 }

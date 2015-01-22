@@ -17,7 +17,7 @@ import fr.heffebaycay.cdb.dto.ComputerDTO;
 import fr.heffebaycay.cdb.dto.mapper.ComputerMapper;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.IComputerService;
-import fr.heffebaycay.cdb.service.impl.ComputerServiceMockImpl;
+import fr.heffebaycay.cdb.service.manager.ServiceManager;
 import fr.heffebaycay.cdb.util.AppSettings;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
@@ -38,7 +38,7 @@ public class ComputerController extends HttpServlet {
    */
   public ComputerController() {
     super();
-    mComputerService = new ComputerServiceMockImpl();
+    mComputerService = ServiceManager.INSTANCE.getComputerService();
   }
 
   /**
@@ -81,8 +81,7 @@ public class ComputerController extends HttpServlet {
     request.setAttribute("totalPage", searchWrapper.getTotalPage());
     request.setAttribute("totalCount", searchWrapper.getTotalQueryCount());
     request.setAttribute("computers", computers);
-    
-    
+       
     RequestDispatcher rd = getServletContext().getRequestDispatcher(response.encodeURL("/WEB-INF/views/dashboard.jsp"));
     rd.forward(request, response);
 
