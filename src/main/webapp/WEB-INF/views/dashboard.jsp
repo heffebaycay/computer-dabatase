@@ -78,13 +78,13 @@
                 				<input type="checkbox" name="cb" class="cb" value="${computer.id}" />
                 			</td>
                 			<td>
-                				<a href="<c:url value="/computers/edit?id=${ computer.id }"/>" onclick="">${computer.name}</a>
+                				<a href="<c:url value="/computers/edit?id=${ computer.id }"/>" onclick=""><c:out value="${ computer.name }" /></a>
                 			</td>
-                			<td>${ computer.introduced }</td>
-                			<td>${ computer.discontinued }</td>
+                			<td><c:out value="${ computer.introduced }" /></td>
+                			<td><c:out value="${ computer.discontinued }"/></td>
                 			<c:choose>
-                				<c:when test="${computer.company != null}">
-                					<td>${ computer.company.name }</td>
+                				<c:when test="${ computer.company != null}">
+                					<td><c:out value="${ computer.company.name }" /></td>
                 				</c:when>
                 				<c:otherwise>
                 					<td>&nbsp;</td>
@@ -100,7 +100,7 @@
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
         
-        	<c:set var="urlPattern" value="${ u:generateDashboardRoute(\"%d\", searchQuery) }" />
+        	<c:set var="urlPattern" value="${ u:generateDashboardRoute(\"%d\", searchQuery, sortCriterion, sortOrder) }" />
         	<t:pagination urlPattern="${ urlPattern }" totalPage="${ totalPage }" currentPage="${ currentPage }" delta="${ 3 }"></t:pagination>
 
 	        <div class="btn-group btn-group-sm pull-right" role="group" >

@@ -43,15 +43,15 @@
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" value="<c:choose><c:when test="${ computerNameValue != null }">${ computerNameValue }</c:when><c:otherwise><c:if test="${ computer != null }">${ computer.name }</c:if></c:otherwise></c:choose>">
+                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" value="<c:choose><c:when test="${ computerNameValue != null }"><c:out value="${ computerNameValue }" /></c:when><c:otherwise><c:if test="${ computer != null }"><c:out value="${ computer.name }" /></c:if></c:otherwise></c:choose>">
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="<c:choose><c:when test="${ dateIntroducedValue != null }">${ dateIntroducedValue }</c:when><c:otherwise><c:if test="${ computer != null }">${ computer.introduced }</c:if></c:otherwise></c:choose>">
+                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="<c:choose><c:when test="${ dateIntroducedValue != null }"><c:out value="${ dateIntroducedValue }" /></c:when><c:otherwise><c:if test="${ computer != null }"><c:out value="${ computer.introduced }" /></c:if></c:otherwise></c:choose>">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="<c:choose><c:when test="${ dateDiscontinuedValue != null }">${ dateDiscontinuedValue }</c:when><c:otherwise><c:if test="${ computer != null }">${ computer.discontinued }</c:if></c:otherwise></c:choose>">
+                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="<c:choose><c:when test="${ dateDiscontinuedValue != null }"><c:out value="${ dateDiscontinuedValue }" /></c:when><c:otherwise><c:if test="${ computer != null }"><c:out value="${ computer.discontinued }" /></c:if></c:otherwise></c:choose>">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
@@ -70,7 +70,7 @@
                                     					selected="selected"
                                     				</c:if>
                                     			</c:otherwise>
-                                    		</c:choose> > ${company.name } </option>
+                                    		</c:choose> > <c:out value="${ company.name }" /> </option>
                                     </c:forEach>
                                 </select>
                             </div>            

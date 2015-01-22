@@ -16,6 +16,8 @@ import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.impl.mapper.ComputerMySQLRowMapper;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.model.Computer;
+import fr.heffebaycay.cdb.util.ComputerSortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class ComputerDaoMySQLImpl implements IComputerDao {
@@ -233,7 +235,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Computer> findAll(long offset, long nbRequested, Connection conn) {
+  public SearchWrapper<Computer> findAll(long offset, long nbRequested, ComputerSortCriteria sortCriterion, SortOrder sortOrder, Connection conn) {
 
     SearchWrapper<Computer> searchWrapper = new SearchWrapper<Computer>();
     List<Computer> computers = new ArrayList<Computer>();
@@ -247,14 +249,21 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       return searchWrapper;
     }
 
-    String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id LIMIT ?, ?";
-    String countQuery = "SELECT COUNT(c.id) AS count FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id";
+    String orderPart;
+    if(sortCriterion.equals(ComputerSortCriteria.COMPANY_NAME)) {
+      orderPart = generateOrderPart("cp", sortCriterion, sortOrder);
+    } else {
+      orderPart = generateOrderPart("c", sortCriterion, sortOrder);
+    }
+    
+    String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id ORDER BY " + orderPart + " LIMIT ?, ?";
+    String countQuery = "SELECT COUNT(c.id) AS count FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id ORDER BY " + orderPart;
 
     PreparedStatement ps = null;
 
     try {
 
-      // First, we need to know exactly how many results they are, agregated
+      // First, we need to know exactly how many results they are, aggregated
       Statement stmt = conn.createStatement();
       ResultSet countResult = stmt.executeQuery(countQuery);
       countResult.first();
@@ -289,24 +298,24 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
 
     return searchWrapper;
   }
-  
+
   /**
    * {@inheritDoc}
    */
   @Override
   public int removeForCompany(long companyId, Connection conn) {
-    
+
     String removeForCompanySQL = "DELETE FROM computer WHERE company_id = ?";
-    
+
     try {
       PreparedStatement ps = conn.prepareStatement(removeForCompanySQL);
       ps.setLong(1, companyId);
       return ps.executeUpdate();
-    } catch(SQLException e) {
+    } catch (SQLException e) {
       LOGGER.warn("removeForCompany(): SQL Exception: ", e);
       return -1;
     }
-    
+
   }
 
   /**
@@ -314,10 +323,10 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    */
   @Override
   public SearchWrapper<Computer> findByName(String name, long offset, long nbRequested,
-      Connection conn) {
+      ComputerSortCriteria sortCriterion, SortOrder sortOrder, Connection conn) {
     SearchWrapper<Computer> searchWrapper = new SearchWrapper<Computer>();
     List<Computer> computers = new ArrayList<Computer>();
-    
+
     if (offset < 0 || nbRequested <= 0) {
       searchWrapper.setResults(computers);
       searchWrapper.setCurrentPage(0);
@@ -327,61 +336,101 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       return searchWrapper;
     }
     
-    String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id WHERE c.name LIKE ? OR cp.name LIKE ? LIMIT ?, ?";
-    String countQuery = "SELECT COUNT(c.id) AS count FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id WHERE c.name LIKE ? OR cp.name LIKE ?";
+    name = name.replace("%", "");
+    
+    String orderPart;
+    
+    if(sortCriterion.equals(ComputerSortCriteria.COMPANY_NAME)) {
+      orderPart = generateOrderPart("cp", sortCriterion, sortOrder);
+    } else {
+      orderPart = generateOrderPart("c", sortCriterion, sortOrder);
+    }
+
+    String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id WHERE c.name LIKE ? OR cp.name LIKE ? ORDER BY " + orderPart +  " LIMIT ?, ?";
+    String countQuery = "SELECT COUNT(c.id) AS count FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id WHERE c.name LIKE ? OR cp.name LIKE ? ORDER BY " + orderPart;
 
     PreparedStatement ps = null;
-    
+
     try {
-      
+
       String searchKeyword = String.format("%%%s%%", name);
       LOGGER.debug("Search keyword: " + searchKeyword);
       
       PreparedStatement countStmt = conn.prepareStatement(countQuery);
       countStmt.setString(1, searchKeyword);
       countStmt.setString(2, searchKeyword);
-      
+
       ResultSet countResult = countStmt.executeQuery();
       countResult.first();
       searchWrapper.setTotalQueryCount(countResult.getLong("count"));
       sqlUtils.closeStatement(countStmt);
-      
+
       long currentPage = (long) Math.ceil(offset * 1.0 / nbRequested) + 1;
       searchWrapper.setCurrentPage(currentPage);
-      
+
       long totalPage = (long) Math.ceil(searchWrapper.getTotalQueryCount() * 1.0 / nbRequested);
       searchWrapper.setTotalPage(totalPage);
-      
+
       ps = conn.prepareStatement(query);
-      
-      
+
       ps.setString(1, searchKeyword);
       ps.setString(2, searchKeyword);
       ps.setLong(3, offset);
       ps.setLong(4, nbRequested);
-      
+
       ResultSet rs = ps.executeQuery();
-      
-      while(rs.next()) {
+
+      while (rs.next()) {
         ComputerMySQLRowMapper mapper = new ComputerMySQLRowMapper();
         Computer computer = mapper.mapRow(rs);
-        
+
         computers.add(computer);
       }
-      
+
       searchWrapper.setResults(computers);
-      
-    } catch(SQLException e) {
+
+    } catch (SQLException e) {
       LOGGER.warn("findByName(): SQLException: ", e);
     } finally {
       sqlUtils.closeStatement(ps);
     }
-    
-    
-    
+
     return searchWrapper;
   }
   
-  
+  private String generateOrderPart(String entityAlias, ComputerSortCriteria sortCriterion, SortOrder sortOrder) {
+    
+    StringBuffer stringBuffer = new StringBuffer(entityAlias);
+    
+    switch(sortCriterion) {
+      
+      case ID:
+        stringBuffer.append(".id");
+        break;
+      case NAME:
+        stringBuffer.append(".name");
+        break;
+      case DATE_DISCONTINUED:
+        stringBuffer.append(".discontinued");
+        break;
+      case DATE_INTRODUCED:
+        stringBuffer.append(".introduced");
+        break;
+      case COMPANY_NAME:
+        stringBuffer.append(".name");
+        break;
+      default:
+        stringBuffer.append(".id");
+    }
+    
+    if(sortOrder.equals(SortOrder.DESC)) {
+      stringBuffer.append(" desc");
+    } else {
+      stringBuffer.append(" asc");
+    }
+    
+    return stringBuffer.toString();
+    
+  }
 
 }

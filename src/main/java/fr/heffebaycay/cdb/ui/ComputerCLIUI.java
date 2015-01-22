@@ -13,6 +13,8 @@ import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.IComputerService;
 import fr.heffebaycay.cdb.service.manager.ServiceManager;
 import fr.heffebaycay.cdb.util.AppSettings;
+import fr.heffebaycay.cdb.util.ComputerSortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class ComputerCLIUI {
@@ -276,7 +278,7 @@ public class ComputerCLIUI {
     
     long offset = (pageNumber - 1) * AppSettings.NB_RESULTS_PAGE;
     
-    SearchWrapper<Computer> sw = computerService.findAll(offset, AppSettings.NB_RESULTS_PAGE);
+    SearchWrapper<Computer> sw = computerService.findAll(offset, AppSettings.NB_RESULTS_PAGE, ComputerSortCriteria.ID, SortOrder.ASC);
     
     System.out.printf("Displaying page %d of %d:%n", sw.getCurrentPage(), sw.getTotalPage());
     

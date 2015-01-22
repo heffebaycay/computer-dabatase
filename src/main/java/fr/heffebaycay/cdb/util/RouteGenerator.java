@@ -19,9 +19,9 @@ public class RouteGenerator {
    * @param search          Search Query
    * @return                Path to the Dashboard route
    */
-  public static String generateDashboardRoute(String pageNumber, String search) {
+  public static String generateDashboardRoute(String pageNumber, String search, String sortCriterion, String sortOrder) {
     
-    return generateRoute("dashboard", new RouteArgumentMapBuilder().addArgument("p", pageNumber).addArgument("search", search).build());
+    return generateRoute("dashboard", new RouteArgumentMapBuilder().addArgument("p", pageNumber).addArgument("search", search).addArgument("sortBy", sortCriterion).addArgument("order", sortOrder).build());
     
   }
 
@@ -63,7 +63,7 @@ public class RouteGenerator {
                 isFirstParam = false;
               } else {
                 // Inserting the parameter separator
-                routeURLBuilder.append("&");
+                routeURLBuilder.append("&amp;");
               }
 
               routeURLBuilder.append(pName);

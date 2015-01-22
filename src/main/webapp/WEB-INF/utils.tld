@@ -18,6 +18,6 @@ version="2.0">
 	<function>
 		<name>generateDashboardRoute</name>
 		<function-class>fr.heffebaycay.cdb.util.RouteGenerator</function-class>
-		<function-signature>java.lang.String generateDashboardRoute(java.lang.String, java.lang.String)</function-signature>
+		<function-signature>java.lang.String generateDashboardRoute(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</function-signature>
 	</function>
 </taglib>

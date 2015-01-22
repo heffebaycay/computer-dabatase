@@ -24,22 +24,22 @@
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" value="<c:if test="${ computerNameValue != null }" >${ computerNameValue }</c:if>">
+                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" value="<c:if test="${ computerNameValue != null }" ><c:out value="${ computerNameValue }" /></c:if>">
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="<c:if test="${ dateIntroducedValue != null }">${ dateIntroducedValue }</c:if>">
+                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="<c:if test="${ dateIntroducedValue != null }"><c:out value="${ dateIntroducedValue }" /> </c:if>">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="<c:if test="${ dateDiscontinuedValue != null }">${ dateDiscontinuedValue }</c:if>">
+                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="<c:if test="${ dateDiscontinuedValue != null }"><c:out value="${ dateDiscontinuedValue }" /> </c:if>">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
                                 <select class="form-control" id="companyId" name="companyId">
                                     <option value="-1">--</option>
                                     <c:forEach items="${ companies }" var="company">
-                                    	<option value="${ company.id }" <c:if test="${ companyIdValue != null && company.id == companyIdValue }"></c:if>>${ company.name }</option>
+                                    	<option value="${ company.id }" <c:if test="${ companyIdValue != null && company.id == companyIdValue }"></c:if>><c:out value="${ company.name }" /></option>
                                     </c:forEach>
                                 </select>
                             </div>            

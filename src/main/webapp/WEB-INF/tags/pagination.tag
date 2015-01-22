@@ -1,8 +1,8 @@
 <%@ tag language="java" pageEncoding="UTF-8" description="Pagination template" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ attribute name="currentPage" required="true" %>
-<%@ attribute name="totalPage" required="true"  %>
-<%@ attribute name="delta" required="true"  %>
+<%@ attribute name="currentPage" required="true" type="java.lang.Integer" %>
+<%@ attribute name="totalPage" required="true"  type="java.lang.Integer" %>
+<%@ attribute name="delta" required="true" type="java.lang.Integer"  %>
 <%@ attribute name="urlPattern" required="true" %>
 
 <ul class="pagination">
@@ -48,5 +48,5 @@
 			</a>
 		</li>
 	</c:if>
-
+	
 </ul>

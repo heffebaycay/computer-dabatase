@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.util.List;
 
 import fr.heffebaycay.cdb.model.Computer;
+import fr.heffebaycay.cdb.util.ComputerSortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public interface IComputerDao {
@@ -57,7 +59,7 @@ public interface IComputerDao {
 	 * @param nbRequested      The number of elements requested
 	 * @return                 A SearchWrapper element containing the results as well as page information
 	 */
-	SearchWrapper<Computer> findAll(long offset, long nbRequested, Connection conn);
+	SearchWrapper<Computer> findAll(long offset, long nbRequested, ComputerSortCriteria sortCriterion, SortOrder sortOrder, Connection conn);
 	
 	/**
 	 * Removes all computers matching a given company from the data source
@@ -78,7 +80,7 @@ public interface IComputerDao {
 	 * @param conn
 	 * @return                 A SearchWrapper element containing the results as well as page information
 	 */
-	SearchWrapper<Computer> findByName(String name, long offset, long nbRequested, Connection conn);
+	SearchWrapper<Computer> findByName(String name, long offset, long nbRequested, ComputerSortCriteria sortCriterion, SortOrder sortOrder, Connection conn);
 	
 
 }

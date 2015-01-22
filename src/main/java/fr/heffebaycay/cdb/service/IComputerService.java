@@ -3,6 +3,8 @@ package fr.heffebaycay.cdb.service;
 import java.util.List;
 
 import fr.heffebaycay.cdb.model.Computer;
+import fr.heffebaycay.cdb.util.ComputerSortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public interface IComputerService {
@@ -53,7 +55,7 @@ public interface IComputerService {
      * @param nbRequested      The number of elements requested
      * @return                 A SearchWrapper element containing the results as well as page information
      */
-  SearchWrapper<Computer> findAll(long offset, long nbRequested);
+  SearchWrapper<Computer> findAll(long offset, long nbRequested, ComputerSortCriteria sortCriterion, SortOrder sortOrder);
 
   /**
    * Searches the data source for computers whose names match the name argument
@@ -64,6 +66,6 @@ public interface IComputerService {
    * @param nbRequested     The number of elements requested
    * @return                A SearchWrapper element containing the results as well as page information
    */
-  SearchWrapper<Computer> findByName(String name, long offset, long nbRequested);
+  SearchWrapper<Computer> findByName(String name, long offset, long nbRequested, ComputerSortCriteria sortCriterion, SortOrder sortOrder);
 
 }

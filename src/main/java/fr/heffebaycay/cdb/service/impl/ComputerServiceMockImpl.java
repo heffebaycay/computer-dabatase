@@ -10,6 +10,8 @@ import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.IComputerService;
+import fr.heffebaycay.cdb.util.ComputerSortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class ComputerServiceMockImpl implements IComputerService {
@@ -104,11 +106,11 @@ public class ComputerServiceMockImpl implements IComputerService {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Computer> findAll(long offset, long nbRequested) {
+  public SearchWrapper<Computer> findAll(long offset, long nbRequested, ComputerSortCriteria sortCriterion, SortOrder sortOrder) {
     LOGGER.debug("Call to findAll(long, long)");
     Connection conn = DaoManager.INSTANCE.getConnection();
     
-    SearchWrapper<Computer> wrapper = computerDao.findAll(offset, nbRequested, conn);
+    SearchWrapper<Computer> wrapper = computerDao.findAll(offset, nbRequested, sortCriterion, sortOrder, conn);
     
     DaoManager.INSTANCE.closeConnection(conn);
     
@@ -119,11 +121,11 @@ public class ComputerServiceMockImpl implements IComputerService {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Computer> findByName(String name, long offset, long nbRequested) {
+  public SearchWrapper<Computer> findByName(String name, long offset, long nbRequested, ComputerSortCriteria sortCriterion, SortOrder sortOrder) {
     LOGGER.debug("Call to findByName()");
     Connection conn = DaoManager.INSTANCE.getConnection();
     
-    SearchWrapper<Computer> wrapper = computerDao.findByName(name, offset, nbRequested, conn);
+    SearchWrapper<Computer> wrapper = computerDao.findByName(name, offset, nbRequested, sortCriterion, sortOrder, conn);
     
     DaoManager.INSTANCE.closeConnection(conn);
     
