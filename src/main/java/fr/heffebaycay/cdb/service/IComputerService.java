@@ -55,4 +55,15 @@ public interface IComputerService {
      */
   SearchWrapper<Computer> findAll(long offset, long nbRequested);
 
+  /**
+   * Searches the data source for computers whose names match the name argument
+   * The method is case insensitive
+   * 
+   * @param name            Search query
+   * @param offset          The offset of the first Computer element that should be returned
+   * @param nbRequested     The number of elements requested
+   * @return                A SearchWrapper element containing the results as well as page information
+   */
+  SearchWrapper<Computer> findByName(String name, long offset, long nbRequested);
+
 }

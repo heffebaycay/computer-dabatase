@@ -16,11 +16,12 @@ public class RouteGenerator {
    * Generates the path to the Dashboard route.
    * 
    * @param pageNumber      Page number
+   * @param search          Search Query
    * @return                Path to the Dashboard route
    */
-  public static String generateDashboardRoute(String pageNumber) {
+  public static String generateDashboardRoute(String pageNumber, String search) {
     
-    return generateRoute("dashboard", new RouteArgumentMapBuilder().addArgument("p", pageNumber).build());
+    return generateRoute("dashboard", new RouteArgumentMapBuilder().addArgument("p", pageNumber).addArgument("search", search).build());
     
   }
 

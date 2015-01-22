@@ -75,7 +75,19 @@ public class ComputerController extends HttpServlet {
     }
     request.setAttribute("currentPage", currentPage);
     
-    searchWrapper = mComputerService.findAll((currentPage - 1) * nbResultsPerPage, nbResultsPerPage);
+    // Page parameters
+    long offset = (currentPage - 1) * nbResultsPerPage;
+    
+    // Fetching search parameters
+    String searchQuery = request.getParameter("search");
+    
+    if(searchQuery != null && !searchQuery.isEmpty()) {
+      searchWrapper = mComputerService.findByName(searchQuery, offset, nbResultsPerPage);
+      request.setAttribute("searchQuery", searchQuery);
+    } else {
+      searchWrapper = mComputerService.findAll(offset, nbResultsPerPage);
+    }
+    
     computers = ComputerMapper.toDTO( searchWrapper.getResults() );
     
     request.setAttribute("totalPage", searchWrapper.getTotalPage());

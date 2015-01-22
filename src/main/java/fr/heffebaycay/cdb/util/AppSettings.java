@@ -84,6 +84,7 @@ public class AppSettings {
 
     Set<String> params = new HashSet();
     params.add("p");
+    params.add("search");
 
     Route dashboardRoute = new Route.Builder().name("dashboard").path("/").parameters(params)
         .build();

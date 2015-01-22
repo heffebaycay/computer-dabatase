@@ -115,4 +115,21 @@ public class ComputerServiceMockImpl implements IComputerService {
     return wrapper;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public SearchWrapper<Computer> findByName(String name, long offset, long nbRequested) {
+    LOGGER.debug("Call to findByName()");
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    
+    SearchWrapper<Computer> wrapper = computerDao.findByName(name, offset, nbRequested, conn);
+    
+    DaoManager.INSTANCE.closeConnection(conn);
+    
+    return wrapper;
+  }
+  
+  
+
 }

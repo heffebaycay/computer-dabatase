@@ -100,7 +100,7 @@
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
         
-        	<c:set var="urlPattern" value="${ u:generateDashboardRoute(\"%d\") }" />
+        	<c:set var="urlPattern" value="${ u:generateDashboardRoute(\"%d\", searchQuery) }" />
         	<t:pagination urlPattern="${ urlPattern }" totalPage="${ totalPage }" currentPage="${ currentPage }" delta="${ 3 }"></t:pagination>
 
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
