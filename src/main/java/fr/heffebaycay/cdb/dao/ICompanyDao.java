@@ -13,21 +13,21 @@ public interface ICompanyDao {
    * 
    * @return The list of all Companies
    */
-  List<Company> findAll();
+  List<Company> findAll(Connection conn);
 
   /**
    * Find a Company from the data source
    * @param id
    * @return
    */
-  Company findById(long id);
+  Company findById(long id, Connection conn);
 
   /**
    * Create a Company in the data source based on an instance of Company
    * 
    * @param company The company object that should be created
    */
-  void create(Company company);
+  void create(Company company, Connection conn);
   
   /**
    * Removes a Company from the data source along with all the Computers tied to it
@@ -43,7 +43,7 @@ public interface ICompanyDao {
    * @param nbRequested      The total number of elements requested
    * @return                 A SearchWrapper element containing both the results as a List and the total number of elements matched by the query
    */
-  SearchWrapper<Company> findAll(long offset, long nbRequested);
+  SearchWrapper<Company> findAll(long offset, long nbRequested, Connection conn);
   
   
 

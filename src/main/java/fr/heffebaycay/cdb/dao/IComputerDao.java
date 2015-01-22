@@ -13,7 +13,7 @@ public interface IComputerDao {
 	 * 
 	 * @return
 	 */
-	List<Computer> findAll();
+	List<Computer> findAll(Connection conn);
 	
 	
 	/**
@@ -22,7 +22,7 @@ public interface IComputerDao {
 	 * @param id The Id of the Computer object that should be returned
 	 * @return An instance of Computer or null if there's no match
 	 */
-	Computer findById(long id);
+	Computer findById(long id, Connection conn);
 	
 	
 	/**
@@ -31,7 +31,7 @@ public interface IComputerDao {
 	 * @param id Id of the computer object to be removed
 	 * @return boolean indicating success (true) or failure (false) of the removal operation
 	 */
-	boolean remove(long id);
+	boolean remove(long id, Connection conn);
 		
 	/**
 	 * Create a Computer in the data source based on an instance of Computer
@@ -40,7 +40,7 @@ public interface IComputerDao {
 	 * 
 	 * @return id of the created computer
 	 */
-	long create(Computer computer);
+	long create(Computer computer, Connection conn);
 	
 	
 	/**
@@ -48,7 +48,7 @@ public interface IComputerDao {
 	 * 
 	 * @param computer The computer object that should be updated
 	 */
-	void update(Computer computer);
+	void update(Computer computer, Connection conn);
 	
 	/**
 	 * Queries the data source for <strong>nbRequested</strong> elements starting at the offset defined by the <strong>offset</strong> parameter
@@ -57,7 +57,7 @@ public interface IComputerDao {
 	 * @param nbRequested      The number of elements requested
 	 * @return                 A SearchWrapper element containing the results as well as page information
 	 */
-	SearchWrapper<Computer> findAll(long offset, long nbRequested);
+	SearchWrapper<Computer> findAll(long offset, long nbRequested, Connection conn);
 	
 	/**
 	 * Removes all computers matching a given company from the data source

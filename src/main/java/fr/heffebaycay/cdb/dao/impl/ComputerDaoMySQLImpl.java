@@ -36,9 +36,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public List<Computer> findAll() {
-
-    Connection conn = sqlUtils.getConnection();
+  public List<Computer> findAll(Connection conn) {
     Statement stmt = null;
 
     String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id";
@@ -61,7 +59,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch (SQLException e) {
       LOGGER.error("SQLException: {}", e);
     } finally {
-      sqlUtils.closeConnectionAndStatement(conn, stmt);
+      sqlUtils.closeStatement(stmt);
     }
 
     return computers;
@@ -71,10 +69,8 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public Computer findById(long id) {
-
+  public Computer findById(long id, Connection conn) {
     Computer computer = null;
-    Connection conn = sqlUtils.getConnection();
     PreparedStatement ps = null;
 
     String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id WHERE c.id = ?";
@@ -97,7 +93,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch (SQLException e) {
       LOGGER.error("SQLException: {}", e);
     } finally {
-      sqlUtils.closeConnectionAndStatement(conn, ps);
+      sqlUtils.closeStatement(ps);
     }
 
     return computer;
@@ -107,9 +103,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public boolean remove(long id) {
-
-    Connection conn = sqlUtils.getConnection();
+  public boolean remove(long id, Connection conn) {
     String query = "DELETE FROM computer WHERE id = ?";
     PreparedStatement ps = null;
 
@@ -126,7 +120,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       LOGGER.error("SQLException: {}", e);
       return false;
     } finally {
-      sqlUtils.closeConnectionAndStatement(conn, ps);
+      sqlUtils.closeStatement(ps);
     }
 
   }
@@ -135,7 +129,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public long create(Computer computer) {
+  public long create(Computer computer, Connection conn) {
 
     if (computer == null) {
       throw new IllegalArgumentException("'computer' argument cannot be null");
@@ -145,7 +139,6 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
 
     String query = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES(?,?,?,?)";
 
-    Connection conn = sqlUtils.getConnection();
     PreparedStatement ps = null;
 
     try {
@@ -180,7 +173,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch (SQLException e) {
       LOGGER.error("SQLException: {}", e);
     } finally {
-      sqlUtils.closeConnectionAndStatement(conn, ps);
+      sqlUtils.closeStatement(ps);
     }
 
     return newComputerId;
@@ -191,14 +184,13 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public void update(Computer computer) {
+  public void update(Computer computer, Connection conn) {
 
     if (computer == null) {
       throw new IllegalArgumentException("'computer' argument cannot be null");
     }
 
     String query = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
-    Connection conn = sqlUtils.getConnection();
     PreparedStatement ps = null;
 
     try {
@@ -232,7 +224,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       LOGGER.error("SQLException: {}", e);
     } finally {
       sqlUtils.closeConnection(conn);
-      sqlUtils.closeConnectionAndStatement(conn, ps);
+      sqlUtils.closeStatement(ps);
     }
 
   }
@@ -241,7 +233,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Computer> findAll(long offset, long nbRequested) {
+  public SearchWrapper<Computer> findAll(long offset, long nbRequested, Connection conn) {
 
     SearchWrapper<Computer> searchWrapper = new SearchWrapper<Computer>();
     List<Computer> computers = new ArrayList<Computer>();
@@ -258,7 +250,6 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id LIMIT ?, ?";
     String countQuery = "SELECT COUNT(c.id) AS count FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id";
 
-    Connection conn = sqlUtils.getConnection();
     PreparedStatement ps = null;
 
     try {
@@ -293,7 +284,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch (SQLException e) {
       LOGGER.error("SQL Exception: {}", e);
     } finally {
-      sqlUtils.closeConnectionAndStatement(conn, ps);
+      sqlUtils.closeStatement(ps);
     }
 
     return searchWrapper;
@@ -302,6 +293,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
   /**
    * {@inheritDoc}
    */
+  @Override
   public int removeForCompany(long companyId, Connection conn) {
     
     String removeForCompanySQL = "DELETE FROM computer WHERE company_id = ?";

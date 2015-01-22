@@ -35,9 +35,8 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public List<Company> findAll() {
+  public List<Company> findAll(Connection conn) {
 
-    Connection conn = sqlUtils.getConnection();
     Statement stmt = null;
 
     final String query = "SELECT id, name FROM company";
@@ -54,14 +53,12 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
         Company company = mapper.mapRow(results);
 
         companies.add(company);
-
       }
 
     } catch (SQLException e) {
       LOGGER.error("SQLException: {}", e);
-
     } finally {
-      sqlUtils.closeConnectionAndStatement(conn, stmt);
+      sqlUtils.closeStatement(stmt);
     }
 
     return companies;
@@ -72,10 +69,9 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public Company findById(long id) {
+  public Company findById(long id, Connection conn) {
 
     Company company = null;
-    Connection conn = sqlUtils.getConnection();
     PreparedStatement ps = null;
 
     String query = "SELECT id, name FROM company WHERE id = ?";
@@ -96,7 +92,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       LOGGER.error("SQLException: {}", e);
 
     } finally {
-      sqlUtils.closeConnectionAndStatement(conn, ps);
+      sqlUtils.closeStatement(ps);
     }
 
     return company;
@@ -107,7 +103,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Company> findAll(long offset, long nbRequested) {
+  public SearchWrapper<Company> findAll(long offset, long nbRequested, Connection conn) {
     SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
     List<Company> companies = new ArrayList<Company>();
 
@@ -123,7 +119,6 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     String query = "SELECT id, name FROM company LIMIT ?, ?";
     String countQuery = "SELECT COUNT(id) AS count FROM company";
 
-    Connection conn = sqlUtils.getConnection();
     PreparedStatement ps = null;
 
     try {
@@ -157,24 +152,23 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
         companies.add(company);
 
       }
-
+      
       searchWrapper.setResults(companies);
 
     } catch (SQLException e) {
       LOGGER.error("SQLException: {}", e);
     } finally {
-      sqlUtils.closeConnectionAndStatement(conn, ps);
+      sqlUtils.closeStatement(ps);
     }
 
     return searchWrapper;
   }
 
   @Override
-  public void create(Company company) {
+  public void create(Company company, Connection conn) {
 
     String query = "INSERT INTO company(name) VALUES(?)";
 
-    Connection conn = sqlUtils.getConnection();
     PreparedStatement ps = null;
 
     try {
@@ -183,13 +177,11 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       ps.setString(1, company.getName());
 
       ps.executeUpdate();
-
+      
     } catch (SQLException e) {
-
       LOGGER.error("SQLException: {}", e);
-
     } finally {
-      sqlUtils.closeConnectionAndStatement(conn, ps);
+      sqlUtils.closeStatement(ps);
     }
 
   }
@@ -201,16 +193,18 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
   public int remove(long id, Connection conn) {
 
     String removeCompanyQuery = "DELETE FROM company WHERE id = ?";
+    PreparedStatement ps = null;
     try {
-      PreparedStatement ps = conn.prepareStatement(removeCompanyQuery);
+      ps = conn.prepareStatement(removeCompanyQuery);
       ps.setLong(1, id);
       int nbCompany = ps.executeUpdate();
-      ps.close();
       return nbCompany;
       
     } catch(SQLException e) {
       LOGGER.warn("remove(): SQLException: ", e);
       return -1;
+    } finally {
+      sqlUtils.closeStatement(ps);
     }
 
   }

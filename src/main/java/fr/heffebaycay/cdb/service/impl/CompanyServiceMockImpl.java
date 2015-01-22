@@ -34,7 +34,13 @@ public class CompanyServiceMockImpl implements ICompanyService {
    */
   @Override
   public List<Company> findAll() {
-    return companyDao.findAll();
+    LOGGER.debug("Call to findAll()");
+    
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    List<Company> companies = companyDao.findAll(conn);
+    DaoManager.INSTANCE.closeConnection(conn);
+    
+    return companies;
   }
 
   /**
@@ -42,7 +48,13 @@ public class CompanyServiceMockImpl implements ICompanyService {
    */
   @Override
   public Company findById(long id) {
-    return companyDao.findById(id);
+    LOGGER.debug("Call to findById()");
+    
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    Company company = companyDao.findById(id, conn);
+    DaoManager.INSTANCE.closeConnection(conn);
+    
+    return company;
   }
 
   /**
@@ -50,7 +62,13 @@ public class CompanyServiceMockImpl implements ICompanyService {
    */
   @Override
   public void create(Company company) {
-    companyDao.create(company);
+    LOGGER.debug("Call to create()");
+    
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    companyDao.create(company, conn);
+    DaoManager.INSTANCE.closeConnection(conn);
+    
+    
   }
 
   /**
@@ -58,11 +76,18 @@ public class CompanyServiceMockImpl implements ICompanyService {
    */
   @Override
   public SearchWrapper<Company> findAll(long offset, long nbRequested) {
-    return companyDao.findAll(offset, nbRequested);
+    LOGGER.debug("Call to findAll()");
+    
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    SearchWrapper<Company> companies = companyDao.findAll(offset, nbRequested, conn);
+    DaoManager.INSTANCE.closeConnection(conn);
+    
+    return companies;
   }
 
   @Override
   public void remove(long id) {
+    LOGGER.debug("Call to remove()");
     
     Connection conn = DaoManager.INSTANCE.getConnection();
     
