@@ -57,15 +57,15 @@
                             Computer name <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'name', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'name', 'desc') }" />">D</a>
                         </th>
                         <th>
-                            Introduced date
+                            Introduced date <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'introduced', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'introduced', 'desc') }" />">D</a>
                         </th>
                         <!-- Table header for Discontinued Date -->
                         <th>
-                            Discontinued date
+                            Discontinued date <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'discontinued', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'discontinued', 'desc') }" />">D</a>
                         </th>
                         <!-- Table header for Company -->
                         <th>
-                            Company
+                            Company <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'company', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'company', 'desc') }" />">D</a>
                         </th>
 
                     </tr>
