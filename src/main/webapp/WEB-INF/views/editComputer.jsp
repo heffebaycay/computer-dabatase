@@ -47,11 +47,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="<c:choose><c:when test="${ dateIntroducedValue != null }">${ dateIntroducedValue }</c:when><c:otherwise><c:if test="${ computer != null }">${ u:formatDateTime(computer.introduced) }</c:if></c:otherwise></c:choose>">
+                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="<c:choose><c:when test="${ dateIntroducedValue != null }">${ dateIntroducedValue }</c:when><c:otherwise><c:if test="${ computer != null }">${ computer.introduced }</c:if></c:otherwise></c:choose>">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="<c:choose><c:when test="${ dateDiscontinuedValue != null }">${ dateDiscontinuedValue }</c:when><c:otherwise><c:if test="${ computer != null }">${ u:formatDateTime(computer.discontinued) }</c:if></c:otherwise></c:choose>">
+                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="<c:choose><c:when test="${ dateDiscontinuedValue != null }">${ dateDiscontinuedValue }</c:when><c:otherwise><c:if test="${ computer != null }">${ computer.discontinued }</c:if></c:otherwise></c:choose>">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>

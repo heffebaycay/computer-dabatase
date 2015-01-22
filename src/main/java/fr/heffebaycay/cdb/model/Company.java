@@ -23,9 +23,6 @@ public class Company {
   }
 
   public void setName(String name) {
-    if (name == null || name.length() == 0) {
-      throw new IllegalArgumentException("The 'name' property cannot be null nor empty");
-    }
     this.name = name;
   }
 

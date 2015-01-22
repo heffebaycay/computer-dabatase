@@ -80,8 +80,8 @@
                 			<td>
                 				<a href="<c:url value="/computers/edit?id=${ computer.id }"/>" onclick="">${computer.name}</a>
                 			</td>
-                			<td>${ u:formatDateTime(computer.introduced) }</td>
-                			<td>${ u:formatDateTime(computer.discontinued) }</td>
+                			<td>${ computer.introduced }</td>
+                			<td>${ computer.discontinued }</td>
                 			<c:choose>
                 				<c:when test="${computer.company != null}">
                 					<td>${ computer.company.name }</td>

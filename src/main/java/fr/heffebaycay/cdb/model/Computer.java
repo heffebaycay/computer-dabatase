@@ -32,10 +32,6 @@ public class Computer {
   }
 
   public void setName(String name) {
-    if (name == null || name.length() == 0) {
-      throw new IllegalArgumentException("Name property cannot be null nor empty");
-    }
-
     this.name = name;
   }
 

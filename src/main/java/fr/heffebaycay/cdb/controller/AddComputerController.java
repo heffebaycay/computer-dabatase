@@ -14,6 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.heffebaycay.cdb.dto.ComputerDTO;
+import fr.heffebaycay.cdb.dto.ComputerDTO.Builder;
+import fr.heffebaycay.cdb.dto.mapper.CompanyMapper;
+import fr.heffebaycay.cdb.dto.mapper.ComputerMapper;
+import fr.heffebaycay.cdb.dto.validator.ComputerDTOValidator;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.ICompanyService;
@@ -52,7 +57,7 @@ public class AddComputerController extends HttpServlet {
     LOGGER.debug("Call to AddComputerController::doGet()");
 
     // The view requires the list of all companies
-    request.setAttribute("companies", mCompanyService.findAll());
+    request.setAttribute("companies", CompanyMapper.toDTO( mCompanyService.findAll() ));
 
     RequestDispatcher rd = getServletContext().getRequestDispatcher(
         response.encodeURL("/WEB-INF/views/addComputer.jsp"));
@@ -71,43 +76,24 @@ public class AddComputerController extends HttpServlet {
     List<String> errors = new ArrayList<>();
 
     Computer computer = new Computer();
+    ComputerDTO.Builder computerBuilder = new ComputerDTO.Builder();
 
     String uName = request.getParameter("computerName");
+    String uIntroduced = request.getParameter("introduced");
+    String uDiscontinued = request.getParameter("discontinued");
 
     // Storing given value in case something goes wrong and we need to display it back to the user
     request.setAttribute("computerNameValue", uName);
-    LOGGER.debug("doPost() :: computerName: " + uName);
-
-    if (uName == null || uName.isEmpty()) {
-      // Error: invalid computer name
-      errors.add("Computer name cannot be empty");
-    } else {
-      computer.setName(uName);
-    }
-
-    String uIntroduced = request.getParameter("introduced");
-    LOGGER.debug("doPost() :: dateIntroduced: " + uIntroduced);
-
-    // Storing given value in case something goes wrong and we need to display it back to the user
     request.setAttribute("dateIntroducedValue", uIntroduced);
-    try {
-      computer.setIntroduced(uIntroduced);
-    } catch (Exception e) {
-      LOGGER.warn("Invalid value for date introduced. Exception: {}", e);
-      errors.add("Invalid value for date introduced. Valid format is: YYYY-MM-DD.");
-    }
-
-    String uDiscontinued = request.getParameter("discontinued");
-    LOGGER.debug("doPost() :: dateDiscontinued: " + uDiscontinued);
-
     request.setAttribute("dateDiscontinuedValue", uDiscontinued);
-    try {
-      computer.setDiscontinued(uDiscontinued);
-    } catch (Exception e) {
-      LOGGER.warn("Invalid value for date discontinued. Exception: {}", e);
-      errors.add("Invalid value for date discontinued. Valid format is: YYYY-MM-DD.");
-    }
-
+    
+    ComputerDTO computerDTO = computerBuilder.name(uName).introduced(uIntroduced).discontinued(uDiscontinued).build();
+    
+    ComputerDTOValidator computerValidator = new ComputerDTOValidator();
+    computerValidator.validate(computerDTO, errors);
+    
+    // Validating company is special as we need to check that the company selected
+    // by the user does exist in the data source.
     String uCompanyId = request.getParameter("companyId");
     Company company = null;
     long companyId;
@@ -122,7 +108,8 @@ public class AddComputerController extends HttpServlet {
     }
 
     if (errors.isEmpty()) {
-
+      computer = ComputerMapper.toDAO(computerDTO);
+      
       computer.setCompany(company);
       long computerId = mComputerService.create(computer);
 

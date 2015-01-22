@@ -1,5 +1,8 @@
 package fr.heffebaycay.cdb.dto.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import fr.heffebaycay.cdb.dto.CompanyDTO;
 import fr.heffebaycay.cdb.model.Company;
 
@@ -22,6 +25,22 @@ public class CompanyMapper {
         .name(companyDAO.getName()).build();
 
     return companyDTO;
+  }
+  
+  /**
+   * Converts a List of Company to a List of CompanyDTO
+   * 
+   * @param companies   The List of Company DAO objects to be converted
+   * @return            A List of CompanyDTO objects, or <strong>null</strong> if <strong>companies</strong> is null.
+   */
+  public static List<CompanyDTO> toDTO(List<Company> companies) {
+    
+    if(companies == null) {
+      return null;
+    }
+    
+    return companies.stream().map(c -> toDTO(c)).collect(Collectors.toList());
+    
   }
 
   /**

@@ -8,21 +8,21 @@ import java.time.format.DateTimeParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LocalDateTimeMapper {
+public class LocalDateMapper {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(LocalDateTimeMapper.class.getSimpleName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LocalDateMapper.class.getSimpleName());
   
-  private static final String DATE_PATTERN = "yyyy-MM-dd"; 
+private static final String DATE_PATTERN = "yyyy-MM-dd"; 
   
-  public static String toDTO(LocalDateTime ldt) {
+  public static String toDTO(LocalDate ld) {
    
-    if(ldt == null) {
+    if(ld == null) {
       return null;
     }
     
     try {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
-      String strDate = ldt.format(formatter);
+      String strDate = ld.format(formatter);
       return strDate;
     } catch(IllegalArgumentException e) {
       LOGGER.warn("toDTO() : Invalid Object Provided: ", e);
@@ -33,29 +33,22 @@ public class LocalDateTimeMapper {
   
 
   
-  public static LocalDateTime fromDTO(String strDate) {
+  public static LocalDate fromDTO(String strDate) {
+    
+    if(strDate == null || strDate.trim().isEmpty()) {
+      return null;
+    }
     
     try {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
-      LocalDateTime ldt = LocalDateTime.parse(strDate, formatter);
-      return ldt;
+      LocalDate ld = LocalDate.parse(strDate, formatter);
+      return ld;
     } catch(DateTimeParseException e) {
       LOGGER.warn("toDAO() : Failed to parse String input: ", e);
       return null;
     }
-  }
-  
-  public static LocalDateTime fromLocalDate(LocalDate ld) {
     
-    if(ld == null) {
-      return null;
-    }
-    
-    return ld.atStartOfDay();
     
   }
   
-  
-  
-
 }

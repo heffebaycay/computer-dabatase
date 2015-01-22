@@ -1,8 +1,8 @@
 package fr.heffebaycay.cdb.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +14,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.heffebaycay.cdb.dto.CompanyDTO;
+import fr.heffebaycay.cdb.dto.ComputerDTO;
+import fr.heffebaycay.cdb.dto.ComputerDTO.Builder;
+import fr.heffebaycay.cdb.dto.mapper.CompanyMapper;
+import fr.heffebaycay.cdb.dto.mapper.ComputerMapper;
+import fr.heffebaycay.cdb.dto.validator.ComputerDTOValidator;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.ICompanyService;
@@ -77,17 +83,17 @@ public class EditComputerController extends HttpServlet {
 	    return;
 	  }
 	  
-	  Computer computer = mComputerService.findById(computerId);
-	  if(computer == null) {
+	  ComputerDTO computerDTO = ComputerMapper.toDTO( mComputerService.findById(computerId) );
+	  if(computerDTO == null) {
 	    // Unable to find any computer based on the given Id
 	    LOGGER.warn("doGet() : Inexisting computer requested by user");
 	    return;
 	  }
 	  
-	  List<Company> companies = mCompanyService.findAll();
-	  request.setAttribute("companies", companies);
+	  List<CompanyDTO> companies = CompanyMapper.toDTO( mCompanyService.findAll() );
 	  
-	  request.setAttribute("computer", computer);
+	  request.setAttribute("companies", companies);
+	  request.setAttribute("computer", computerDTO);
 	  
 	  RequestDispatcher rd = getServletContext().getRequestDispatcher(response.encodeURL("/WEB-INF/views/editComputer.jsp"));
 	  rd.forward(request, response);
@@ -119,47 +125,27 @@ public class EditComputerController extends HttpServlet {
 	    LOGGER.warn("doPost() :: User supplied an Id for a non-existing computer.");
 	    return;
 	  }
-	   
 	  
-	  // Computer name
+	  ComputerDTO.Builder computerBuilder = new ComputerDTO.Builder();
+	  
+	  // Fetching the request parameters
 	  String uName = request.getParameter("computerName");
-	  // Storing given value in case something goes wrong and we need to display it back to the user
-	  request.setAttribute("computerNameValue", uName);
-	  
-	  LOGGER.debug("doPost() :: computerName: " + uName);
-	  
-	  if( uName == null || uName.isEmpty()) {
-	    // Error: invalid computer name
-	    errors.add("Computer name cannot be empty");
-	  }
-	  
 	  String uIntroduced = request.getParameter("introduced");
-	  LOGGER.debug("doPost() :: dateIntroduced: " + uIntroduced);
-	  
-	  // Storing given value in case something goes wrong and we need to display it back to the user
-	  request.setAttribute("dateIntroducedValue", uIntroduced);
-	  try {
-	    computer.setIntroduced(uIntroduced);
-	  } catch(Exception e) {
-	    LOGGER.warn("Invalid value for date introduced. Exception: {}", e);
-	    errors.add("Invalid value for date introduced. Valid format is: YYYY-MM-DD.");
-	  }
-	  
-	  
 	  String uDiscontinued = request.getParameter("discontinued");
-	  LOGGER.debug("doPost() :: dateDiscontinued: " + uDiscontinued);
-	  
-	  request.setAttribute("dateDiscontinuedValue", uDiscontinued);
-	  try {
-	    computer.setDiscontinued(uDiscontinued);
-	  } catch(Exception e) {
-	    LOGGER.warn("Invalid value for date discontinued. Exception: {}", e);
-	    errors.add("Invalid value for date discontinued. Valid format is: YYYY-MM-DD.");
-	  }
-	  
 	  String uCompanyId = request.getParameter("companyId");
-	  request.setAttribute("companyIdValue", uCompanyId);
 	  
+	   // Storing given value in case something goes wrong and we need to display it back to the user
+      request.setAttribute("computerNameValue", uName);
+      request.setAttribute("dateIntroducedValue", uIntroduced);
+      request.setAttribute("dateDiscontinuedValue", uDiscontinued);
+      request.setAttribute("companyIdValue", uCompanyId);
+	  
+	  ComputerDTO computerDTO = computerBuilder.name(uName).introduced(uIntroduced).discontinued(uDiscontinued).id(computerId).build();
+	  
+	  ComputerDTOValidator computerValidator = new ComputerDTOValidator();
+	  computerValidator.validate(computerDTO, errors);
+	  
+	  // Creating the Company object
 	  Company company = null;
 	  long companyId;
 	  try {
@@ -175,16 +161,12 @@ public class EditComputerController extends HttpServlet {
 	  }
 	  
 	  
-	  
 	  if(errors.isEmpty()) {
-	    computer.setName(uName);
+	    
+	    ComputerMapper.updateDAO(computer, computerDTO);
 	    computer.setCompany(company);
 	    
-	    computer.setIntroduced(uIntroduced);
-	    computer.setDiscontinued(uDiscontinued);
-	    
 	    mComputerService.update(computer);
-	    
 	  }
 	  
 	  

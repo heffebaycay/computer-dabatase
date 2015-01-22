@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.heffebaycay.cdb.dto.ComputerDTO;
+import fr.heffebaycay.cdb.dto.mapper.ComputerMapper;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.IComputerService;
 import fr.heffebaycay.cdb.service.impl.ComputerServiceMockImpl;
@@ -52,7 +54,7 @@ public class ComputerController extends HttpServlet {
       request.setAttribute("bRemoveSuccess", true);
     }
     
-    List<Computer> computers = null;
+    List<ComputerDTO> computers = null;
     SearchWrapper<Computer> searchWrapper;
 
     long nbResultsPerPage = AppSettings.NB_RESULTS_PAGE;
@@ -74,7 +76,7 @@ public class ComputerController extends HttpServlet {
     request.setAttribute("currentPage", currentPage);
     
     searchWrapper = mComputerService.findAll((currentPage - 1) * nbResultsPerPage, nbResultsPerPage);
-    computers = searchWrapper.getResults();
+    computers = ComputerMapper.toDTO( searchWrapper.getResults() );
     
     request.setAttribute("totalPage", searchWrapper.getTotalPage());
     request.setAttribute("totalCount", searchWrapper.getTotalQueryCount());
