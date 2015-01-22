@@ -20,4 +20,10 @@ version="2.0">
 		<function-class>fr.heffebaycay.cdb.util.RouteGenerator</function-class>
 		<function-signature>java.lang.String generateDashboardRoute(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</function-signature>
 	</function>
+	
+	<function>
+		<name>generateCompanyRoute</name>
+		<function-class>fr.heffebaycay.cdb.util.RouteGenerator</function-class>
+		<function-signature>java.lang.String generateCompanyRoute(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	</function>
 </taglib>

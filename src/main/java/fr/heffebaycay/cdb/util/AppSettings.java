@@ -90,8 +90,11 @@ public class AppSettings {
 
     Route dashboardRoute = new Route.Builder().name("dashboard").path("/").parameters(params)
         .build();
+    
+    Route companyRoute = new Route.Builder().name("company-list").path("/companies/list").parameters(params).build();
 
     APP_ROUTES.add(dashboardRoute);
+    APP_ROUTES.add(companyRoute);
 
   }
 

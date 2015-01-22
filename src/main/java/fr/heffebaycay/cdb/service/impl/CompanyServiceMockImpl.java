@@ -11,6 +11,8 @@ import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.service.ICompanyService;
+import fr.heffebaycay.cdb.util.CompanySortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class CompanyServiceMockImpl implements ICompanyService {
@@ -75,11 +77,11 @@ public class CompanyServiceMockImpl implements ICompanyService {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Company> findAll(long offset, long nbRequested) {
+  public SearchWrapper<Company> findAll(long offset, long nbRequested, CompanySortCriteria sortCriterion, SortOrder sortOrder) {
     LOGGER.debug("Call to findAll()");
     
     Connection conn = DaoManager.INSTANCE.getConnection();
-    SearchWrapper<Company> companies = companyDao.findAll(offset, nbRequested, conn);
+    SearchWrapper<Company> companies = companyDao.findAll(offset, nbRequested, sortCriterion, sortOrder, conn);
     DaoManager.INSTANCE.closeConnection(conn);
     
     return companies;
@@ -104,6 +106,19 @@ public class CompanyServiceMockImpl implements ICompanyService {
     DaoManager.INSTANCE.endTransaction(conn);
     
   }
+
+	@Override
+	public SearchWrapper<Company> findByName(String name, long offset,
+	  long nbRequested, CompanySortCriteria sortCriterion, SortOrder sortOrder) {
+	  LOGGER.debug("Call to findByName()");
+		
+	  Connection conn = DaoManager.INSTANCE.getConnection();
+	  SearchWrapper<Company> companies = companyDao.findByName(name, offset, nbRequested, sortCriterion, sortOrder, conn);
+	  DaoManager.INSTANCE.closeConnection(conn);
+		
+	  return companies;
+	}
+  
   
   
 

@@ -15,6 +15,8 @@ import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.impl.mapper.CompanyMySQLRowMapper;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.model.Company;
+import fr.heffebaycay.cdb.util.CompanySortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class CompanyDaoMySQLImpl implements ICompanyDao {
@@ -103,7 +105,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Company> findAll(long offset, long nbRequested, Connection conn) {
+  public SearchWrapper<Company> findAll(long offset, long nbRequested, CompanySortCriteria sortCriterion, SortOrder sortOrder, Connection conn) {
     SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
     List<Company> companies = new ArrayList<Company>();
 
@@ -115,9 +117,12 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
 
       return searchWrapper;
     }
+    
+    String orderPart = generateOrderPart("c", sortCriterion, sortOrder);
+    
 
-    String query = "SELECT id, name FROM company LIMIT ?, ?";
-    String countQuery = "SELECT COUNT(id) AS count FROM company";
+    String query = "SELECT c.id, c.name FROM company AS c ORDER BY " + orderPart +  " LIMIT ?, ?";
+    String countQuery = "SELECT COUNT(c.id) AS count FROM company AS c ORDER BY " + orderPart;
 
     PreparedStatement ps = null;
 
@@ -208,5 +213,102 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
     }
 
   }
+  
+  private String generateOrderPart(String entityAlias, CompanySortCriteria sortCriterion, SortOrder sortOrder) {
+	  StringBuffer stringBuffer = new StringBuffer(entityAlias);
+	  
+	  switch(sortCriterion) {
+	  case ID:
+		  stringBuffer.append(".id");
+		  break;
+	  case NAME:
+		  stringBuffer.append(".name");
+		  break;
+	  default:
+		  stringBuffer.append(".id");
+	  }
+	  
+	  if(sortOrder.equals(SortOrder.DESC)) {
+		  stringBuffer.append(" desc");
+	  } else {
+		  stringBuffer.append(" asc");
+	  }
+	  
+	  return stringBuffer.toString();
+  }
+
+@Override
+public SearchWrapper<Company> findByName(String name, long offset,
+		long nbRequested, CompanySortCriteria sortCriterion,
+		SortOrder sortOrder, Connection conn) {
+	
+	SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
+	List<Company> companies = new ArrayList<Company>();
+	
+	if (offset < 0 || nbRequested <= 0) {
+		searchWrapper.setResults(companies);
+		searchWrapper.setCurrentPage(0);
+		searchWrapper.setTotalPage(0);
+		searchWrapper.setTotalQueryCount(0);
+		
+		return searchWrapper;
+	}
+	
+	name = name.replace("%", "");
+	
+	String orderPart = generateOrderPart("c", sortCriterion, sortOrder);
+	
+	String query = "SELECT c.id, c.name FROM company AS c WHERE c.name LIKE ? ORDER BY " + orderPart + " LIMIT ?, ?";
+	String countQuery = "SELECT COUNT(c.id) AS count FROM company AS c WHERE c.name LIKE ? ORDER BY " + orderPart;
+	
+	PreparedStatement ps = null;
+	
+	try {
+		String searchKeyword = String.format("%%%s%%", name);
+		LOGGER.debug(String.format("findByName(): Keyword={%s}", searchKeyword));
+		
+		PreparedStatement countStmt = conn.prepareStatement(countQuery);
+		countStmt.setString(1, searchKeyword);
+		
+		ResultSet countResult = countStmt.executeQuery();
+		countResult.first();
+		searchWrapper.setTotalQueryCount(countResult.getLong("count"));
+		sqlUtils.closeStatement(countStmt);
+		
+		long currentPage = (long) Math.ceil(offset * 1.0 / nbRequested) + 1;
+		searchWrapper.setCurrentPage(currentPage);
+		
+		long totalPage = (long) Math.ceil(searchWrapper.getTotalQueryCount() * 1.0 / nbRequested);
+		searchWrapper.setTotalPage(totalPage);
+		
+		ps = conn.prepareStatement(query);
+		
+		ps.setString(1, searchKeyword);
+		ps.setLong(2, offset);
+		ps.setLong(3, nbRequested);
+		
+		ResultSet rs = ps.executeQuery();
+		
+		while(rs.next()) {
+			CompanyMySQLRowMapper mapper = new CompanyMySQLRowMapper();
+			Company company = mapper.mapRow(rs);
+			
+			companies.add(company);
+		}
+		
+		searchWrapper.setResults(companies);
+	} catch (SQLException e) {
+		LOGGER.warn("findByName(): SQLException: ", e);
+	} finally {
+		sqlUtils.closeStatement(ps);
+	}
+	
+	
+	
+	return null;
+}
+  
+  
+  
 
 }

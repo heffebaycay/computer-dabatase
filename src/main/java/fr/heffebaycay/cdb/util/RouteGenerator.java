@@ -24,7 +24,10 @@ public class RouteGenerator {
     return generateRoute("dashboard", new RouteArgumentMapBuilder().addArgument("p", pageNumber).addArgument("search", search).addArgument("sortBy", sortCriterion).addArgument("order", sortOrder).build());
     
   }
-
+  
+  public static String generateCompanyRoute(String pageNumber, String search, String sortCriterion, String sortOrder) {
+	  return generateRoute("company-list", new RouteArgumentMapBuilder().addArgument("p", pageNumber).addArgument("search", search).addArgument("sortBy", sortCriterion).addArgument("order", sortOrder).build());
+  }
   
   /**
    * Generates the path to a given Route identified by its name, and append the

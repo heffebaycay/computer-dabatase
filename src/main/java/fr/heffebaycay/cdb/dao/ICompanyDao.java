@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.util.List;
 
 import fr.heffebaycay.cdb.model.Company;
+import fr.heffebaycay.cdb.util.CompanySortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public interface ICompanyDao {
@@ -43,8 +45,9 @@ public interface ICompanyDao {
    * @param nbRequested      The total number of elements requested
    * @return                 A SearchWrapper element containing both the results as a List and the total number of elements matched by the query
    */
-  SearchWrapper<Company> findAll(long offset, long nbRequested, Connection conn);
+  SearchWrapper<Company> findAll(long offset, long nbRequested, CompanySortCriteria sortCriterion, SortOrder sortOrder, Connection conn);
   
   
-
+  SearchWrapper<Company> findByName(String name, long offset, long nbRequested, CompanySortCriteria sortCriterion, SortOrder sortOrder, Connection conn );
+  
 }
