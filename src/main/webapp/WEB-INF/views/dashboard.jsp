@@ -54,7 +54,7 @@
                             </span>
                         </th>
                         <th>
-                            Computer name
+                            Computer name <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'name', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'name', 'desc') }" />">D</a>
                         </th>
                         <th>
                             Introduced date
