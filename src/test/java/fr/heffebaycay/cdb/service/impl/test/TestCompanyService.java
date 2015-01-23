@@ -9,14 +9,20 @@ import static org.mockito.Mockito.when;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import javax.naming.ldap.Rdn;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.impl.CompanyDaoMySQLImpl;
 import fr.heffebaycay.cdb.model.Company;
+import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.impl.CompanyServiceMockImpl;
 import fr.heffebaycay.cdb.util.CompanySortCriteria;
@@ -26,78 +32,33 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 public class TestCompanyService {
 
   private static final int NUMBER_OF_RESULTS = 10;
-  
-  ICompanyService     companyService;
-  CompanyDaoMySQLImpl companyDao;
 
-  Connection conn = null;
-  
+  ICompanyService          companyService;
+  ICompanyDao              companyDao;
+
+  Connection               conn              = null;
+
+  List<Company>            companiesDB;
+
   @Before
   public void setUp() {
 
     companyDao = mock(CompanyDaoMySQLImpl.class);
     companyService = new CompanyServiceMockImpl(companyDao);
 
-    
-    Company c1 = new Company.Builder()
-                                .id(1)
-                                .name("Apple")
-                                .build();
-    
-    Company c2 = new Company.Builder()
-                                .id(2)
-                                .name("HP")
-                                .build();
-    
-    Company c3 = new Company.Builder()
-                                .id(3)
-                                .name("IBM")
-                                .build();
-    
-    Company c4 = new Company.Builder()
-                                .id(2)
-                                .name("Compaq")
-                                .build();
-    
-    List<Company> companies = new ArrayList<Company>();
-    companies.add(c1);
-    companies.add(c2);
-    companies.add(c3);
-    
-    // findAll()
-    when(companyDao.findAll(conn)).thenReturn(companies);
-    
-    // findById()
-    when(companyDao.findById(1, conn)).thenReturn(c1);
-    when(companyDao.findById(2, conn)).thenReturn(c2);
-    when(companyDao.findById(3, conn)).thenReturn(c3);
-    
-    // create()
-    doAnswer(new Answer<Object>() {
-      
-      public Object answer(InvocationOnMock invocation) {
-        
-        Object[] args = invocation.getArguments();
-        
-        // The one and only argument of the method is of type "Company"
-        Company company = (Company) args[0];
-        companies.add(company);
-        
-        return null;
-        
-      }
-      
-    }).when(companyDao).create(c4, conn);
-    
-    // findAllWithOffset
-    SearchWrapper<Company> wrapper = new SearchWrapper<Company>();
-    wrapper.setResults(companies);
-    wrapper.setCurrentPage(1);
-    wrapper.setTotalPage(1);
-    wrapper.setTotalQueryCount(companies.size());
-    
-    when(companyDao.findAll(0, NUMBER_OF_RESULTS, CompanySortCriteria.ID, SortOrder.ASC, conn)).thenReturn(wrapper);
-    
+    Company c1 = new Company.Builder().id(1).name("Apple").build();
+
+    Company c2 = new Company.Builder().id(2).name("HP").build();
+
+    Company c3 = new Company.Builder().id(3).name("IBM").build();
+
+    Company c4 = new Company.Builder().id(2).name("Compaq").build();
+
+    companiesDB = new ArrayList<Company>();
+    companiesDB.add(c1);
+    companiesDB.add(c2);
+    companiesDB.add(c3);
+
   }
 
   @Test
@@ -107,24 +68,11 @@ public class TestCompanyService {
       fail("Company Service isn't initialized");
     }
 
+    when(companyDao.findAll(Matchers.any(Connection.class))).thenReturn(companiesDB);
+
     List<Company> companies = companyService.findAll();
 
-    assertEquals(3, companies.size());
-    
-    for(Company c : companies) {
-      long computerId = c.getId();
-      
-      if(computerId == 1) {
-        assertEquals("Apple", c.getName());
-      } else if(computerId == 2) {
-        assertEquals("HP", c.getName());
-      } else if(computerId == 3) {
-        assertEquals("IBM", c.getName());
-      } else {
-        fail("Unknown company in list");
-      }
-      
-    }
+    assertEquals(companiesDB, companies);
 
   }
 
@@ -135,9 +83,25 @@ public class TestCompanyService {
       fail("Company Service isn't initialized");
     }
 
-    Company company = companyService.findById(2);
+    doAnswer(new Answer<Company>() {
 
-    assertEquals("HP", company.getName());
+      @Override
+      public Company answer(InvocationOnMock invocation) {
+        long idToFind = invocation.getArgumentAt(0, Long.class);
+
+        return companiesDB.stream().filter(c -> c.getId() == idToFind).findFirst().get();
+      }
+
+    }).when(companyDao).findById(Matchers.anyLong(), Matchers.any(Connection.class));
+
+    Random rnd = new Random();
+    int randomIndex = rnd.nextInt(companiesDB.size());
+
+    Company rndCompany = companiesDB.get(randomIndex);
+
+    Company company = companyService.findById(rndCompany.getId());
+
+    assertEquals(rndCompany, company);
 
   }
 
@@ -148,37 +112,51 @@ public class TestCompanyService {
       fail("CompanyService isn't initialized");
     }
 
-    Company c4 = new Company.Builder()
-                                .id(4)
-                                .name("Compaq")
-                                .build();
+    doAnswer(new Answer<Long>() {
+
+      @Override
+      public Long answer(InvocationOnMock invocation) {
+
+        Company companyToCreate = invocation.getArgumentAt(0, Company.class);
+
+        companiesDB.add(companyToCreate);
+
+        return companyToCreate.getId();
+      }
+
+    }).when(companyDao).create(Matchers.any(Company.class), Matchers.any(Connection.class));
+
+    Company c4 = new Company.Builder().id(4).name("Compaq").build();
 
     companyService.create(c4);
 
-    List<Company> companies = companyService.findAll();
-    
-    for(Company c : companies) {
-      if(c.getId() == 4) {
-        assertEquals("Compaq", c.getName());
-      }
-    }
-    
-    
-    
+    Company foundCompany = companiesDB.stream().filter(c -> c.getId() == c4.getId()).findFirst()
+        .get();
+
+    assertEquals(c4, foundCompany);
+
   }
 
   @Test
   public void testFindAllWithOffset() {
-    
+
     if (companyService == null) {
       fail("CompanyService isn't initialized");
     }
 
-    SearchWrapper<Company> wrapper = companyService.findAll(0, NUMBER_OF_RESULTS, CompanySortCriteria.ID, SortOrder.ASC);
+    SearchWrapper<Company> wrapper = new SearchWrapper<Company>();
 
-    if(wrapper.getResults().size() > NUMBER_OF_RESULTS) {
-      fail("Wrapper cannot contain more results than requested");
-    }
+    when(
+        companyDao.findAll(Matchers.anyLong(), Matchers.anyLong(),
+            Matchers.any(CompanySortCriteria.class), Matchers.any(SortOrder.class),
+            Matchers.any(Connection.class))).thenReturn(wrapper);
+
+    SearchWrapper<Company> returnedWrapper = companyService.findAll(0, NUMBER_OF_RESULTS,
+        CompanySortCriteria.ID, SortOrder.ASC);
+
+    
+    assertEquals(wrapper, returnedWrapper);
+    
   }
 
 }

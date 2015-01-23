@@ -225,7 +225,6 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     } catch (SQLException e) {
       LOGGER.error("SQLException: {}", e);
     } finally {
-      sqlUtils.closeConnection(conn);
       sqlUtils.closeStatement(ps);
     }
 

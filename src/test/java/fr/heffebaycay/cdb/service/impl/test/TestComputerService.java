@@ -16,7 +16,6 @@ import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
-import org.mockito.internal.matchers.Any;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -79,129 +78,6 @@ public class TestComputerService {
     computersDB.add(c4);
     computersDB.add(c5);
     computersDB.add(c6);
-
-    // findById()
-    /*doAnswer(new Answer<Object>() {
-      public Object answer(InvocationOnMock invocation) {
-                
-        Object[] args = invocation.getArguments();
-        long computerId = (long) args[0];
-        
-        for(Computer c : computersDB) {
-          if(c.getId() == computerId) {
-            return c;
-          }
-        }
-        
-        return null;
-        
-      }
-      
-    }).when(computerDao).findById(c1.getId(), conn);
-    
-    when(computerDao.findById(c2.getId(), conn)).thenReturn(c2);
-    when(computerDao.findById(c3.getId(), conn)).thenReturn(c3);
-    when(computerDao.findById(c4.getId(), conn)).thenReturn(c4);
-    when(computerDao.findById(c5.getId(), conn)).thenReturn(c5);
-    when(computerDao.findById(c6.getId(), conn)).thenReturn(c6);
-    when(computerDao.findById(c7.getId(), conn)).thenReturn(c7);*/
-
-    // remove()
-    /*doAnswer(new Answer<Object>() {
-      public Object answer(InvocationOnMock invocation) {
-        Object[] args = invocation.getArguments();
-        
-        // First argument is of type long
-        long computerId = (long) args[0];
-        
-        for(int i = 0; i < computersDB.size(); i++) {
-          if(computersDB.get(i).getId() == computerId) {
-            computersDB.remove(i);
-            break;
-          }
-        }
-        
-        return null;
-      }
-    }).when(computerDao).remove(3, conn);*/
-
-    // create()
-    /*doAnswer(new Answer<Object>() {
-      
-      public Object answer(InvocationOnMock invocation) {
-        Object[] args = invocation.getArguments();
-        
-        // First argument is of type Computer
-        Computer computer = (Computer)args[0];
-        
-        computersDB.add(computer);
-        
-        return null;
-      }
-      
-    }).when(computerDao).create(c7, conn);*/
-
-    // update
-    /*doAnswer(new Answer<Object>() {
-      public Object answer(InvocationOnMock invocation) {
-        Object[] args = invocation.getArguments();
-        
-        // First argument is of type Computer
-        Computer computer = (Computer) args[0];
-        
-        for(int i = 0; i < computersDB.size(); i++) {
-          if(computersDB.get(i).getId() == computer.getId() ) {
-            computersDB.remove(i);
-            break;
-          }
-        }
-        
-        computersDB.add(computer);
-               
-        //when(computerDao.findById(computer.getId())).thenReturn(computer);
-        
-        return null;
-      }
-    }).when(computerDao).update(c8, conn);*/
-
-    // findAllWithOffset
-    /*SearchWrapper<Computer> wrapper = new SearchWrapper<Computer>();
-    wrapper.setResults(computersDB);
-    wrapper.setCurrentPage(1);
-    wrapper.setTotalPage(1);
-    wrapper.setTotalQueryCount(computersDB.size());
-    
-    // findAll(offset, nbResults, sortCriterion, sortOrder, conn)
-    doAnswer(new Answer<SearchWrapper<Computer>>() {
-      
-      public SearchWrapper<Computer> answer(InvocationOnMock invocation) {
-        
-        long offset = invocation.getArgumentAt(0, Long.class);
-        long nbResult = invocation.getArgumentAt(1, Long.class);
-        ComputerSortCriteria sortCriteria = invocation.getArgumentAt(2, ComputerSortCriteria.class);
-        SortOrder sortOrder = invocation.getArgumentAt(3, SortOrder.class);
-        Connection conn = invocation.getArgumentAt(4, Connection.class);
-        
-        if(nbResult > computersDB.size()) {
-          nbResult = computersDB.size();
-        }
-        
-        SearchWrapper<Computer> wrapper = new SearchWrapper<Computer>();
-        List<Computer> results = computersDB.subList(0, (int)nbResult);
-        
-        wrapper.setResults( results );
-        wrapper.setCurrentPage(1);
-        wrapper.setTotalPage(1);
-        wrapper.setTotalQueryCount(results.size());
-        
-        
-        
-        return wrapper;
-        
-      }
-      
-    }).when(computerDao).findAll(anyLong(), anyLong(), anyObject(), anyObject(), anyObject());*/
-
   }
 
   @Test
