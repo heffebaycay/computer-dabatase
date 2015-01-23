@@ -6,11 +6,11 @@ import org.slf4j.LoggerFactory;
 
 public class ComputerDatabaseCLI {
 
-  public static final String CLI_VERSION = "1.0";
-  
-  private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDatabaseCLI.class);
-  
-  public class MenuOption {
+  public static final String  CLI_VERSION = "1.0";
+
+  private static final Logger LOGGER      = LoggerFactory.getLogger(ComputerDatabaseCLI.class);
+
+  public final class MenuOption {
     /**
      * Here are the list of options available in the application
      * Each option value must be unique!
@@ -23,8 +23,9 @@ public class ComputerDatabaseCLI {
     public static final int COMPUTER_UPDATE      = 6;
     public static final int COMPANY_LIST_PAGE    = 7;
     public static final int COMPUTER_LIST_PAGE   = 8;
-    public static final int EXIT                 = 9;
-    
+    public static final int COMPANY_REMOVE       = 9;
+    public static final int EXIT                 = 10;
+
     private MenuOption() { }
   }
 
@@ -64,13 +65,13 @@ public class ComputerDatabaseCLI {
 
     boolean bMenuLoop = true;
 
-    Scanner sc = new Scanner(System.in);
+    final Scanner sc = new Scanner(System.in);
 
     while (bMenuLoop) {
 
       printMenu();
 
-      if (handleMenuChoice(sc) == true) {
+      if (handleMenuChoice(sc)) {
         bMenuLoop = false;
       } else {
         System.out.println("Press 'Enter' to continue ");
@@ -81,7 +82,7 @@ public class ComputerDatabaseCLI {
 
     sc.close();
 
-    System.out.println("%n%n*** \tThanks for using our CLI application \\o/ ***");
+    System.out.printf("%n%n*** \tThanks for using our CLI application \\o/ ***%n");
 
   }
 
@@ -100,9 +101,10 @@ public class ComputerDatabaseCLI {
     System.out.printf("\t#%d - Update an existing computer%n", MenuOption.COMPUTER_UPDATE);
     System.out.printf("\t#%d - List Companies (w/ page)%n", MenuOption.COMPANY_LIST_PAGE);
     System.out.printf("\t#%d - List Computers (w/ page)%n", MenuOption.COMPUTER_LIST_PAGE);
+    System.out.printf("\t#%d - Remove a specific company%n", MenuOption.COMPANY_REMOVE);
     System.out.printf("\t#%d - Exit this application%n", MenuOption.EXIT);
 
-    System.out.println("%nPlease type the identifier of the action you want to perform: ");
+    System.out.printf("%nPlease type the identifier of the action you want to perform:%n");
 
   }
 
@@ -114,84 +116,106 @@ public class ComputerDatabaseCLI {
    * @return A boolean indicating whether the main application should exit the menu loop
    * (<strong>true</strong>: the loop should be exited ; <strong>false</strong>: the loop should not be exited)
    */
-  protected static boolean handleMenuChoice(Scanner sc) {
+  protected static boolean handleMenuChoice(final Scanner sc) {
 
     int iChoice;
-    if(sc.hasNextInt()) {
+    if (sc.hasNextInt()) {
       iChoice = sc.nextInt();
       sc.nextLine();
     } else {
       iChoice = -1;
     }
-    
-    long computerId, pageNumber;
+
+    long computerId, pageNumber, companyId;
+    boolean result;
 
     switch (iChoice) {
       case MenuOption.COMPANY_LIST:
         companyUI.printCompanies();
-        return false;
+        result = false;
+        break;
       case MenuOption.COMPUTER_LIST:
         computerUI.printComputers();
-        return false;
+        result = false;
+        break;
       case MenuOption.COMPUTER_SHOWDETAILS:
         System.out.println("Please type the identifier of the computer:");
-        if(sc.hasNextLong()) {
+        if (sc.hasNextLong()) {
           computerId = sc.nextLong();
           sc.nextLine(); // clearing Scanner buffer
           computerUI.printComputerDetails(computerId);
         } else {
           System.out.println("Invalid identifier. Exiting routine.");
         }
-        return false;
+        result = false;
+        break;
       case MenuOption.COMPUTER_REMOVE:
         System.out.println("Please type the identifier of the computer to be removed:");
-        if(sc.hasNextLong()) {
+        if (sc.hasNextLong()) {
           computerId = sc.nextLong();
           sc.nextLine(); // clearing Scanner buffer
           computerUI.printRemoveComputer(computerId);
         } else {
           System.out.println("Invalid identifier. Exiting routine.");
         }
-        return false;
+        result = false;
+        break;
       case MenuOption.COMPUTER_CREATE:
         computerUI.createComputer(sc);
         return false;
       case MenuOption.COMPUTER_UPDATE:
         System.out.println("Please type the identifier of the computer:");
-        if(sc.hasNextLong()) {
+        if (sc.hasNextLong()) {
           computerId = sc.nextLong();
           sc.nextLine(); // clearing Scanner buffer
           computerUI.updateComputer(sc, computerId);
         } else {
           System.out.println("Invalid identifier. Exiting routine.");
         }
-        return false;
+        result = false;
+        break;
       case MenuOption.COMPANY_LIST_PAGE:
         System.out.println("Please type the number of the page you wish to displayed");
-        if(sc.hasNextLong()) {
+        if (sc.hasNextLong()) {
           pageNumber = sc.nextLong();
           sc.nextLine(); // clearing Scanner buffer
           companyUI.printCompaniesWithPage(pageNumber);
         } else {
           System.out.println("Invalid page number. Exiting routine.");
         }
-        return false;
+        result = false;
+        break;
       case MenuOption.COMPUTER_LIST_PAGE:
         System.out.println("Please type the number of the page you wish to be displayed");
-        if(sc.hasNextLong()) {
+        if (sc.hasNextLong()) {
           pageNumber = sc.nextLong();
           sc.nextLine(); // clearing Scanner buffer
           computerUI.printComputersWithPage(pageNumber);
         } else {
           System.out.println("Invalid page number. Exiting routine.");
         }
-        return false;
+        result = false;
+        break;
+      case MenuOption.COMPANY_REMOVE:
+        System.out.println("Please type the identifier of the company to be removed:");
+        if (sc.hasNextLong()) {
+          companyId = sc.nextLong();
+          sc.nextLine(); // clearing Scanner buffer
+          companyUI.removeCompany(companyId);
+        } else {
+          System.out.println("Invalid identifier. Exiting routine.");
+        }
+        result = false;
+        break;
       case MenuOption.EXIT:
-        return true;
+        result = true;
+        break;
       default:
         System.out.println("The option you picked isn't available.");
-        return false;
+        result = false;
     }
+
+    return result;
 
   }
 

@@ -51,5 +51,18 @@ public class CompanyCLIUI {
 	  
 	}
 	
+	/**
+	 * Handles the Company removal operation.
+	 * 
+	 * @param companyId    Identifier of the Company that should be removed from the data source
+	 */
+	public void removeCompany(long companyId) {
+	  
+	  companyService.remove(companyId);
+	  
+	  System.out.println("Company removal operation completed.");
+	  
+	}
+	
 
 }
