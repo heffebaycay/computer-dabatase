@@ -305,7 +305,7 @@ public SearchWrapper<Company> findByName(String name, long offset,
 	
 	
 	
-	return null;
+	return searchWrapper;
 }
   
   

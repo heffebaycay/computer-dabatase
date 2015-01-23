@@ -48,6 +48,11 @@ public class CompanyController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LOGGER.debug("Call to doGet()");
 		
+		String msgResult = request.getParameter("msg");
+	    if("removeSuccess".equals(msgResult)) {
+	      request.setAttribute("bRemoveSuccess", true);
+	    }
+		
 		List<CompanyDTO> companies = null;
 		SearchWrapper<Company> searchWrapper;
 		
