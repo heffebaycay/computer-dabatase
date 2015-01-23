@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.Before;
@@ -16,6 +17,7 @@ import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.util.CompanySortCriteria;
+import fr.heffebaycay.cdb.util.ComputerSortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
@@ -27,8 +29,8 @@ public class TestCompanyDaoMySQLImpl {
   CompanyDaoMySQLImpl companyDao = new CompanyDaoMySQLImpl(sqlUtils);
   List<Company>       localCompanies;
 
-  Connection conn;
-  
+  Connection          conn;
+
   @Before
   public void setUp() throws Exception {
 
@@ -77,7 +79,7 @@ public class TestCompanyDaoMySQLImpl {
 
       ps.executeUpdate();
     }
-    
+
     sqlUtils.closeStatement(ps);
 
   }
@@ -86,14 +88,14 @@ public class TestCompanyDaoMySQLImpl {
   public void tearDown() throws Exception {
 
     sqlUtils.truncateTables();
-    
+
     DaoManager.INSTANCE.closeConnection(conn);
 
   }
 
   @Test
   public void testFindAll() {
-    
+
     final List<Company> companies = companyDao.findAll(conn);
 
     assertEquals(localCompanies, companies);
@@ -123,9 +125,17 @@ public class TestCompanyDaoMySQLImpl {
   }
 
   @Test
+  public void testFindByIdNegativeId() {
+    Company company = companyDao.findById(-1, conn);
+
+    assertEquals(null, company);
+  }
+
+  @Test
   public void testFindAllWithOffset() {
 
-    SearchWrapper<Company> wrapper = companyDao.findAll(0, 5, CompanySortCriteria.ID, SortOrder.ASC, conn);
+    SearchWrapper<Company> wrapper = companyDao.findAll(0, 5, CompanySortCriteria.ID,
+        SortOrder.ASC, conn);
 
     assertEquals(2, wrapper.getTotalPage());
     assertEquals(1, wrapper.getCurrentPage());
@@ -139,5 +149,45 @@ public class TestCompanyDaoMySQLImpl {
     assertEquals(reducedList, wrapper.getResults());
 
   }
+
+  @Test
+  public void testFindByNameNull() {
+
+    SearchWrapper<Company> wrapper = companyDao.findByName(null, 0, 10, CompanySortCriteria.NAME,
+        SortOrder.DESC, conn);
+
+    assertEquals(0, wrapper.getResults().size());
+  }
+
+  @Test
+  public void testFindByName() {
+    SearchWrapper<Company> wrapper = companyDao.findByName("a", 0, 10, CompanySortCriteria.ID,
+        SortOrder.ASC, conn);
+
+    List<Company> companies = wrapper.getResults();
+
+    List<Company> filteredCompanies = localCompanies.stream()
+        .filter(c -> c.getName().toLowerCase().contains("a")).collect(Collectors.toList());
+
+    assertEquals(filteredCompanies, companies);
+
+  }
+
+  @Test
+  public void testFindByNameInvalidOffset() {
+    SearchWrapper<Company> wrapper = companyDao.findByName("ple", -25, 10, CompanySortCriteria.ID,
+        SortOrder.ASC, conn);
+
+    assertEquals(0, wrapper.getResults().size());
+  }
+  
+  @Test
+  public void testFindByNameInvalidResultNumber() {
+    SearchWrapper<Company> wrapper = companyDao.findByName("ple", 0, -31, CompanySortCriteria.ID, SortOrder.ASC, conn);
+    
+    assertEquals(0, wrapper.getResults().size());
+  }
+  
+  
 
 }

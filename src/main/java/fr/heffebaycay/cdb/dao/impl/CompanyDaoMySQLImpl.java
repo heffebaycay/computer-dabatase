@@ -249,8 +249,8 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
 
     SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
     List<Company> companies = new ArrayList<Company>();
-
-    if (offset < 0 || nbRequested <= 0) {
+    
+    if (name == null || name.isEmpty() || offset < 0 || nbRequested <= 0) {
       searchWrapper.setResults(companies);
       searchWrapper.setCurrentPage(0);
       searchWrapper.setTotalPage(0);
