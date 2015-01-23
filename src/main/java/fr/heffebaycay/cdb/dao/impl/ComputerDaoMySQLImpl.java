@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.dao.IComputerDao;
+import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.mapper.ComputerMySQLRowMapper;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.model.Computer;
@@ -38,7 +39,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public List<Computer> findAll(Connection conn) {
+  public List<Computer> findAll(Connection conn) throws DaoException {
     Statement stmt = null;
 
     String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id";
@@ -59,7 +60,8 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
 
       }
     } catch (SQLException e) {
-      LOGGER.error("SQLException: {}", e);
+      LOGGER.error("findAll(): SQLException: ", e);
+      throw new DaoException(e);
     } finally {
       sqlUtils.closeStatement(stmt);
     }
@@ -71,7 +73,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public Computer findById(long id, Connection conn) {
+  public Computer findById(long id, Connection conn) throws DaoException {
     Computer computer = null;
     PreparedStatement ps = null;
 
@@ -93,7 +95,8 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       }
 
     } catch (SQLException e) {
-      LOGGER.error("SQLException: {}", e);
+      LOGGER.error("findById(): SQLException:", e);
+      throw new DaoException(e);
     } finally {
       sqlUtils.closeStatement(ps);
     }
@@ -105,7 +108,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public boolean remove(long id, Connection conn) {
+  public boolean remove(long id, Connection conn) throws DaoException {
     String query = "DELETE FROM computer WHERE id = ?";
     PreparedStatement ps = null;
 
@@ -119,8 +122,8 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       return true;
 
     } catch (SQLException e) {
-      LOGGER.error("SQLException: {}", e);
-      return false;
+      LOGGER.error("remove(): SQLException: ", e);
+      throw new DaoException(e);
     } finally {
       sqlUtils.closeStatement(ps);
     }
@@ -131,7 +134,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public long create(Computer computer, Connection conn) {
+  public long create(Computer computer, Connection conn) throws DaoException {
 
     if (computer == null) {
       throw new IllegalArgumentException("'computer' argument cannot be null");
@@ -173,7 +176,8 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       }
 
     } catch (SQLException e) {
-      LOGGER.error("SQLException: {}", e);
+      LOGGER.error("create(): SQLException: ", e);
+      throw new DaoException(e);
     } finally {
       sqlUtils.closeStatement(ps);
     }
@@ -186,7 +190,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public void update(Computer computer, Connection conn) {
+  public void update(Computer computer, Connection conn) throws DaoException {
 
     if (computer == null) {
       throw new IllegalArgumentException("'computer' argument cannot be null");
@@ -223,7 +227,8 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       ps.executeUpdate();
 
     } catch (SQLException e) {
-      LOGGER.error("SQLException: {}", e);
+      LOGGER.error("update(): SQLException: ", e);
+      throw new DaoException(e);
     } finally {
       sqlUtils.closeStatement(ps);
     }
@@ -234,7 +239,8 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Computer> findAll(long offset, long nbRequested, ComputerSortCriteria sortCriterion, SortOrder sortOrder, Connection conn) {
+  public SearchWrapper<Computer> findAll(long offset, long nbRequested,
+      ComputerSortCriteria sortCriterion, SortOrder sortOrder, Connection conn) throws DaoException {
 
     SearchWrapper<Computer> searchWrapper = new SearchWrapper<Computer>();
     List<Computer> computers = new ArrayList<Computer>();
@@ -249,14 +255,16 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
     }
 
     String orderPart;
-    if(sortCriterion.equals(ComputerSortCriteria.COMPANY_NAME)) {
+    if (sortCriterion.equals(ComputerSortCriteria.COMPANY_NAME)) {
       orderPart = generateOrderPart("cp", sortCriterion, sortOrder);
     } else {
       orderPart = generateOrderPart("c", sortCriterion, sortOrder);
     }
-    
-    String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id ORDER BY " + orderPart + " LIMIT ?, ?";
-    String countQuery = "SELECT COUNT(c.id) AS count FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id ORDER BY " + orderPart;
+
+    String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id ORDER BY "
+        + orderPart + " LIMIT ?, ?";
+    String countQuery = "SELECT COUNT(c.id) AS count FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id ORDER BY "
+        + orderPart;
 
     PreparedStatement ps = null;
 
@@ -290,7 +298,8 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       searchWrapper.setResults(computers);
 
     } catch (SQLException e) {
-      LOGGER.error("SQL Exception: {}", e);
+      LOGGER.error("findAll: SQL Exception: ", e);
+      throw new DaoException(e);
     } finally {
       sqlUtils.closeStatement(ps);
     }
@@ -302,7 +311,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public int removeForCompany(long companyId, Connection conn) {
+  public int removeForCompany(long companyId, Connection conn) throws DaoException {
 
     String removeForCompanySQL = "DELETE FROM computer WHERE company_id = ?";
 
@@ -312,7 +321,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       return ps.executeUpdate();
     } catch (SQLException e) {
       LOGGER.warn("removeForCompany(): SQL Exception: ", e);
-      return -1;
+      throw new DaoException(e);
     }
 
   }
@@ -322,7 +331,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
    */
   @Override
   public SearchWrapper<Computer> findByName(String name, long offset, long nbRequested,
-      ComputerSortCriteria sortCriterion, SortOrder sortOrder, Connection conn) {
+      ComputerSortCriteria sortCriterion, SortOrder sortOrder, Connection conn) throws DaoException {
     SearchWrapper<Computer> searchWrapper = new SearchWrapper<Computer>();
     List<Computer> computers = new ArrayList<Computer>();
 
@@ -334,19 +343,21 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
 
       return searchWrapper;
     }
-    
+
     name = name.replace("%", "");
-    
+
     String orderPart;
-    
-    if(sortCriterion.equals(ComputerSortCriteria.COMPANY_NAME)) {
+
+    if (sortCriterion.equals(ComputerSortCriteria.COMPANY_NAME)) {
       orderPart = generateOrderPart("cp", sortCriterion, sortOrder);
     } else {
       orderPart = generateOrderPart("c", sortCriterion, sortOrder);
     }
 
-    String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id WHERE c.name LIKE ? OR cp.name LIKE ? ORDER BY " + orderPart +  " LIMIT ?, ?";
-    String countQuery = "SELECT COUNT(c.id) AS count FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id WHERE c.name LIKE ? OR cp.name LIKE ? ORDER BY " + orderPart;
+    String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id WHERE c.name LIKE ? OR cp.name LIKE ? ORDER BY "
+        + orderPart + " LIMIT ?, ?";
+    String countQuery = "SELECT COUNT(c.id) AS count FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id WHERE c.name LIKE ? OR cp.name LIKE ? ORDER BY "
+        + orderPart;
 
     PreparedStatement ps = null;
 
@@ -354,7 +365,7 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
 
       String searchKeyword = String.format("%%%s%%", name);
       LOGGER.debug("Search keyword: " + searchKeyword);
-      
+
       PreparedStatement countStmt = conn.prepareStatement(countQuery);
       countStmt.setString(1, searchKeyword);
       countStmt.setString(2, searchKeyword);
@@ -390,19 +401,21 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
 
     } catch (SQLException e) {
       LOGGER.warn("findByName(): SQLException: ", e);
+      throw new DaoException(e);
     } finally {
       sqlUtils.closeStatement(ps);
     }
 
     return searchWrapper;
   }
-  
-  private String generateOrderPart(String entityAlias, ComputerSortCriteria sortCriterion, SortOrder sortOrder) {
-    
+
+  private String generateOrderPart(String entityAlias, ComputerSortCriteria sortCriterion,
+      SortOrder sortOrder) {
+
     StringBuffer stringBuffer = new StringBuffer(entityAlias);
-    
-    switch(sortCriterion) {
-      
+
+    switch (sortCriterion) {
+
       case ID:
         stringBuffer.append(".id");
         break;
@@ -421,15 +434,15 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       default:
         stringBuffer.append(".id");
     }
-    
-    if(sortOrder.equals(SortOrder.DESC)) {
+
+    if (sortOrder.equals(SortOrder.DESC)) {
       stringBuffer.append(" desc");
     } else {
       stringBuffer.append(" asc");
     }
-    
+
     return stringBuffer.toString();
-    
+
   }
 
 }

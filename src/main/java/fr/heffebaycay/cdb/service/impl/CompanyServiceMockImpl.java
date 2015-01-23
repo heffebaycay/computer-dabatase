@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.IComputerDao;
+import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.service.ICompanyService;
@@ -95,17 +96,26 @@ public class CompanyServiceMockImpl implements ICompanyService {
     
     DaoManager.INSTANCE.startTransaction(conn);
     
-    // Remove computers linked to company X
-    int nbComputers = computerDao.removeForCompany(id, conn);
+    int nbComputers = -1;
+    int nbCompany = -1;
     
-    // Remove company X
-    int nbCompany = companyDao.remove(id, conn);
+    try {
+      // Remove computers linked to company X
+      nbComputers = computerDao.removeForCompany(id, conn);
+      
+      // Remove company X
+      nbCompany = companyDao.remove(id, conn);
+      
+      DaoManager.INSTANCE.commitTransaction(conn);
+      
+    } catch(DaoException e) {
+      DaoManager.INSTANCE.rollbackTransaction(conn);
+      
+    } finally {
+      DaoManager.INSTANCE.endTransaction(conn);
+    }
     
-    DaoManager.INSTANCE.commitTransaction(conn);
-    
-    LOGGER.debug(String.format("Removed %d computers and %d company", nbComputers, nbCompany));
-    
-    DaoManager.INSTANCE.endTransaction(conn);
+    LOGGER.debug(String.format("Removed %d computers and %d company", nbComputers, nbCompany));   
     
   }
 
