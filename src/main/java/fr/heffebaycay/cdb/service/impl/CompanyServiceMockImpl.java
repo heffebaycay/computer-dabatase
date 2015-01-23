@@ -101,6 +101,8 @@ public class CompanyServiceMockImpl implements ICompanyService {
     // Remove company X
     int nbCompany = companyDao.remove(id, conn);
     
+    DaoManager.INSTANCE.commitTransaction(conn);
+    
     LOGGER.debug(String.format("Removed %d computers and %d company", nbComputers, nbCompany));
     
     DaoManager.INSTANCE.endTransaction(conn);

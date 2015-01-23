@@ -15,8 +15,11 @@ import org.junit.Test;
 
 import fr.heffebaycay.cdb.dao.impl.ComputerDaoMySQLImpl;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
+import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.Company;
+import fr.heffebaycay.cdb.util.ComputerSortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class TestComputerDaoMySQLImpl {
@@ -26,6 +29,8 @@ public class TestComputerDaoMySQLImpl {
   //Passing a reference to the test SQL utils class to the DAO
   ComputerDaoMySQLImpl computerDao = new ComputerDaoMySQLImpl(sqlUtils);
   List<Computer> localComputers;
+  
+  Connection conn;
   
   @Before
   public void setUp() throws Exception {
@@ -95,7 +100,7 @@ public class TestComputerDaoMySQLImpl {
     companies.add(c9);
     companies.add(c10);
     
-    final Connection conn = sqlUtils.getConnection();
+    conn = DaoManager.INSTANCE.getConnection();
     
     final String insertCompanySQL = "INSERT INTO company(id, name) VALUES(?,?)";
     final PreparedStatement companyPS = conn.prepareStatement(insertCompanySQL);
@@ -106,6 +111,8 @@ public class TestComputerDaoMySQLImpl {
       
       companyPS.executeUpdate();
     }
+    
+    sqlUtils.closeStatement(companyPS);
     
     
     
@@ -199,7 +206,7 @@ public class TestComputerDaoMySQLImpl {
       computerPS.executeUpdate();
     }
     
-    sqlUtils.closeConnection(conn);
+    sqlUtils.closeStatement(computerPS);
     
   }
 
@@ -208,12 +215,14 @@ public class TestComputerDaoMySQLImpl {
     
     sqlUtils.truncateTables();
     
+    DaoManager.INSTANCE.closeConnection(conn);
+    
   }
 
   @Test
   public void testFindAll() {
   
-    List<Computer> computers = computerDao.findAll();
+    List<Computer> computers = computerDao.findAll(conn);
     
     assertEquals(localComputers, computers);
     
@@ -222,7 +231,7 @@ public class TestComputerDaoMySQLImpl {
   @Test
   public void testFindAllWithOffset() {
     
-    SearchWrapper<Computer> wrapper = computerDao.findAll(0, 5);
+    SearchWrapper<Computer> wrapper = computerDao.findAll(0, 5, ComputerSortCriteria.ID, SortOrder.ASC, conn);
     
     assertEquals(1, wrapper.getCurrentPage());
     assertEquals(7, wrapper.getTotalQueryCount());
@@ -238,7 +247,7 @@ public class TestComputerDaoMySQLImpl {
   @Test
   public void testFindById() {
     
-    Computer computer = computerDao.findById(4);
+    Computer computer = computerDao.findById(4, conn);
     
     boolean checked = false;
     
@@ -272,7 +281,7 @@ public class TestComputerDaoMySQLImpl {
                                         .build();
     
     
-    long computerId = computerDao.create(computer);
+    long computerId = computerDao.create(computer, conn);
     
     if(computerId == -1) {
       fail("Computer was not created, as no valid id was returned");
@@ -280,7 +289,7 @@ public class TestComputerDaoMySQLImpl {
     
     computer.setId(computerId);
     
-    Computer fetchedComputer = computerDao.findById(computerId);
+    Computer fetchedComputer = computerDao.findById(computerId, conn);
     
     assertEquals(computer, fetchedComputer);
   }
@@ -289,7 +298,7 @@ public class TestComputerDaoMySQLImpl {
   public void testCreateWithNullComputer() {
     
     try {
-      long computerId = computerDao.create(null);
+      long computerId = computerDao.create(null, conn);
       
       fail("Expected an IllegalArgumentException to be thrown");
       
@@ -304,7 +313,7 @@ public class TestComputerDaoMySQLImpl {
   @Test
   public void testUpdate() {
     
-    Computer computer = computerDao.findById(7);
+    Computer computer = computerDao.findById(7, conn);
     
     Company company = new Company.Builder()
     .id(8)
@@ -316,9 +325,9 @@ public class TestComputerDaoMySQLImpl {
     computer.setIntroduced(LocalDateTime.parse("2011-09-02T00:00:00"));
     computer.setDiscontinued(LocalDateTime.parse("2013-03-27T00:00:00"));
     
-    computerDao.update(computer);
+    computerDao.update(computer, conn);
     
-    Computer updatedComputer = computerDao.findById(7);
+    Computer updatedComputer = computerDao.findById(7, conn);
     
     assertEquals(computer, updatedComputer);
   }
@@ -327,7 +336,7 @@ public class TestComputerDaoMySQLImpl {
     
     try {
       
-      computerDao.update(null);
+      computerDao.update(null, conn);
       
       fail("Expected an IllegalArgumentException to be thrown");
       

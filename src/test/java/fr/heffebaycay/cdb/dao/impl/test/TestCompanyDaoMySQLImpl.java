@@ -13,7 +13,10 @@ import org.junit.Test;
 
 import fr.heffebaycay.cdb.dao.impl.CompanyDaoMySQLImpl;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
+import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
+import fr.heffebaycay.cdb.util.CompanySortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class TestCompanyDaoMySQLImpl {
@@ -24,6 +27,8 @@ public class TestCompanyDaoMySQLImpl {
   CompanyDaoMySQLImpl companyDao = new CompanyDaoMySQLImpl(sqlUtils);
   List<Company>       localCompanies;
 
+  Connection conn;
+  
   @Before
   public void setUp() throws Exception {
 
@@ -62,7 +67,7 @@ public class TestCompanyDaoMySQLImpl {
     localCompanies.add(c9);
     localCompanies.add(c10);
 
-    final Connection conn = sqlUtils.getConnection();
+    conn = DaoManager.INSTANCE.getConnection();
     final String insertSQL = "INSERT INTO company(id, name) VALUES(?,?)";
     final PreparedStatement ps = conn.prepareStatement(insertSQL);
 
@@ -72,8 +77,8 @@ public class TestCompanyDaoMySQLImpl {
 
       ps.executeUpdate();
     }
-
-    sqlUtils.closeConnection(conn);
+    
+    sqlUtils.closeStatement(ps);
 
   }
 
@@ -81,13 +86,15 @@ public class TestCompanyDaoMySQLImpl {
   public void tearDown() throws Exception {
 
     sqlUtils.truncateTables();
+    
+    DaoManager.INSTANCE.closeConnection(conn);
 
   }
 
   @Test
   public void testFindAll() {
-
-    final List<Company> companies = companyDao.findAll();
+    
+    final List<Company> companies = companyDao.findAll(conn);
 
     assertEquals(localCompanies, companies);
   }
@@ -95,7 +102,7 @@ public class TestCompanyDaoMySQLImpl {
   @Test
   public void testFindById() {
 
-    Company company = companyDao.findById(2);
+    Company company = companyDao.findById(2, conn);
 
     assertEquals(2, company.getId());
 
@@ -118,7 +125,7 @@ public class TestCompanyDaoMySQLImpl {
   @Test
   public void testFindAllWithOffset() {
 
-    SearchWrapper<Company> wrapper = companyDao.findAll(0, 5);
+    SearchWrapper<Company> wrapper = companyDao.findAll(0, 5, CompanySortCriteria.ID, SortOrder.ASC, conn);
 
     assertEquals(2, wrapper.getTotalPage());
     assertEquals(1, wrapper.getCurrentPage());

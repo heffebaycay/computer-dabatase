@@ -1,8 +1,12 @@
 package fr.heffebaycay.cdb.service.impl.test;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +19,8 @@ import fr.heffebaycay.cdb.dao.impl.CompanyDaoMySQLImpl;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.impl.CompanyServiceMockImpl;
+import fr.heffebaycay.cdb.util.CompanySortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class TestCompanyService {
@@ -24,6 +30,8 @@ public class TestCompanyService {
   ICompanyService     companyService;
   CompanyDaoMySQLImpl companyDao;
 
+  Connection conn = null;
+  
   @Before
   public void setUp() {
 
@@ -57,12 +65,12 @@ public class TestCompanyService {
     companies.add(c3);
     
     // findAll()
-    when(companyDao.findAll()).thenReturn(companies);
+    when(companyDao.findAll(conn)).thenReturn(companies);
     
     // findById()
-    when(companyDao.findById(1)).thenReturn(c1);
-    when(companyDao.findById(2)).thenReturn(c2);
-    when(companyDao.findById(3)).thenReturn(c3);
+    when(companyDao.findById(1, conn)).thenReturn(c1);
+    when(companyDao.findById(2, conn)).thenReturn(c2);
+    when(companyDao.findById(3, conn)).thenReturn(c3);
     
     // create()
     doAnswer(new Answer<Object>() {
@@ -79,7 +87,7 @@ public class TestCompanyService {
         
       }
       
-    }).when(companyDao).create(c4);
+    }).when(companyDao).create(c4, conn);
     
     // findAllWithOffset
     SearchWrapper<Company> wrapper = new SearchWrapper<Company>();
@@ -88,7 +96,7 @@ public class TestCompanyService {
     wrapper.setTotalPage(1);
     wrapper.setTotalQueryCount(companies.size());
     
-    when(companyDao.findAll(0, NUMBER_OF_RESULTS)).thenReturn(wrapper);
+    when(companyDao.findAll(0, NUMBER_OF_RESULTS, CompanySortCriteria.ID, SortOrder.ASC, conn)).thenReturn(wrapper);
     
   }
 
@@ -166,7 +174,7 @@ public class TestCompanyService {
       fail("CompanyService isn't initialized");
     }
 
-    SearchWrapper<Company> wrapper = companyService.findAll(0, NUMBER_OF_RESULTS);
+    SearchWrapper<Company> wrapper = companyService.findAll(0, NUMBER_OF_RESULTS, CompanySortCriteria.ID, SortOrder.ASC);
 
     if(wrapper.getResults().size() > NUMBER_OF_RESULTS) {
       fail("Wrapper cannot contain more results than requested");

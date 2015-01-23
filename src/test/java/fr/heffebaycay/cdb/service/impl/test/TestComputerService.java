@@ -1,112 +1,93 @@
 package fr.heffebaycay.cdb.service.impl.test;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.internal.matchers.Any;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.impl.ComputerDaoMySQLImpl;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.IComputerService;
 import fr.heffebaycay.cdb.service.impl.ComputerServiceMockImpl;
+import fr.heffebaycay.cdb.util.ComputerSortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class TestComputerService {
 
   private static final int NUMBER_OF_RESULTS = 10;
-  
-  IComputerService computerService;  
-  
+
+  IComputerDao             computerDao;
+  IComputerService         computerService;
+
+  Connection               conn;
+
+  List<Computer>           computersDB;
+
   @Before
   public void setUp() {
-    
-    ComputerDaoMySQLImpl computerDao = mock(ComputerDaoMySQLImpl.class);
+
+    computerDao = mock(ComputerDaoMySQLImpl.class);
     computerService = new ComputerServiceMockImpl(computerDao);
-    
-    List<Computer> computers = new ArrayList<Computer>();
+
+    computersDB = new ArrayList<Computer>();
 
     Company apple = new Company.Builder().id(1).name("Apple Inc.").build();
 
     Company thinkingMachines = new Company.Builder().id(2).name("Thinking Machines").build();
 
-    Computer c1 = new Computer.Builder()
-                                  .id(1)
-                                  .company(apple)
-                                  .name("MacBook Pro 15.4 inch")
-                                  .build();
-    
-    Computer c2 = new Computer.Builder()
-                                  .id(2)
-                                  .name("CM-2a")
-                                  .company(thinkingMachines)
-                                  .build();
-    
-    Computer c3 = new Computer.Builder()
-                                  .id(3)
-                                  .name("CM-200")
-                                  .company(thinkingMachines)
-                                  .build();
+    Computer c1 = new Computer.Builder().id(1).company(apple).name("MacBook Pro 15.4 inch").build();
 
-    Computer c4 = new Computer.Builder()
-                                  .id(4)
-                                  .name("CM-5e")
-                                  .company(thinkingMachines)
-                                  .build();
+    Computer c2 = new Computer.Builder().id(2).name("CM-2a").company(thinkingMachines).build();
 
-    Computer c5 = new Computer.Builder()
-                                  .id(5)
-                                  .name("CM-5")
-                                  .company(thinkingMachines)
-                                  .introduced(LocalDateTime.parse("1991-01-01T00:00:00"))
-                                  .build();
+    Computer c3 = new Computer.Builder().id(3).name("CM-200").company(thinkingMachines).build();
 
-    Computer c6 = new Computer.Builder()
-                                 .id(6)
-                                 .name("MacBook Pro")
-                                 .company(apple)
-                                 .introduced(LocalDateTime.parse("2006-01-10T00:00:00"))
-                                 .build();
-    
+    Computer c4 = new Computer.Builder().id(4).name("CM-5e").company(thinkingMachines).build();
+
+    Computer c5 = new Computer.Builder().id(5).name("CM-5").company(thinkingMachines)
+        .introduced(LocalDateTime.parse("1991-01-01T00:00:00")).build();
+
+    Computer c6 = new Computer.Builder().id(6).name("MacBook Pro").company(apple)
+        .introduced(LocalDateTime.parse("2006-01-10T00:00:00")).build();
+
     // This one isn't going to be added to the data source
-    Computer c7 = new Computer.Builder()
-                                .id(42)
-                                .name("My Awesome Computer")
-                                .company(apple)
-                                .build();
-    
-    // Updated version of c1
-    Computer c8 = new Computer.Builder()
-                                    .id(1)
-                                    .company(apple)
-                                    .name("Ipad 27")
-                                    .build();
+    Computer c7 = new Computer.Builder().id(42).name("My Awesome Computer").company(apple).build();
 
-    computers.add(c1);
-    computers.add(c2);
-    computers.add(c3);
-    computers.add(c4);
-    computers.add(c5);
-    computers.add(c6);
-    
-    // findAll()
-    when(computerDao.findAll()).thenReturn(computers);
-    
+    // Updated version of c1
+    Computer c8 = new Computer.Builder().id(1).company(apple).name("Ipad 27").build();
+
+    computersDB.add(c1);
+    computersDB.add(c2);
+    computersDB.add(c3);
+    computersDB.add(c4);
+    computersDB.add(c5);
+    computersDB.add(c6);
+
     // findById()
-    doAnswer(new Answer<Object>() {
+    /*doAnswer(new Answer<Object>() {
       public Object answer(InvocationOnMock invocation) {
                 
         Object[] args = invocation.getArguments();
         long computerId = (long) args[0];
         
-        for(Computer c : computers) {
+        for(Computer c : computersDB) {
           if(c.getId() == computerId) {
             return c;
           }
@@ -116,36 +97,36 @@ public class TestComputerService {
         
       }
       
-    }).when(computerDao).findById(c1.getId());
+    }).when(computerDao).findById(c1.getId(), conn);
     
-    when(computerDao.findById(c2.getId())).thenReturn(c2);
-    when(computerDao.findById(c3.getId())).thenReturn(c3);
-    when(computerDao.findById(c4.getId())).thenReturn(c4);
-    when(computerDao.findById(c5.getId())).thenReturn(c5);
-    when(computerDao.findById(c6.getId())).thenReturn(c6);
-    when(computerDao.findById(c7.getId())).thenReturn(c7);
-    
+    when(computerDao.findById(c2.getId(), conn)).thenReturn(c2);
+    when(computerDao.findById(c3.getId(), conn)).thenReturn(c3);
+    when(computerDao.findById(c4.getId(), conn)).thenReturn(c4);
+    when(computerDao.findById(c5.getId(), conn)).thenReturn(c5);
+    when(computerDao.findById(c6.getId(), conn)).thenReturn(c6);
+    when(computerDao.findById(c7.getId(), conn)).thenReturn(c7);*/
+
     // remove()
-    doAnswer(new Answer<Object>() {
+    /*doAnswer(new Answer<Object>() {
       public Object answer(InvocationOnMock invocation) {
         Object[] args = invocation.getArguments();
         
         // First argument is of type long
         long computerId = (long) args[0];
         
-        for(int i = 0; i < computers.size(); i++) {
-          if(computers.get(i).getId() == computerId) {
-            computers.remove(i);
+        for(int i = 0; i < computersDB.size(); i++) {
+          if(computersDB.get(i).getId() == computerId) {
+            computersDB.remove(i);
             break;
           }
         }
         
         return null;
       }
-    }).when(computerDao).remove(3);
-    
+    }).when(computerDao).remove(3, conn);*/
+
     // create()
-    doAnswer(new Answer<Object>() {
+    /*doAnswer(new Answer<Object>() {
       
       public Object answer(InvocationOnMock invocation) {
         Object[] args = invocation.getArguments();
@@ -153,193 +134,225 @@ public class TestComputerService {
         // First argument is of type Computer
         Computer computer = (Computer)args[0];
         
-        computers.add(computer);
+        computersDB.add(computer);
         
         return null;
       }
       
-    }).when(computerDao).create(c7);
-    
+    }).when(computerDao).create(c7, conn);*/
+
     // update
-    doAnswer(new Answer<Object>() {
+    /*doAnswer(new Answer<Object>() {
       public Object answer(InvocationOnMock invocation) {
         Object[] args = invocation.getArguments();
         
         // First argument is of type Computer
         Computer computer = (Computer) args[0];
         
-        for(int i = 0; i < computers.size(); i++) {
-          if(computers.get(i).getId() == computer.getId() ) {
-            computers.remove(i);
+        for(int i = 0; i < computersDB.size(); i++) {
+          if(computersDB.get(i).getId() == computer.getId() ) {
+            computersDB.remove(i);
             break;
           }
         }
         
-        computers.add(computer);
+        computersDB.add(computer);
                
         //when(computerDao.findById(computer.getId())).thenReturn(computer);
         
         return null;
       }
-    }).when(computerDao).update(c8);
-    
+    }).when(computerDao).update(c8, conn);*/
+
     // findAllWithOffset
-    SearchWrapper<Computer> wrapper = new SearchWrapper<Computer>();
-    wrapper.setResults(computers);
+    /*SearchWrapper<Computer> wrapper = new SearchWrapper<Computer>();
+    wrapper.setResults(computersDB);
     wrapper.setCurrentPage(1);
     wrapper.setTotalPage(1);
-    wrapper.setTotalQueryCount(computers.size());
+    wrapper.setTotalQueryCount(computersDB.size());
     
-    when(computerDao.findAll(0, NUMBER_OF_RESULTS)).thenReturn(wrapper);
-    
-    
+    // findAll(offset, nbResults, sortCriterion, sortOrder, conn)
+    doAnswer(new Answer<SearchWrapper<Computer>>() {
+      
+      public SearchWrapper<Computer> answer(InvocationOnMock invocation) {
+        
+        long offset = invocation.getArgumentAt(0, Long.class);
+        long nbResult = invocation.getArgumentAt(1, Long.class);
+        ComputerSortCriteria sortCriteria = invocation.getArgumentAt(2, ComputerSortCriteria.class);
+        SortOrder sortOrder = invocation.getArgumentAt(3, SortOrder.class);
+        Connection conn = invocation.getArgumentAt(4, Connection.class);
+        
+        if(nbResult > computersDB.size()) {
+          nbResult = computersDB.size();
+        }
+        
+        SearchWrapper<Computer> wrapper = new SearchWrapper<Computer>();
+        List<Computer> results = computersDB.subList(0, (int)nbResult);
+        
+        wrapper.setResults( results );
+        wrapper.setCurrentPage(1);
+        wrapper.setTotalPage(1);
+        wrapper.setTotalQueryCount(results.size());
+        
+        
+        
+        return wrapper;
+        
+      }
+      
+    }).when(computerDao).findAll(anyLong(), anyLong(), anyObject(), anyObject(), anyObject());*/
+
   }
 
   @Test
   public void testFindAll() {
-    
-    if(computerService == null) {
+
+    if (computerService == null) {
       fail("Computer Service not initialized");
     }
-    
+
+    when(computerDao.findAll(anyObject())).thenReturn(computersDB);
+
     List<Computer> computers = computerService.findAll();
-    
-    assertEquals(6, computers.size());
-    
-    for(Computer c : computers) {
-      
-      long computerId = c.getId();
-      
-      if(computerId == 1) {
-        
-        assertEquals("MacBook Pro 15.4 inch", c.getName());
-        assertEquals("Apple Inc.", c.getCompany().getName());
-        assertEquals(1, c.getCompany().getId());
-        
-      } else if(computerId == 5) {
-        
-        assertEquals("CM-5", c.getName());
-        assertEquals("Thinking Machines", c.getCompany().getName());
-        assertEquals(2, c.getCompany().getId());
-        assertEquals(LocalDateTime.parse("1991-01-01T00:00:00"), c.getIntroduced());
-        assertEquals(null, c.getDiscontinued());
-        
-      }
-      
-    }
+
+    assertEquals(computersDB, computers);
+
   }
-  
+
   @Test
   public void testFindById() {
-    
-    if(computerService == null) {
+
+    if (computerService == null) {
       fail("Computer Service not initialized");
     }
-    
-    Computer computer = computerService.findById(6);
-    
-    assertEquals(6, computer.getId());
-    assertEquals("MacBook Pro", computer.getName());
-    
-    assertEquals(1, computer.getCompany().getId());
-    assertEquals("Apple Inc.", computer.getCompany().getName());
-    
-    
+
+    final long COMPUTER_ID = 2;
+
+    Computer computerExpected = computersDB.stream().filter(c -> c.getId() == COMPUTER_ID)
+        .findFirst().get();
+
+    when(computerDao.findById(Matchers.eq(COMPUTER_ID), anyObject())).thenReturn(computerExpected);
+
+    Computer computer = computerService.findById(COMPUTER_ID);
+
+    assertEquals(computerExpected, computer);
+
   }
-  
+
   @Test
   public void testRemove() {
-    
-    if(computerService == null) {
+
+    if (computerService == null) {
       fail("Computer Service not initialized");
     }
-    
-    Company thinkingMachines = new Company.Builder().id(2).name("Thinking Machines").build();
-    Computer computer = new Computer.Builder()
-                                        .id(3)
-                                        .name("CM-200")
-                                        .company(thinkingMachines)
-                                        .build();
-    
-    computerService.remove(computer.getId());
-    
-    List<Computer> computers = computerService.findAll();
-    
-    for(Computer c : computers ) {
-      
-      if(c.getId() == computer.getId()) {
-        
-        fail("Computer is stil in the data source");
-        
+
+    doAnswer(new Answer<Object>() {
+      public Object answer(InvocationOnMock invocation) {
+
+        long idToRemove = invocation.getArgumentAt(0, Long.class);
+
+        return computersDB.removeIf(c -> c.getId() == idToRemove);
+
       }
-      
-    }
-    
+    }).when(computerDao).remove(Matchers.anyLong(), Matchers.anyObject());
+
+    Random rand = new Random();
+    int randomIndex = rand.nextInt(computersDB.size());
+
+    Computer computerExpected = computersDB.get(randomIndex);
+
+    computerService.remove(computerExpected.getId());
+
+    // Returns true if no elements are matched
+    boolean result = computersDB.stream().noneMatch(c -> c == computerExpected);
+
+    assertEquals(true, result);
+
   }
-  
+
   @Test
   public void testCreate() {
-    
-    if(computerService == null) {
+
+    if (computerService == null) {
       fail("Computer Service not initialized");
     }
-    
-    
+
+    doAnswer(new Answer<Long>() {
+      public Long answer(InvocationOnMock invocation) {
+
+        Computer computerToCreate = invocation.getArgumentAt(0, Computer.class);
+
+        computersDB.add(computerToCreate);
+
+        return computerToCreate.getId();
+      }
+    }).when(computerDao).create(Matchers.any(Computer.class), Matchers.any(Connection.class));
+
     Company apple = new Company.Builder().id(1).name("Apple Inc.").build();
-    Computer computer = new Computer.Builder()
-    .id(42)
-    .name("My Awesome Computer")
-    .company(apple)
-    .build();
-    
+    Computer computer = new Computer.Builder().id(42).name("My Awesome Computer").company(apple)
+        .build();
+
     computerService.create(computer);
-    
-    
-    
-    Computer foundComputer = computerService.findById(computer.getId());
-    
-    
+
+    Computer foundComputer = computersDB.stream().filter(c -> c == computer).findFirst().get();
+
     assertEquals(computer, foundComputer);
-    
+
   }
 
   @Test
   public void testUpdate() {
-    if(computerService == null) {
+    if (computerService == null) {
       fail("Computer Service not initialized");
     }
+
+    doAnswer(new Answer<Object>() {
+      public Object answer(InvocationOnMock invocation) {
+        
+        Computer computerToUpdate = invocation.getArgumentAt(0, Computer.class);
+        
+        computersDB.removeIf(c -> c.getId() == computerToUpdate.getId());
+        computersDB.add(computerToUpdate);
+        
+        return null;
+        
+      }
+    }).when(computerDao).update(Matchers.any(Computer.class), Matchers.any(Connection.class));;
     
-    Company apple = new Company.Builder().id(1).name("Apple Inc.").build();
-    Computer c1 = new Computer.Builder()
-                                .id(1)
-                                .company(apple)
-                                .name("MacBook Pro 15.4 inch")
-                                .build();
-                                
+    Random rnd = new Random();
+    int randomIndex = rnd.nextInt(computersDB.size());
+
+    Computer originalComputer = computersDB.get(randomIndex);
+
+    Computer copyComputer = new Computer.Builder().id(originalComputer.getId())
+        .name(originalComputer.getName()).introduced(originalComputer.getIntroduced())
+        .discontinued(originalComputer.getDiscontinued()).company(originalComputer.getCompany())
+        .build();
     
-    c1.setName("Ipad 27");
+    copyComputer.setName("ABCDEFGHIJKLMNOPQZRS");
+    copyComputer.setIntroduced(LocalDateTime.now());
+    copyComputer.setDiscontinued(LocalDateTime.now());
     
-    computerService.update(c1);
+    computerService.update(copyComputer);
+
+    originalComputer = computersDB.stream().filter(c -> c.getId() == copyComputer.getId()).findFirst().get();
     
-    Computer foundComputer = computerService.findById(c1.getId());
-    
-    assertEquals(c1.getName(), foundComputer.getName());
-    assertEquals(c1, foundComputer);
-    
-    
+    assertEquals(copyComputer, originalComputer);
   }
-  
+
   @Test
   public void testFindAllWithOffset() {
-    if(computerService == null) {
+    if (computerService == null) {
       fail("Computer Service not initialized");
     }
     
-    SearchWrapper<Computer> wrapper = computerService.findAll(0, NUMBER_OF_RESULTS);
+    SearchWrapper<Computer> wrapper = new SearchWrapper<Computer>();
+    when(computerDao.findAll(Matchers.anyLong(), Matchers.anyLong(), Matchers.any(ComputerSortCriteria.class), Matchers.any(SortOrder.class), Matchers.any(Connection.class))).thenReturn(wrapper);
+
+    SearchWrapper<Computer> returnedWrapper = computerService.findAll(0, NUMBER_OF_RESULTS,
+        ComputerSortCriteria.ID, SortOrder.ASC);
     
-    if(wrapper.getResults().size() > NUMBER_OF_RESULTS) {
-      fail("Wrapper cannot contain more results than requested");
-    }
+    assertEquals(wrapper, returnedWrapper);
   }
-  
+
 }

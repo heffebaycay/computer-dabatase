@@ -68,6 +68,7 @@ public enum DaoManager {
       conn.commit();
     } catch(SQLException e) {
       LOGGER.warn("commitTransaction(): Failed to commit transaction: ", e);
+      rollbackTransaction(conn);
     }
   }
   
