@@ -6,12 +6,16 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jolbox.bonecp.BoneCP;
+import com.jolbox.bonecp.BoneCPConfig;
+
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.CompanyDaoMySQLImpl;
 import fr.heffebaycay.cdb.dao.impl.ComputerDaoMySQLImpl;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
+import fr.heffebaycay.cdb.util.AppSettings;
 
 /**
  * The <i>DaoManager</i> object can be used to access the various objects that
@@ -24,21 +28,41 @@ public enum DaoManager {
   private ICompanyDao  companyDao;
   private IComputerDao computerDao;
   private MySQLUtils sqlUtils;
+  private BoneCP connectionPool;
   
-  private static final Logger LOGGER = LoggerFactory.getLogger(DaoManager.class.getSimpleName());
+  
+  
+  private static final Logger LOGGER = LoggerFactory.getLogger(DaoManager.class);
 
-  static {
+  private DaoManager() {  
+    
     try {
       Class.forName("com.mysql.jdbc.Driver");
     } catch (ClassNotFoundException e) {
       throw new DaoException("Failed to load MySQL JDBC driver.", e);
     }
-  }
-
-  private DaoManager() {
+    
     companyDao = new CompanyDaoMySQLImpl();
     computerDao = new ComputerDaoMySQLImpl();
+        
+    
     sqlUtils = new MySQLUtils();
+    
+    BoneCPConfig config = new BoneCPConfig();
+    config.setJdbcUrl(sqlUtils.getMySQLConnectionURL());
+    config.setUsername(AppSettings.DB_USER);
+    config.setPassword(AppSettings.DB_PASSWORD);
+    config.setMinConnectionsPerPartition(3);
+    config.setMaxConnectionsPerPartition(10);
+    config.setPartitionCount(2);
+    
+    try {
+      connectionPool = new BoneCP(config);
+    } catch (SQLException e) {
+      throw new DaoException("Failed to initialize BoneCP.", e);
+    }
+    
+    
   }
 
   public ICompanyDao getCompanyDao() {
@@ -50,7 +74,16 @@ public enum DaoManager {
   }
   
   public Connection getConnection() {
-    return sqlUtils.getConnection();
+    
+    Connection conn = null;
+    
+    try {
+      conn = connectionPool.getConnection();
+    } catch(SQLException e) {
+      LOGGER.warn("Failed to get DB connection.", e);
+    }
+    
+    return conn;
   }
   
   public void startTransaction(Connection conn) {

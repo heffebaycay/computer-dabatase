@@ -28,11 +28,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="<c:if test="${ dateIntroducedValue != null }"><c:out value="${ dateIntroducedValue }" /> </c:if>">
+                                <input type="text" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="<c:if test="${ dateIntroducedValue != null }"><c:out value="${ dateIntroducedValue }" /> </c:if>">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="<c:if test="${ dateDiscontinuedValue != null }"><c:out value="${ dateDiscontinuedValue }" /> </c:if>">
+                                <input type="text" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="<c:if test="${ dateDiscontinuedValue != null }"><c:out value="${ dateDiscontinuedValue }" /> </c:if>">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
