@@ -117,7 +117,7 @@ public class SQLCompanyDao implements ICompanyDao {
       searchWrapper.setResults(companies);
       searchWrapper.setCurrentPage(0);
       searchWrapper.setTotalPage(0);
-      searchWrapper.setTotalQueryCount(0);
+      searchWrapper.setTotalCount(0);
 
       return searchWrapper;
     }
@@ -135,7 +135,7 @@ public class SQLCompanyDao implements ICompanyDao {
       Statement stmt = conn.createStatement();
       ResultSet countResult = stmt.executeQuery(countQuery);
       countResult.first();
-      searchWrapper.setTotalQueryCount(countResult.getLong("count"));
+      searchWrapper.setTotalCount(countResult.getLong("count"));
 
       // Closing the first statement
       sqlUtils.closeStatement(stmt);
@@ -143,7 +143,7 @@ public class SQLCompanyDao implements ICompanyDao {
       long currentPage = (long) Math.ceil(offset * 1.0 / nbRequested) + 1;
       searchWrapper.setCurrentPage(currentPage);
 
-      long totalPage = (long) Math.ceil(searchWrapper.getTotalQueryCount() * 1.0 / nbRequested);
+      long totalPage = (long) Math.ceil(searchWrapper.getTotalCount() * 1.0 / nbRequested);
 
       searchWrapper.setTotalPage(totalPage);
 
@@ -256,7 +256,7 @@ public class SQLCompanyDao implements ICompanyDao {
       searchWrapper.setResults(companies);
       searchWrapper.setCurrentPage(0);
       searchWrapper.setTotalPage(0);
-      searchWrapper.setTotalQueryCount(0);
+      searchWrapper.setTotalCount(0);
 
       return searchWrapper;
     }
@@ -281,13 +281,13 @@ public class SQLCompanyDao implements ICompanyDao {
 
       ResultSet countResult = countStmt.executeQuery();
       countResult.first();
-      searchWrapper.setTotalQueryCount(countResult.getLong("count"));
+      searchWrapper.setTotalCount(countResult.getLong("count"));
       sqlUtils.closeStatement(countStmt);
 
       long currentPage = (long) Math.ceil(offset * 1.0 / nbRequested) + 1;
       searchWrapper.setCurrentPage(currentPage);
 
-      long totalPage = (long) Math.ceil(searchWrapper.getTotalQueryCount() * 1.0 / nbRequested);
+      long totalPage = (long) Math.ceil(searchWrapper.getTotalCount() * 1.0 / nbRequested);
       searchWrapper.setTotalPage(totalPage);
 
       ps = conn.prepareStatement(query);

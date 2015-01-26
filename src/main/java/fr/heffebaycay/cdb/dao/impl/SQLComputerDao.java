@@ -17,6 +17,7 @@ import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.mapper.ComputerMySQLRowMapper;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.model.Computer;
+import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.util.ComputerSortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
@@ -239,78 +240,6 @@ public class SQLComputerDao implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Computer> findAll(long offset, long nbRequested,
-      ComputerSortCriteria sortCriterion, SortOrder sortOrder, Connection conn) throws DaoException {
-
-    SearchWrapper<Computer> searchWrapper = new SearchWrapper<Computer>();
-    List<Computer> computers = new ArrayList<Computer>();
-
-    if (offset < 0 || nbRequested <= 0) {
-      searchWrapper.setResults(computers);
-      searchWrapper.setCurrentPage(0);
-      searchWrapper.setTotalPage(0);
-      searchWrapper.setTotalQueryCount(0);
-
-      return searchWrapper;
-    }
-
-    String orderPart;
-    if (sortCriterion.equals(ComputerSortCriteria.COMPANY_NAME)) {
-      orderPart = generateOrderPart("cp", sortCriterion, sortOrder);
-    } else {
-      orderPart = generateOrderPart("c", sortCriterion, sortOrder);
-    }
-
-    String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id ORDER BY "
-        + orderPart + " LIMIT ?, ?";
-    String countQuery = "SELECT COUNT(c.id) AS count FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id ORDER BY "
-        + orderPart;
-
-    PreparedStatement ps = null;
-
-    try {
-
-      // First, we need to know exactly how many results they are, aggregated
-      Statement stmt = conn.createStatement();
-      ResultSet countResult = stmt.executeQuery(countQuery);
-      countResult.first();
-      searchWrapper.setTotalQueryCount(countResult.getLong("count"));
-      sqlUtils.closeStatement(stmt);
-
-      long currentPage = (long) Math.ceil(offset * 1.0 / nbRequested) + 1;
-      searchWrapper.setCurrentPage(currentPage);
-
-      long totalPage = (long) Math.ceil(searchWrapper.getTotalQueryCount() * 1.0 / nbRequested);
-      searchWrapper.setTotalPage(totalPage);
-
-      ps = conn.prepareStatement(query);
-      ps.setLong(1, offset);
-      ps.setLong(2, nbRequested);
-      ResultSet rs = ps.executeQuery();
-
-      while (rs.next()) {
-        ComputerMySQLRowMapper mapper = new ComputerMySQLRowMapper();
-        Computer computer = mapper.mapRow(rs);
-
-        computers.add(computer);
-      }
-
-      searchWrapper.setResults(computers);
-
-    } catch (SQLException e) {
-      LOGGER.error("findAll: SQL Exception: ", e);
-      throw new DaoException(e);
-    } finally {
-      sqlUtils.closeStatement(ps);
-    }
-
-    return searchWrapper;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   public int removeForCompany(long companyId, Connection conn) throws DaoException {
 
     String removeForCompanySQL = "DELETE FROM computer WHERE company_id = ?";
@@ -330,30 +259,36 @@ public class SQLComputerDao implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Computer> findByName(String name, long offset, long nbRequested,
-      ComputerSortCriteria sortCriterion, SortOrder sortOrder, Connection conn) throws DaoException {
+  public SearchWrapper<Computer> findByName(ComputerPageRequest request, Connection conn) throws DaoException {
+    
+    if(request == null) {
+      throw new DaoException("PageRequest object cannot be null");
+    }
+    
     SearchWrapper<Computer> searchWrapper = new SearchWrapper<Computer>();
     List<Computer> computers = new ArrayList<Computer>();
 
-    if (offset < 0 || nbRequested <= 0) {
+    searchWrapper.setSearchQuery(request.getSearchQuery());
+    searchWrapper.setSortOrder(request.getSortOrder().getName());
+    searchWrapper.setSortCriterion(request.getSortCriterion().getName());
+    
+    if (request.getOffset() < 0 || request.getNbRequested() <= 0) {
       searchWrapper.setResults(computers);
       searchWrapper.setCurrentPage(0);
       searchWrapper.setTotalPage(0);
-      searchWrapper.setTotalQueryCount(0);
+      searchWrapper.setTotalCount(0);
 
       return searchWrapper;
     }
 
-    // Escaping '%' character
-    name = name.replace("%", "\\%");
-
     String orderPart;
 
-    if (sortCriterion.equals(ComputerSortCriteria.COMPANY_NAME)) {
-      orderPart = generateOrderPart("cp", sortCriterion, sortOrder);
+    if(ComputerSortCriteria.COMPANY_NAME.equals(request.getSortCriterion())) {
+      orderPart = generateOrderPart("cp", request.getSortCriterion(), request.getSortOrder());
     } else {
-      orderPart = generateOrderPart("c", sortCriterion, sortOrder);
+      orderPart = generateOrderPart("c", request.getSortCriterion(), request.getSortOrder());
     }
+    
 
     String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id WHERE c.name LIKE ? OR cp.name LIKE ? ORDER BY "
         + orderPart + " LIMIT ?, ?";
@@ -364,7 +299,9 @@ public class SQLComputerDao implements IComputerDao {
 
     try {
 
-      String searchKeyword = String.format("%%%s%%", name);
+      //  Escaping '%' character
+      String searchKeyword = request.getSearchQuery().replace("%", "\\%");
+      searchKeyword = String.format("%%%s%%", searchKeyword);
       LOGGER.debug("Search keyword: " + searchKeyword);
 
       PreparedStatement countStmt = conn.prepareStatement(countQuery);
@@ -373,21 +310,21 @@ public class SQLComputerDao implements IComputerDao {
 
       ResultSet countResult = countStmt.executeQuery();
       countResult.first();
-      searchWrapper.setTotalQueryCount(countResult.getLong("count"));
+      searchWrapper.setTotalCount(countResult.getLong("count"));
       sqlUtils.closeStatement(countStmt);
 
-      long currentPage = (long) Math.ceil(offset * 1.0 / nbRequested) + 1;
+      long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
       searchWrapper.setCurrentPage(currentPage);
 
-      long totalPage = (long) Math.ceil(searchWrapper.getTotalQueryCount() * 1.0 / nbRequested);
+      long totalPage = (long) Math.ceil(searchWrapper.getTotalCount() * 1.0 / request.getNbRequested());
       searchWrapper.setTotalPage(totalPage);
 
       ps = conn.prepareStatement(query);
 
       ps.setString(1, searchKeyword);
       ps.setString(2, searchKeyword);
-      ps.setLong(3, offset);
-      ps.setLong(4, nbRequested);
+      ps.setLong(3, request.getOffset());
+      ps.setLong(4, request.getNbRequested());
 
       ResultSet rs = ps.executeQuery();
 
@@ -402,6 +339,82 @@ public class SQLComputerDao implements IComputerDao {
 
     } catch (SQLException e) {
       LOGGER.warn("findByName(): SQLException: ", e);
+      throw new DaoException(e);
+    } finally {
+      sqlUtils.closeStatement(ps);
+    }
+
+    return searchWrapper;
+  }
+
+  @Override
+  public SearchWrapper<Computer> findAll(ComputerPageRequest request, Connection conn) throws DaoException {
+
+    if(request == null) {
+      throw new DaoException("PageRequest object cannot be null");
+    }
+    
+    SearchWrapper<Computer> searchWrapper = new SearchWrapper<Computer>();
+    List<Computer> computers = new ArrayList<Computer>();
+    
+    searchWrapper.setSortOrder(request.getSortOrder().getName());
+    searchWrapper.setSortCriterion(request.getSortCriterion().getName());
+
+    if (request.getOffset() < 0 || request.getNbRequested() <= 0) {
+      searchWrapper.setResults(computers);
+      searchWrapper.setCurrentPage(0);
+      searchWrapper.setTotalPage(0);
+      searchWrapper.setTotalCount(0);
+
+      return searchWrapper;
+    }
+
+    String orderPart;
+    
+    if (ComputerSortCriteria.COMPANY_NAME.equals(request.getSortCriterion())) {
+      orderPart = generateOrderPart("cp", request.getSortCriterion(), request.getSortOrder());
+    } else {
+      orderPart = generateOrderPart("c", request.getSortCriterion(), request.getSortOrder());
+    }
+
+    String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id ORDER BY "
+        + orderPart + " LIMIT ?, ?";
+    String countQuery = "SELECT COUNT(c.id) AS count FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id ORDER BY "
+        + orderPart;
+
+    PreparedStatement ps = null;
+
+    try {
+
+      // First, we need to know exactly how many results they are, aggregated
+      Statement stmt = conn.createStatement();
+      ResultSet countResult = stmt.executeQuery(countQuery);
+      countResult.first();
+      searchWrapper.setTotalCount(countResult.getLong("count"));
+      sqlUtils.closeStatement(stmt);
+
+      long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
+      searchWrapper.setCurrentPage(currentPage);
+
+      long totalPage = (long) Math.ceil(searchWrapper.getTotalCount() * 1.0 / request.getNbRequested());
+      searchWrapper.setTotalPage(totalPage);
+
+      ps = conn.prepareStatement(query);
+      ps.setLong(1, request.getOffset());
+      ps.setLong(2, request.getNbRequested());
+      ResultSet rs = ps.executeQuery();
+
+      while (rs.next()) {
+        ComputerMySQLRowMapper mapper = new ComputerMySQLRowMapper();
+        Computer computer = mapper.mapRow(rs);
+
+        computers.add(computer);
+      }
+
+      searchWrapper.setResults(computers);
+
+    } catch (SQLException e) {
+      LOGGER.error("findAll: SQL Exception: ", e);
       throw new DaoException(e);
     } finally {
       sqlUtils.closeStatement(ps);

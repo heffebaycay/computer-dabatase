@@ -7,8 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.dao.IComputerDao;
+import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Computer;
+import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.service.IComputerService;
 import fr.heffebaycay.cdb.util.ComputerSortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
@@ -36,9 +38,14 @@ public class ComputerServiceJDBCImpl implements IComputerService {
     LOGGER.debug("Call to findAll()");
     Connection conn = DaoManager.INSTANCE.getConnection();
     
-    List<Computer> computers = computerDao.findAll(conn);
-    
-    DaoManager.INSTANCE.closeConnection(conn);
+    List<Computer> computers = null;
+    try {
+      computers = computerDao.findAll(conn);
+    } catch (DaoException e) {
+      LOGGER.warn("findAll(): DaoException", e);
+    } finally {
+      DaoManager.INSTANCE.closeConnection(conn);
+    }
     
     return computers;
   }
@@ -51,9 +58,14 @@ public class ComputerServiceJDBCImpl implements IComputerService {
     LOGGER.debug("Call to findById()");
     Connection conn = DaoManager.INSTANCE.getConnection();
     
-    Computer computer = computerDao.findById(id, conn);
-    
-    DaoManager.INSTANCE.closeConnection(conn);
+    Computer computer = null;
+    try {
+      computer = computerDao.findById(id, conn);
+    } catch (DaoException e) {
+      LOGGER.warn("findById(): DaoException: ", e);
+    } finally {
+      DaoManager.INSTANCE.closeConnection(conn);
+    }
     
     return computer;
   }
@@ -66,9 +78,14 @@ public class ComputerServiceJDBCImpl implements IComputerService {
     LOGGER.debug("Call to remove()");
     Connection conn = DaoManager.INSTANCE.getConnection();
     
-    boolean result = computerDao.remove(id, conn);
-    
-    DaoManager.INSTANCE.closeConnection(conn);
+    boolean result = false;
+    try {
+      result = computerDao.remove(id, conn);
+    } catch (DaoException e) {
+      LOGGER.warn("remove(): DaoException: ", e);
+    } finally {
+      DaoManager.INSTANCE.closeConnection(conn);
+    }
     
     return result;
 
@@ -82,9 +99,14 @@ public class ComputerServiceJDBCImpl implements IComputerService {
     LOGGER.debug("Call to create()");
     Connection conn = DaoManager.INSTANCE.getConnection();
     
-    long computerId = computerDao.create(computer, conn);
-    
-    DaoManager.INSTANCE.closeConnection(conn);
+    long computerId = -1;
+    try {
+      computerId = computerDao.create(computer, conn);
+    } catch (DaoException e) {
+      LOGGER.warn("create(): DaoException: ", e);
+    } finally {
+      DaoManager.INSTANCE.closeConnection(conn);
+    }
     
     return computerId;
   }
@@ -97,22 +119,34 @@ public class ComputerServiceJDBCImpl implements IComputerService {
     LOGGER.debug("Call to update()");
     Connection conn = DaoManager.INSTANCE.getConnection();
     
-    computerDao.update(computer, conn);
+    try {
+      computerDao.update(computer, conn);
+    } catch (DaoException e) {
+      LOGGER.warn("update(): ", e);
+    } finally {
+      DaoManager.INSTANCE.closeConnection(conn);
+    }
     
-    DaoManager.INSTANCE.closeConnection(conn);
+    
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Computer> findAll(long offset, long nbRequested, ComputerSortCriteria sortCriterion, SortOrder sortOrder) {
+  public SearchWrapper<Computer> findAll(ComputerPageRequest request) {
     LOGGER.debug("Call to findAll(long, long)");
     Connection conn = DaoManager.INSTANCE.getConnection();
     
-    SearchWrapper<Computer> wrapper = computerDao.findAll(offset, nbRequested, sortCriterion, sortOrder, conn);
+    SearchWrapper<Computer> wrapper = null;
     
-    DaoManager.INSTANCE.closeConnection(conn);
+    try {
+      wrapper = computerDao.findAll(request, conn);
+    } catch(DaoException e) {
+      LOGGER.warn("findAll(): DaoException: ", e);
+    } finally {
+      DaoManager.INSTANCE.closeConnection(conn);
+    }
     
     return wrapper;
   }
@@ -121,13 +155,20 @@ public class ComputerServiceJDBCImpl implements IComputerService {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Computer> findByName(String name, long offset, long nbRequested, ComputerSortCriteria sortCriterion, SortOrder sortOrder) {
+  public SearchWrapper<Computer> findByName(ComputerPageRequest request) {
     LOGGER.debug("Call to findByName()");
     Connection conn = DaoManager.INSTANCE.getConnection();
     
-    SearchWrapper<Computer> wrapper = computerDao.findByName(name, offset, nbRequested, sortCriterion, sortOrder, conn);
+    SearchWrapper<Computer> wrapper = null;
     
-    DaoManager.INSTANCE.closeConnection(conn);
+    try {
+      wrapper = computerDao.findByName(request, conn);
+    } catch( DaoException e) {
+      LOGGER.warn("findByName(): DaoException: ", e);
+    } finally {
+      DaoManager.INSTANCE.closeConnection(conn);
+    }
+
     
     return wrapper;
   }

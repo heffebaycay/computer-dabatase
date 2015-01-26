@@ -19,15 +19,15 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 public class CompanyServiceJDBCImpl implements ICompanyService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CompanyServiceJDBCImpl.class);
-  
-  ICompanyDao companyDao;
-  IComputerDao computerDao;
-  
+
+  ICompanyDao                 companyDao;
+  IComputerDao                computerDao;
+
   public CompanyServiceJDBCImpl() {
     companyDao = DaoManager.INSTANCE.getCompanyDao();
     computerDao = DaoManager.INSTANCE.getComputerDao();
   }
-  
+
   public CompanyServiceJDBCImpl(ICompanyDao companyDao) {
     this.companyDao = companyDao;
   }
@@ -38,11 +38,17 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   @Override
   public List<Company> findAll() {
     LOGGER.debug("Call to findAll()");
-    
+
     Connection conn = DaoManager.INSTANCE.getConnection();
-    List<Company> companies = companyDao.findAll(conn);
-    DaoManager.INSTANCE.closeConnection(conn);
-    
+    List<Company> companies = null;
+    try {
+      companies = companyDao.findAll(conn);
+    } catch (DaoException e) {
+      LOGGER.warn("findAll(): DaoException: ", e);
+    } finally {
+      DaoManager.INSTANCE.closeConnection(conn);
+    }
+
     return companies;
   }
 
@@ -52,11 +58,17 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   @Override
   public Company findById(long id) {
     LOGGER.debug("Call to findById()");
-    
+
     Connection conn = DaoManager.INSTANCE.getConnection();
-    Company company = companyDao.findById(id, conn);
-    DaoManager.INSTANCE.closeConnection(conn);
-    
+    Company company = null;
+    try {
+      company = companyDao.findById(id, conn);
+    } catch (DaoException e) {
+      LOGGER.warn("findById(): DaoException: ", e);
+    } finally {
+      DaoManager.INSTANCE.closeConnection(conn);
+    }
+
     return company;
   }
 
@@ -66,72 +78,86 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   @Override
   public void create(Company company) {
     LOGGER.debug("Call to create()");
-    
+
     Connection conn = DaoManager.INSTANCE.getConnection();
-    companyDao.create(company, conn);
-    DaoManager.INSTANCE.closeConnection(conn);
-    
-    
+    try {
+      companyDao.create(company, conn);
+    } catch (DaoException e) {
+      LOGGER.warn("create(): DaoException: ", e);
+    } finally {
+      DaoManager.INSTANCE.closeConnection(conn);
+    }
+
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Company> findAll(long offset, long nbRequested, CompanySortCriteria sortCriterion, SortOrder sortOrder) {
+  public SearchWrapper<Company> findAll(long offset, long nbRequested,
+      CompanySortCriteria sortCriterion, SortOrder sortOrder) {
     LOGGER.debug("Call to findAll()");
-    
+
     Connection conn = DaoManager.INSTANCE.getConnection();
-    SearchWrapper<Company> companies = companyDao.findAll(offset, nbRequested, sortCriterion, sortOrder, conn);
-    DaoManager.INSTANCE.closeConnection(conn);
-    
+    SearchWrapper<Company> companies = null;
+    try {
+      companies = companyDao.findAll(offset, nbRequested, sortCriterion, sortOrder, conn);
+    } catch (DaoException e) {
+      LOGGER.warn("findAll(): DaoException", e);
+    } finally {
+      DaoManager.INSTANCE.closeConnection(conn);
+    }
+
     return companies;
   }
 
   @Override
   public void remove(long id) {
     LOGGER.debug("Call to remove()");
-    
+
     Connection conn = DaoManager.INSTANCE.getConnection();
-    
+
     DaoManager.INSTANCE.startTransaction(conn);
-    
+
     int nbComputers = -1;
     int nbCompany = -1;
-    
+
     try {
       // Remove computers linked to company X
       nbComputers = computerDao.removeForCompany(id, conn);
-      
+
       // Remove company X
       nbCompany = companyDao.remove(id, conn);
-      
+
       DaoManager.INSTANCE.commitTransaction(conn);
-      
-    } catch(DaoException e) {
+
+    } catch (DaoException e) {
       DaoManager.INSTANCE.rollbackTransaction(conn);
-      
+
     } finally {
       DaoManager.INSTANCE.endTransaction(conn);
     }
-    
-    LOGGER.debug(String.format("Removed %d computers and %d company", nbComputers, nbCompany));   
-    
+
+    LOGGER.debug(String.format("Removed %d computers and %d company", nbComputers, nbCompany));
+
   }
 
-	@Override
-	public SearchWrapper<Company> findByName(String name, long offset,
-	  long nbRequested, CompanySortCriteria sortCriterion, SortOrder sortOrder) {
-	  LOGGER.debug("Call to findByName()");
-		
-	  Connection conn = DaoManager.INSTANCE.getConnection();
-	  SearchWrapper<Company> companies = companyDao.findByName(name, offset, nbRequested, sortCriterion, sortOrder, conn);
-	  DaoManager.INSTANCE.closeConnection(conn);
-		
-	  return companies;
-	}
-  
-  
-  
+  @Override
+  public SearchWrapper<Company> findByName(String name, long offset, long nbRequested,
+      CompanySortCriteria sortCriterion, SortOrder sortOrder) {
+    LOGGER.debug("Call to findByName()");
+
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    SearchWrapper<Company> companies = null;
+    try {
+      companies = companyDao.findByName(name, offset, nbRequested, sortCriterion, sortOrder, conn);
+    } catch (DaoException e) {
+      LOGGER.warn("findByName(): DaoException: ", e);
+    } finally {
+      DaoManager.INSTANCE.closeConnection(conn);
+    }
+    
+    return companies;
+  }
 
 }

@@ -13,6 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.SQLComputerDao;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.dao.manager.DaoManager;
@@ -164,7 +165,13 @@ public class TestComputerDaoMySQLImpl {
   @Test
   public void testFindAll() {
 
-    List<Computer> computers = computerDao.findAll(conn);
+    List<Computer> computers = null;
+    
+    try {
+      computers = computerDao.findAll(conn);
+    } catch(DaoException e) {
+      fail("DaoException thrown by findAll()");
+    }
 
     assertEquals(localComputers, computers);
 
@@ -177,7 +184,7 @@ public class TestComputerDaoMySQLImpl {
         SortOrder.ASC, conn);
 
     assertEquals(1, wrapper.getCurrentPage());
-    assertEquals(7, wrapper.getTotalQueryCount());
+    assertEquals(7, wrapper.getTotalCount());
     assertEquals(2, wrapper.getTotalPage());
 
     List<Computer> reducedList = localComputers.subList(0, 5);

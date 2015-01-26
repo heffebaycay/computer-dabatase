@@ -139,7 +139,7 @@ public class TestCompanyDaoMySQLImpl {
 
     assertEquals(2, wrapper.getTotalPage());
     assertEquals(1, wrapper.getCurrentPage());
-    assertEquals(10, wrapper.getTotalQueryCount()); // We stored 10 elements in the Database
+    assertEquals(10, wrapper.getTotalCount()); // We stored 10 elements in the Database
 
     List<Company> reducedList = new ArrayList<Company>();
     for (int i = 0; i < 5; i++) {

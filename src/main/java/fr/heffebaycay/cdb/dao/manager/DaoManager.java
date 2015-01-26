@@ -39,7 +39,7 @@ public enum DaoManager {
     try {
       Class.forName("com.mysql.jdbc.Driver");
     } catch (ClassNotFoundException e) {
-      throw new DaoException("Failed to load MySQL JDBC driver.", e);
+      throw new RuntimeException("Failed to load MySQL JDBC driver.", e);
     }
     
     companyDao = new SQLCompanyDao();
@@ -59,7 +59,7 @@ public enum DaoManager {
     try {
       connectionPool = new BoneCP(config);
     } catch (SQLException e) {
-      throw new DaoException("Failed to initialize BoneCP.", e);
+      throw new RuntimeException("Failed to initialize BoneCP.", e);
     }
     
     

@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import fr.heffebaycay.cdb.dto.ComputerDTO;
 import fr.heffebaycay.cdb.dto.mapper.ComputerMapper;
 import fr.heffebaycay.cdb.model.Computer;
+import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.service.IComputerService;
 import fr.heffebaycay.cdb.service.manager.ServiceManager;
 import fr.heffebaycay.cdb.util.AppSettings;
@@ -92,51 +93,26 @@ public class ComputerController extends HttpServlet {
     // Fetching sorting parameters
     String uSortBy = request.getParameter("sortBy");
     String uSortOrder = request.getParameter("order");
-    SortOrder sortOrder;
-    ComputerSortCriteria sortCriterion;
     
-    // Setting up sort order
-    if ("desc".equals(uSortOrder)) {
-      sortOrder = SortOrder.DESC;
-      request.setAttribute("sortOrder", "desc");
-    } else {
-      sortOrder = SortOrder.ASC;
-      request.setAttribute("sortOrder", "asc");
-    }
+    ComputerPageRequest pageRequest = new ComputerPageRequest.Builder()
+                                                              .sortOrder(uSortOrder)
+                                                              .sortCriterion(uSortBy)
+                                                              .searchQuery(searchQuery)
+                                                              .offset(offset)
+                                                              .nbRequested(nbResultsPerPage)
+                                                              .build();
     
-    // Setting up sort criterion
-    if( "id".equals(uSortBy) ) {
-      sortCriterion = ComputerSortCriteria.ID;
-      request.setAttribute("sortCriterion", "id");
-    } else if( "name".equals(uSortBy) ) {
-      sortCriterion = ComputerSortCriteria.NAME;
-      request.setAttribute("sortCriterion", "name");
-    } else if( "introduced".equals(uSortBy) ) {
-      sortCriterion = ComputerSortCriteria.DATE_INTRODUCED;
-      request.setAttribute("sortCriterion", "introduced");
-    } else if( "discontinued".equals(uSortBy) ) {
-      sortCriterion = ComputerSortCriteria.DATE_DISCONTINUED;
-      request.setAttribute("sortCriterion", "discontinued");
-    } else if( "company".equals(uSortBy) ) {
-      sortCriterion = ComputerSortCriteria.COMPANY_NAME;
-      request.setAttribute("sortCriterion", "discontinued");
-    } else {
-      sortCriterion = ComputerSortCriteria.ID;
-      request.setAttribute("sortCriterion", "id");
-    }
     
     if(searchQuery != null && !searchQuery.isEmpty()) {
-      searchWrapper = mComputerService.findByName(searchQuery, offset, nbResultsPerPage, sortCriterion, sortOrder);
-      request.setAttribute("searchQuery", searchQuery);
+      searchWrapper = mComputerService.findByName(pageRequest);
     } else {
-      searchWrapper = mComputerService.findAll(offset, nbResultsPerPage, sortCriterion, sortOrder);
+      searchWrapper = mComputerService.findAll(pageRequest);
     }
     
     computers = ComputerMapper.toDTO( searchWrapper.getResults() );
     
-    request.setAttribute("totalPage", searchWrapper.getTotalPage());
-    request.setAttribute("totalCount", searchWrapper.getTotalQueryCount());
-    request.setAttribute("computers", computers);
+    
+    request.setAttribute("searchWrapper", searchWrapper);
        
     RequestDispatcher rd = getServletContext().getRequestDispatcher(response.encodeURL("/WEB-INF/views/dashboard.jsp"));
     rd.forward(request, response);

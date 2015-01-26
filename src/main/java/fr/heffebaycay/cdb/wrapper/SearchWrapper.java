@@ -11,11 +11,17 @@ public class SearchWrapper<T> {
 
   private List<T> results;
   
-  private long totalQueryCount;
+  private long totalCount;
   
   private long currentPage;
   
   private long totalPage;
+  
+  private String sortOrder;
+  
+  private String sortCriterion;
+  
+  private String searchQuery;
   
   
   public List<T> getResults() {
@@ -27,12 +33,12 @@ public class SearchWrapper<T> {
     return this;
   }
   
-  public long getTotalQueryCount() {
-    return totalQueryCount;
+  public long getTotalCount() {
+    return totalCount;
   }
   
-  public SearchWrapper<T> setTotalQueryCount(long totalQueryCount) {
-    this.totalQueryCount = totalQueryCount;
+  public SearchWrapper<T> setTotalCount(long totalCount) {
+    this.totalCount = totalCount;
     return this;    
   }
 
@@ -50,6 +56,30 @@ public class SearchWrapper<T> {
 
   public void setTotalPage(long totalPage) {
     this.totalPage = totalPage;
+  }
+
+  public String getSortOrder() {
+    return sortOrder;
+  }
+
+  public void setSortOrder(String sortOrder) {
+    this.sortOrder = sortOrder;
+  }
+
+  public String getSortCriterion() {
+    return sortCriterion;
+  }
+
+  public void setSortCriterion(String sortCriterion) {
+    this.sortCriterion = sortCriterion;
+  }
+
+  public String getSearchQuery() {
+    return searchQuery;
+  }
+
+  public void setSearchQuery(String searchQuery) {
+    this.searchQuery = searchQuery;
   }
   
   

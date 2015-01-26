@@ -122,7 +122,7 @@ public class CompanyController extends HttpServlet {
 		companies = CompanyMapper.toDTO(searchWrapper.getResults());
 		
 		request.setAttribute("totalPage", searchWrapper.getTotalPage());
-		request.setAttribute("totalCount", searchWrapper.getTotalQueryCount());
+		request.setAttribute("totalCount", searchWrapper.getTotalCount());
 		request.setAttribute("companies", companies);
 		
 		

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
+import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.IComputerService;
 import fr.heffebaycay.cdb.service.manager.ServiceManager;
@@ -278,7 +279,14 @@ public class ComputerCLIUI {
     
     long offset = (pageNumber - 1) * AppSettings.NB_RESULTS_PAGE;
     
-    SearchWrapper<Computer> sw = computerService.findAll(offset, AppSettings.NB_RESULTS_PAGE, ComputerSortCriteria.ID, SortOrder.ASC);
+    ComputerPageRequest request = new ComputerPageRequest.Builder()
+                                                              .offset(offset)
+                                                              .nbRequested(AppSettings.NB_RESULTS_PAGE)
+                                                              .sortCriterion(ComputerSortCriteria.ID)
+                                                              .sortOrder(SortOrder.ASC)
+                                                              .build();
+    
+    SearchWrapper<Computer> sw = computerService.findAll(request);
     
     System.out.printf("Displaying page %d of %d:%n", sw.getCurrentPage(), sw.getTotalPage());
     

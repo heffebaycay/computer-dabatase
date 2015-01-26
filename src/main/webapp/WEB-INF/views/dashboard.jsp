@@ -9,7 +9,7 @@
 <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                ${totalCount} Computers found
+                ${searchWrapper.totalCount} Computers found
             </h1>
             
             <c:if test="${ bRemoveSuccess == true }">
@@ -54,25 +54,25 @@
                             </span>
                         </th>
                         <th>
-                            Computer name <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'name', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'name', 'desc') }" />">D</a>
+                            Computer name <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'name', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'name', 'desc') }" />">D</a>
                         </th>
                         <th>
-                            Introduced date <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'introduced', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'introduced', 'desc') }" />">D</a>
+                            Introduced date <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'introduced', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'introduced', 'desc') }" />">D</a>
                         </th>
                         <!-- Table header for Discontinued Date -->
                         <th>
-                            Discontinued date <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'discontinued', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'discontinued', 'desc') }" />">D</a>
+                            Discontinued date <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'discontinued', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'discontinued', 'desc') }" />">D</a>
                         </th>
                         <!-- Table header for Company -->
                         <th>
-                            Company <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'company', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'company', 'desc') }" />">D</a>
+                            Company <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'company', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'company', 'desc') }" />">D</a>
                         </th>
 
                     </tr>
                 </thead>
                 <!-- Browse attribute computers -->
                 <tbody id="results">
-                	<c:forEach items="${requestScope.computers}" var="computer">
+                	<c:forEach items="${searchWrapper.results}" var="computer">
                 		<tr>
                 			<td class="editMode">
                 				<input type="checkbox" name="cb" class="cb" value="${computer.id}" />
@@ -100,8 +100,8 @@
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
         
-        	<c:set var="urlPattern" value="${ u:generateDashboardRoute(\"%d\", searchQuery, sortCriterion, sortOrder) }" />
-        	<t:pagination urlPattern="${ urlPattern }" totalPage="${ totalPage }" currentPage="${ currentPage }" delta="${ 3 }"></t:pagination>
+        	<c:set var="urlPattern" value="${ u:generateDashboardRoute(\"%d\", searchWrapper.searchQuery, searchWrapper.sortCriterion, searchWrapper.sortOrder) }" />
+        	<t:pagination urlPattern="${ urlPattern }" totalPage="${ searchWrapper.totalPage }" currentPage="${ searchWrapper.currentPage }" delta="${ 3 }"></t:pagination>
 
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
 	            <button type="button" class="btn btn-default">10</button>

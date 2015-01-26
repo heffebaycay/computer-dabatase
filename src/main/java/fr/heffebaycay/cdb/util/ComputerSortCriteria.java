@@ -2,10 +2,20 @@ package fr.heffebaycay.cdb.util;
 
 public enum ComputerSortCriteria {
   
-  ID,
-  NAME,
-  DATE_INTRODUCED,
-  DATE_DISCONTINUED,
-  COMPANY_NAME
+  ID("id"),
+  NAME("name"),
+  DATE_INTRODUCED("introduced"),
+  DATE_DISCONTINUED("discontinued"),
+  COMPANY_NAME("company");
+  
+  private String name;
+  
+  private ComputerSortCriteria(String name) {
+    this.name = name;
+  }
+  
+  public String getName() {
+    return this.name;
+  }
   
 }
