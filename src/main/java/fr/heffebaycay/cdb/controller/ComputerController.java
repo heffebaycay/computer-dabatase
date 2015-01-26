@@ -26,7 +26,7 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 /**
  * Servlet implementation class ComputerController
  */
-@WebServlet("")
+@WebServlet("/computers/list")
 public class ComputerController extends HttpServlet {
 
   private static final long  serialVersionUID = 1L;

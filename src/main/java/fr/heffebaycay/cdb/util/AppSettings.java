@@ -88,7 +88,7 @@ public class AppSettings {
     params.add("order");
     params.add("sortBy");
 
-    Route dashboardRoute = new Route.Builder().name("dashboard").path("/").parameters(params)
+    Route dashboardRoute = new Route.Builder().name("dashboard").path("/computers/list").parameters(params)
         .build();
     
     Route companyRoute = new Route.Builder().name("company-list").path("/companies/list").parameters(params).build();
