@@ -11,7 +11,6 @@ import com.jolbox.bonecp.BoneCPConfig;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.IComputerDao;
-import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.SQLCompanyDao;
 import fr.heffebaycay.cdb.dao.impl.SQLComputerDao;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
@@ -27,8 +26,9 @@ public enum DaoManager {
 
   private ICompanyDao  companyDao;
   private IComputerDao computerDao;
-  private MySQLUtils sqlUtils;
   private BoneCP connectionPool;
+  
+  private ThreadLocal<Connection> threadLocalConnection;
   
   
   
@@ -46,10 +46,8 @@ public enum DaoManager {
     computerDao = new SQLComputerDao();
         
     
-    sqlUtils = new MySQLUtils();
-    
     BoneCPConfig config = new BoneCPConfig();
-    config.setJdbcUrl(sqlUtils.getMySQLConnectionURL());
+    config.setJdbcUrl(MySQLUtils.getMySQLConnectionURL());
     config.setUsername(AppSettings.DB_USER);
     config.setPassword(AppSettings.DB_PASSWORD);
     config.setMinConnectionsPerPartition(3);
@@ -61,6 +59,8 @@ public enum DaoManager {
     } catch (SQLException e) {
       throw new RuntimeException("Failed to initialize BoneCP.", e);
     }
+    
+    threadLocalConnection = new ThreadLocal<Connection>();
     
     
   }
@@ -74,21 +74,23 @@ public enum DaoManager {
   }
   
   public Connection getConnection() {
-    
-    Connection conn = null;
-    
-    try {
-      conn = connectionPool.getConnection();
-    } catch(SQLException e) {
-      LOGGER.warn("Failed to get DB connection.", e);
+	  
+    if(threadLocalConnection.get() == null) {
+      // No connection available for current Thread
+      try {
+        threadLocalConnection.set(connectionPool.getConnection());
+      } catch(SQLException e) {
+        LOGGER.warn("Failed to get DB connection.", e);
+      }
     }
     
-    return conn;
+    return threadLocalConnection.get();
   }
   
-  public void startTransaction(Connection conn) {
+  public void startTransaction() {
     try {
       LOGGER.debug("startTransaction(): Begining new transaction");
+      Connection conn = getConnection();
       conn.setAutoCommit(false);
       conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
     } catch(SQLException e) {
@@ -96,37 +98,46 @@ public enum DaoManager {
     }
   }
   
-  public void commitTransaction(Connection conn) {
+  public void commitTransaction() {
+    
     try {
       LOGGER.debug("commitTransaction(): Commiting transaction");
-      conn.commit();
+      getConnection().commit();
     } catch(SQLException e) {
       LOGGER.warn("commitTransaction(): Failed to commit transaction: ", e);
-      rollbackTransaction(conn);
+      rollbackTransaction();
     }
   }
   
-  public void endTransaction(Connection conn) {
+  public void endTransaction() {
+   
     try {
       LOGGER.debug("endTransaction(): About to end transaction");
-      conn.setAutoCommit(true);
-      closeConnection(conn);
+      getConnection().setAutoCommit(true);
+      closeConnection();
     } catch(SQLException e) {
       LOGGER.warn("endTransaction(): Failed to end transaction: ", e);
     }
   }
   
-  public void rollbackTransaction(Connection conn) {
+  public void rollbackTransaction() {
+    
     try {
       LOGGER.debug("rollbackTransaction(): About to rollback transaction");
-      conn.rollback();
+      getConnection().rollback();
     } catch(SQLException e) {
       LOGGER.warn("rollbackTransaction(): Failed to rollback transaction: ", e);
     }
   }
   
-  public void closeConnection(Connection conn) {
-    sqlUtils.closeConnection(conn);
+  public void closeConnection() {
+    LOGGER.debug("closeConnection(): About to close connection");
+    try {
+      getConnection().close();
+      threadLocalConnection.remove();
+    } catch (SQLException e) {
+      LOGGER.warn("closeConnection(): SQLException: ", e);
+    }
   }
 
 }

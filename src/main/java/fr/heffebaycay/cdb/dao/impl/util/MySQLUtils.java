@@ -14,12 +14,17 @@ public class MySQLUtils {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MySQLUtils.class);
 
+  // Class should never be instanciated
+  private MySQLUtils() {
+    super();
+  }
+  
   /**
    * Return an instance of <i>Connection</i>, to connect to the database
    * 
    * @return An instance of Connection
    */
-  public Connection getConnection() {
+  public static Connection getConnection() {
 
     Connection conn = null;
 
@@ -38,7 +43,7 @@ public class MySQLUtils {
    * 
    * @param conn The <i>Connection</i> object that should be closed.
    */
-  public void closeConnection(Connection conn) {
+  public static void closeConnection(Connection conn) {
     try {
       if (conn != null) {
         conn.close();
@@ -53,7 +58,7 @@ public class MySQLUtils {
    * 
    * @param stmt    The <i>Statement</i> object that should be closed.
    */
-  public void closeStatement(Statement stmt) {
+  public static void closeStatement(Statement stmt) {
     try {
       if (stmt != null) {
         stmt.close();
@@ -69,7 +74,7 @@ public class MySQLUtils {
    * @param conn    The <i>Connection</i> object that should be closed.
    * @param stmt    The <i>Statement</i> object that should be closed.
    */
-  public void closeConnectionAndStatement(Connection conn, Statement stmt) {
+  public static void closeConnectionAndStatement(Connection conn, Statement stmt) {
 
     try {
       if (stmt != null) {
@@ -83,12 +88,12 @@ public class MySQLUtils {
 
   }
 
-  public String getMySQLConnectionURL() {
+  public static String getMySQLConnectionURL() {
     return String.format("jdbc:mysql://127.0.0.1:3306/%s?zeroDateTimeBehavior=convertToNull",
         AppSettings.DB_NAME);
   }
 
-  public void truncateTables() {
+  public static void truncateTables() {
     Connection conn = getConnection();
     final String queryComputer = "DELETE FROM computer";
     final String queryCompany = "DELETE FROM company";

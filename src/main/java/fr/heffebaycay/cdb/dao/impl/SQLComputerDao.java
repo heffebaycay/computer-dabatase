@@ -16,6 +16,7 @@ import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.mapper.ComputerMySQLRowMapper;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
+import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.util.ComputerSortCriteria;
@@ -26,21 +27,16 @@ public class SQLComputerDao implements IComputerDao {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDao.class);
 
-  private MySQLUtils          sqlUtils;
-
   public SQLComputerDao() {
-    this.sqlUtils = new MySQLUtils();
   }
 
-  public SQLComputerDao(MySQLUtils sqlUtils) {
-    this.sqlUtils = sqlUtils;
-  }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public List<Computer> findAll(Connection conn) throws DaoException {
+  public List<Computer> findAll() throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
     Statement stmt = null;
 
     String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id";
@@ -64,7 +60,7 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.error("findAll(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      sqlUtils.closeStatement(stmt);
+      MySQLUtils.closeStatement(stmt);
     }
 
     return computers;
@@ -74,7 +70,8 @@ public class SQLComputerDao implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public Computer findById(long id, Connection conn) throws DaoException {
+  public Computer findById(long id) throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
     Computer computer = null;
     PreparedStatement ps = null;
 
@@ -99,7 +96,7 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.error("findById(): SQLException:", e);
       throw new DaoException(e);
     } finally {
-      sqlUtils.closeStatement(ps);
+      MySQLUtils.closeStatement(ps);
     }
 
     return computer;
@@ -109,7 +106,8 @@ public class SQLComputerDao implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public boolean remove(long id, Connection conn) throws DaoException {
+  public boolean remove(long id) throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
     String query = "DELETE FROM computer WHERE id = ?";
     PreparedStatement ps = null;
 
@@ -126,7 +124,7 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.error("remove(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      sqlUtils.closeStatement(ps);
+      MySQLUtils.closeStatement(ps);
     }
 
   }
@@ -135,8 +133,9 @@ public class SQLComputerDao implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public long create(Computer computer, Connection conn) throws DaoException {
-
+  public long create(Computer computer) throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    
     if (computer == null) {
       throw new IllegalArgumentException("'computer' argument cannot be null");
     }
@@ -180,7 +179,7 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.error("create(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      sqlUtils.closeStatement(ps);
+      MySQLUtils.closeStatement(ps);
     }
 
     return newComputerId;
@@ -191,8 +190,9 @@ public class SQLComputerDao implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public void update(Computer computer, Connection conn) throws DaoException {
-
+  public void update(Computer computer) throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    
     if (computer == null) {
       throw new IllegalArgumentException("'computer' argument cannot be null");
     }
@@ -231,7 +231,7 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.error("update(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      sqlUtils.closeStatement(ps);
+      MySQLUtils.closeStatement(ps);
     }
 
   }
@@ -240,8 +240,9 @@ public class SQLComputerDao implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public int removeForCompany(long companyId, Connection conn) throws DaoException {
-
+  public int removeForCompany(long companyId) throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    
     String removeForCompanySQL = "DELETE FROM computer WHERE company_id = ?";
 
     try {
@@ -259,7 +260,8 @@ public class SQLComputerDao implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Computer> findByName(ComputerPageRequest request, Connection conn) throws DaoException {
+  public SearchWrapper<Computer> findByName(ComputerPageRequest request) throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
     
     if(request == null) {
       throw new DaoException("PageRequest object cannot be null");
@@ -311,7 +313,7 @@ public class SQLComputerDao implements IComputerDao {
       ResultSet countResult = countStmt.executeQuery();
       countResult.first();
       searchWrapper.setTotalCount(countResult.getLong("count"));
-      sqlUtils.closeStatement(countStmt);
+      MySQLUtils.closeStatement(countStmt);
 
       long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
       searchWrapper.setCurrentPage(currentPage);
@@ -341,15 +343,16 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.warn("findByName(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      sqlUtils.closeStatement(ps);
+      MySQLUtils.closeStatement(ps);
     }
 
     return searchWrapper;
   }
 
   @Override
-  public SearchWrapper<Computer> findAll(ComputerPageRequest request, Connection conn) throws DaoException {
-
+  public SearchWrapper<Computer> findAll(ComputerPageRequest request) throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    
     if(request == null) {
       throw new DaoException("PageRequest object cannot be null");
     }
@@ -391,7 +394,7 @@ public class SQLComputerDao implements IComputerDao {
       ResultSet countResult = stmt.executeQuery(countQuery);
       countResult.first();
       searchWrapper.setTotalCount(countResult.getLong("count"));
-      sqlUtils.closeStatement(stmt);
+      MySQLUtils.closeStatement(stmt);
 
       long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
       searchWrapper.setCurrentPage(currentPage);
@@ -417,7 +420,7 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.error("findAll: SQL Exception: ", e);
       throw new DaoException(e);
     } finally {
-      sqlUtils.closeStatement(ps);
+      MySQLUtils.closeStatement(ps);
     }
 
     return searchWrapper;

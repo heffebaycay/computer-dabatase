@@ -17,7 +17,7 @@ public interface IComputerDao {
    * 
    * @return
    */
-  List<Computer> findAll(Connection conn) throws DaoException;
+  List<Computer> findAll() throws DaoException;
 
   /**
    * Find a given Computer from the data source
@@ -25,7 +25,7 @@ public interface IComputerDao {
    * @param id The Id of the Computer object that should be returned
    * @return An instance of Computer or null if there's no match
    */
-  Computer findById(long id, Connection conn) throws DaoException;
+  Computer findById(long id) throws DaoException;
 
   /**
    * This method removes a Computer from the data source based on its Id
@@ -33,7 +33,7 @@ public interface IComputerDao {
    * @param id Id of the computer object to be removed
    * @return boolean indicating success (true) or failure (false) of the removal operation
    */
-  boolean remove(long id, Connection conn) throws DaoException;
+  boolean remove(long id) throws DaoException;
 
   /**
    * Create a Computer in the data source based on an instance of Computer
@@ -42,14 +42,14 @@ public interface IComputerDao {
    * 
    * @return id of the created computer
    */
-  long create(Computer computer, Connection conn) throws DaoException;
+  long create(Computer computer) throws DaoException;
 
   /**
    * Update an already existing Computer in the data source
    * 
    * @param computer The computer object that should be updated
    */
-  void update(Computer computer, Connection conn) throws DaoException;
+  void update(Computer computer) throws DaoException;
 
   /**
    * Queries the data source for <strong>nbRequested</strong> elements starting at the offset defined by the <strong>offset</strong> parameter
@@ -58,7 +58,7 @@ public interface IComputerDao {
    * @param nbRequested      The number of elements requested
    * @return                 A SearchWrapper element containing the results as well as page information
    */
-  SearchWrapper<Computer> findAll(ComputerPageRequest request, Connection conn) throws DaoException;
+  SearchWrapper<Computer> findAll(ComputerPageRequest request) throws DaoException;
 
   /**
    * Removes all computers matching a given company from the data source
@@ -67,7 +67,7 @@ public interface IComputerDao {
    * @param conn             
    * @return                 The number of rows affected by the operation, or <strong>-1</strong> on error.
    */
-  int removeForCompany(long companyId, Connection conn) throws DaoException;
+  int removeForCompany(long companyId) throws DaoException;
 
   /**
    * Searches the data source for computers whose names match the name argument
@@ -79,7 +79,7 @@ public interface IComputerDao {
    * @param conn
    * @return                 A SearchWrapper element containing the results as well as page information
    */
-  SearchWrapper<Computer> findByName(ComputerPageRequest request, Connection conn)
+  SearchWrapper<Computer> findByName(ComputerPageRequest request)
       throws DaoException;
 
 }

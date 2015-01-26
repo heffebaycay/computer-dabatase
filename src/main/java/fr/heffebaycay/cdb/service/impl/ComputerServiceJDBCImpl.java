@@ -36,15 +36,14 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   @Override
   public List<Computer> findAll() {
     LOGGER.debug("Call to findAll()");
-    Connection conn = DaoManager.INSTANCE.getConnection();
     
     List<Computer> computers = null;
     try {
-      computers = computerDao.findAll(conn);
+      computers = computerDao.findAll();
     } catch (DaoException e) {
       LOGGER.warn("findAll(): DaoException", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection(conn);
+      DaoManager.INSTANCE.closeConnection();
     }
     
     return computers;
@@ -56,15 +55,14 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   @Override
   public Computer findById(long id) {
     LOGGER.debug("Call to findById()");
-    Connection conn = DaoManager.INSTANCE.getConnection();
     
     Computer computer = null;
     try {
-      computer = computerDao.findById(id, conn);
+      computer = computerDao.findById(id);
     } catch (DaoException e) {
       LOGGER.warn("findById(): DaoException: ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection(conn);
+      DaoManager.INSTANCE.closeConnection();
     }
     
     return computer;
@@ -76,15 +74,14 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   @Override
   public boolean remove(long id) {
     LOGGER.debug("Call to remove()");
-    Connection conn = DaoManager.INSTANCE.getConnection();
     
     boolean result = false;
     try {
-      result = computerDao.remove(id, conn);
+      result = computerDao.remove(id);
     } catch (DaoException e) {
       LOGGER.warn("remove(): DaoException: ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection(conn);
+      DaoManager.INSTANCE.closeConnection();
     }
     
     return result;
@@ -97,15 +94,14 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   @Override
   public long create(Computer computer) {
     LOGGER.debug("Call to create()");
-    Connection conn = DaoManager.INSTANCE.getConnection();
     
     long computerId = -1;
     try {
-      computerId = computerDao.create(computer, conn);
+      computerId = computerDao.create(computer);
     } catch (DaoException e) {
       LOGGER.warn("create(): DaoException: ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection(conn);
+      DaoManager.INSTANCE.closeConnection();
     }
     
     return computerId;
@@ -117,14 +113,13 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   @Override
   public void update(Computer computer) {
     LOGGER.debug("Call to update()");
-    Connection conn = DaoManager.INSTANCE.getConnection();
     
     try {
-      computerDao.update(computer, conn);
+      computerDao.update(computer);
     } catch (DaoException e) {
       LOGGER.warn("update(): ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection(conn);
+      DaoManager.INSTANCE.closeConnection();
     }
     
     
@@ -136,16 +131,15 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   @Override
   public SearchWrapper<Computer> findAll(ComputerPageRequest request) {
     LOGGER.debug("Call to findAll(long, long)");
-    Connection conn = DaoManager.INSTANCE.getConnection();
     
     SearchWrapper<Computer> wrapper = null;
     
     try {
-      wrapper = computerDao.findAll(request, conn);
+      wrapper = computerDao.findAll(request);
     } catch(DaoException e) {
       LOGGER.warn("findAll(): DaoException: ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection(conn);
+      DaoManager.INSTANCE.closeConnection();
     }
     
     return wrapper;
@@ -157,16 +151,15 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   @Override
   public SearchWrapper<Computer> findByName(ComputerPageRequest request) {
     LOGGER.debug("Call to findByName()");
-    Connection conn = DaoManager.INSTANCE.getConnection();
     
     SearchWrapper<Computer> wrapper = null;
     
     try {
-      wrapper = computerDao.findByName(request, conn);
+      wrapper = computerDao.findByName(request);
     } catch( DaoException e) {
       LOGGER.warn("findByName(): DaoException: ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection(conn);
+      DaoManager.INSTANCE.closeConnection();
     }
 
     

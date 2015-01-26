@@ -40,14 +40,13 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   public List<Company> findAll() {
     LOGGER.debug("Call to findAll()");
 
-    Connection conn = DaoManager.INSTANCE.getConnection();
     List<Company> companies = null;
     try {
-      companies = companyDao.findAll(conn);
+      companies = companyDao.findAll();
     } catch (DaoException e) {
       LOGGER.warn("findAll(): DaoException: ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection(conn);
+      DaoManager.INSTANCE.closeConnection();
     }
 
     return companies;
@@ -60,14 +59,13 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   public Company findById(long id) {
     LOGGER.debug("Call to findById()");
 
-    Connection conn = DaoManager.INSTANCE.getConnection();
     Company company = null;
     try {
-      company = companyDao.findById(id, conn);
+      company = companyDao.findById(id);
     } catch (DaoException e) {
       LOGGER.warn("findById(): DaoException: ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection(conn);
+      DaoManager.INSTANCE.closeConnection();
     }
 
     return company;
@@ -80,13 +78,12 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   public void create(Company company) {
     LOGGER.debug("Call to create()");
 
-    Connection conn = DaoManager.INSTANCE.getConnection();
     try {
-      companyDao.create(company, conn);
+      companyDao.create(company);
     } catch (DaoException e) {
       LOGGER.warn("create(): DaoException: ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection(conn);
+      DaoManager.INSTANCE.closeConnection();
     }
 
   }
@@ -98,14 +95,13 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   public SearchWrapper<Company> findAll(CompanyPageRequest request) {
     LOGGER.debug("Call to findAll()");
 
-    Connection conn = DaoManager.INSTANCE.getConnection();
     SearchWrapper<Company> companies = null;
     try {
-      companies = companyDao.findAll(request, conn);
+      companies = companyDao.findAll(request);
     } catch (DaoException e) {
       LOGGER.warn("findAll(): DaoException", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection(conn);
+      DaoManager.INSTANCE.closeConnection();
     }
 
     return companies;
@@ -115,27 +111,25 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   public void remove(long id) {
     LOGGER.debug("Call to remove()");
 
-    Connection conn = DaoManager.INSTANCE.getConnection();
-
-    DaoManager.INSTANCE.startTransaction(conn);
+    DaoManager.INSTANCE.startTransaction();
 
     int nbComputers = -1;
     int nbCompany = -1;
 
     try {
       // Remove computers linked to company X
-      nbComputers = computerDao.removeForCompany(id, conn);
+      nbComputers = computerDao.removeForCompany(id);
 
       // Remove company X
-      nbCompany = companyDao.remove(id, conn);
+      nbCompany = companyDao.remove(id);
 
-      DaoManager.INSTANCE.commitTransaction(conn);
+      DaoManager.INSTANCE.commitTransaction();
 
     } catch (DaoException e) {
-      DaoManager.INSTANCE.rollbackTransaction(conn);
+      DaoManager.INSTANCE.rollbackTransaction();
 
     } finally {
-      DaoManager.INSTANCE.endTransaction(conn);
+      DaoManager.INSTANCE.endTransaction();
     }
 
     LOGGER.debug(String.format("Removed %d computers and %d company", nbComputers, nbCompany));
@@ -146,14 +140,13 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   public SearchWrapper<Company> findByName(CompanyPageRequest request) {
     LOGGER.debug("Call to findByName()");
 
-    Connection conn = DaoManager.INSTANCE.getConnection();
     SearchWrapper<Company> companies = null;
     try {
-      companies = companyDao.findByName(request, conn);
+      companies = companyDao.findByName(request);
     } catch (DaoException e) {
       LOGGER.warn("findByName(): DaoException: ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection(conn);
+      DaoManager.INSTANCE.closeConnection();
     }
     
     return companies;

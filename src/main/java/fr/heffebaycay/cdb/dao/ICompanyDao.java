@@ -17,28 +17,28 @@ public interface ICompanyDao {
    * 
    * @return The list of all Companies
    */
-  List<Company> findAll(Connection conn) throws DaoException;
+  List<Company> findAll() throws DaoException;
 
   /**
    * Find a Company from the data source
    * @param id
    * @return
    */
-  Company findById(long id, Connection conn) throws DaoException;
+  Company findById(long id) throws DaoException;
 
   /**
    * Create a Company in the data source based on an instance of Company
    * 
    * @param company The company object that should be created
    */
-  void create(Company company, Connection conn) throws DaoException;
+  void create(Company company) throws DaoException;
   
   /**
    * Removes a Company from the data source along with all the Computers tied to it
    * 
    * @param id      Identifier of the company that should be removed.
    */
-  int remove(long id, Connection conn) throws DaoException;
+  int remove(long id) throws DaoException;
 
 
   /**
@@ -49,9 +49,9 @@ public interface ICompanyDao {
    * @return                A SearchWrapper element containing both the results as a List and additional information about pagination
    * @throws DaoException
    */
-  SearchWrapper<Company> findAll(CompanyPageRequest request, Connection conn) throws DaoException;
+  SearchWrapper<Company> findAll(CompanyPageRequest request) throws DaoException;
   
 
-  SearchWrapper<Company> findByName(CompanyPageRequest request, Connection conn ) throws DaoException;
+  SearchWrapper<Company> findByName(CompanyPageRequest request) throws DaoException;
   
 }

@@ -15,6 +15,7 @@ import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.mapper.CompanyMySQLRowMapper;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
+import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.util.CompanySortCriteria;
@@ -25,22 +26,16 @@ public class SQLCompanyDao implements ICompanyDao {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLCompanyDao.class);
 
-  private MySQLUtils          sqlUtils;
-
   public SQLCompanyDao() {
-    sqlUtils = new MySQLUtils();
-  }
-
-  public SQLCompanyDao(MySQLUtils sqlUtils) {
-    this.sqlUtils = sqlUtils;
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public List<Company> findAll(Connection conn) throws DaoException {
-
+  public List<Company> findAll() throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    
     Statement stmt = null;
 
     final String query = "SELECT id, name FROM company";
@@ -63,7 +58,7 @@ public class SQLCompanyDao implements ICompanyDao {
       LOGGER.error("SQLException: {}", e);
       throw new DaoException(e);
     } finally {
-      sqlUtils.closeStatement(stmt);
+      MySQLUtils.closeStatement(stmt);
     }
 
     return companies;
@@ -74,8 +69,9 @@ public class SQLCompanyDao implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public Company findById(long id, Connection conn) throws DaoException {
-
+  public Company findById(long id) throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    
     Company company = null;
     PreparedStatement ps = null;
 
@@ -98,7 +94,7 @@ public class SQLCompanyDao implements ICompanyDao {
       throw new DaoException(e);
 
     } finally {
-      sqlUtils.closeStatement(ps);
+      MySQLUtils.closeStatement(ps);
     }
 
     return company;
@@ -109,7 +105,8 @@ public class SQLCompanyDao implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Company> findAll(CompanyPageRequest request, Connection conn) throws DaoException {
+  public SearchWrapper<Company> findAll(CompanyPageRequest request) throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
     
     if(request == null) {
       throw new DaoException("CompanyPageRequest parameter cannot be null");
@@ -146,7 +143,7 @@ public class SQLCompanyDao implements ICompanyDao {
       searchWrapper.setTotalCount(countResult.getLong("count"));
 
       // Closing the first statement
-      sqlUtils.closeStatement(stmt);
+      MySQLUtils.closeStatement(stmt);
 
       long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
       searchWrapper.setCurrentPage(currentPage);
@@ -175,15 +172,16 @@ public class SQLCompanyDao implements ICompanyDao {
       LOGGER.error("SQLException: {}", e);
       throw new DaoException(e);
     } finally {
-      sqlUtils.closeStatement(ps);
+      MySQLUtils.closeStatement(ps);
     }
 
     return searchWrapper;
   }
 
   @Override
-  public void create(Company company, Connection conn) throws DaoException {
-
+  public void create(Company company) throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    
     String query = "INSERT INTO company(name) VALUES(?)";
 
     PreparedStatement ps = null;
@@ -199,7 +197,7 @@ public class SQLCompanyDao implements ICompanyDao {
       LOGGER.error("SQLException: {}", e);
       throw new DaoException(e);
     } finally {
-      sqlUtils.closeStatement(ps);
+      MySQLUtils.closeStatement(ps);
     }
 
   }
@@ -208,8 +206,9 @@ public class SQLCompanyDao implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public int remove(long id, Connection conn) throws DaoException {
-
+  public int remove(long id) throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    
     String removeCompanyQuery = "DELETE FROM company WHERE id = ?";
     PreparedStatement ps = null;
     try {
@@ -222,7 +221,7 @@ public class SQLCompanyDao implements ICompanyDao {
       LOGGER.warn("remove(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      sqlUtils.closeStatement(ps);
+      MySQLUtils.closeStatement(ps);
     }
 
   }
@@ -254,8 +253,9 @@ public class SQLCompanyDao implements ICompanyDao {
   }
 
   @Override
-  public SearchWrapper<Company> findByName(CompanyPageRequest request, Connection conn) throws DaoException {
-
+  public SearchWrapper<Company> findByName(CompanyPageRequest request) throws DaoException {
+    Connection conn = DaoManager.INSTANCE.getConnection();
+    
     if(request == null) {
       throw new DaoException("CompanyPageRequest parameter cannot be null");
     }
@@ -299,7 +299,7 @@ public class SQLCompanyDao implements ICompanyDao {
       ResultSet countResult = countStmt.executeQuery();
       countResult.first();
       searchWrapper.setTotalCount(countResult.getLong("count"));
-      sqlUtils.closeStatement(countStmt);
+      MySQLUtils.closeStatement(countStmt);
 
       long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
       searchWrapper.setCurrentPage(currentPage);
@@ -327,7 +327,7 @@ public class SQLCompanyDao implements ICompanyDao {
       LOGGER.warn("findByName(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      sqlUtils.closeStatement(ps);
+      MySQLUtils.closeStatement(ps);
     }
 
     return searchWrapper;
