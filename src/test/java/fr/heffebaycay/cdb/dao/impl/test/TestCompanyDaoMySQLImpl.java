@@ -158,6 +158,13 @@ public class TestCompanyDaoMySQLImpl {
 
     assertEquals(0, wrapper.getResults().size());
   }
+  
+  @Test
+  public void testFindByNameEmptyValue() {
+    SearchWrapper<Company> wrapper = companyDao.findByName("", 0, 10, CompanySortCriteria.NAME, SortOrder.ASC, conn);
+    
+    assertEquals(true, wrapper.getResults().isEmpty());
+  }
 
   @Test
   public void testFindByName() {

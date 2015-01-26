@@ -90,6 +90,7 @@ public enum DaoManager {
     try {
       LOGGER.debug("startTransaction(): Begining new transaction");
       conn.setAutoCommit(false);
+      conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
     } catch(SQLException e) {
       LOGGER.warn("startTransaction(): Failed to start transaction: ", e);
     }

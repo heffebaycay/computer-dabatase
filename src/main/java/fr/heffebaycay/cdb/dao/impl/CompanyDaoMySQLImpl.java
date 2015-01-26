@@ -259,7 +259,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
       return searchWrapper;
     }
 
-    name = name.replace("%", "");
+    name = name.replace("%", "\\%");
 
     String orderPart = generateOrderPart("c", sortCriterion, sortOrder);
 

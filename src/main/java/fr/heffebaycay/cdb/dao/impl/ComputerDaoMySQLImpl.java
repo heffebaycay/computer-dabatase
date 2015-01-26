@@ -344,7 +344,8 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
       return searchWrapper;
     }
 
-    name = name.replace("%", "");
+    // Escaping '%' character
+    name = name.replace("%", "\\%");
 
     String orderPart;
 
