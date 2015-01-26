@@ -13,7 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import fr.heffebaycay.cdb.dao.impl.ComputerDaoMySQLImpl;
+import fr.heffebaycay.cdb.dao.impl.SQLComputerDao;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Computer;
@@ -27,7 +27,7 @@ public class TestComputerDaoMySQLImpl {
   MySQLUtils           sqlUtils    = new MySQLUtils();
 
   //Passing a reference to the test SQL utils class to the DAO
-  ComputerDaoMySQLImpl computerDao = new ComputerDaoMySQLImpl(sqlUtils);
+  SQLComputerDao computerDao = new SQLComputerDao(sqlUtils);
   List<Computer>       localComputers;
 
   Connection           conn;

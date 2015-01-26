@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>computer-database</groupId>
   <artifactId>computer-database</artifactId>
-  <version>0.2.1</version>
+  <version>0.2.2-BETA</version>
   <name>Computer Database</name>
   <packaging>war</packaging>
   <properties>
@@ -13,10 +13,38 @@
   	<junit.version>4.12</junit.version>
   	<jstl.version>1.2</jstl.version>
   	<logback.version>1.1.2</logback.version>
+  	<slf4j-api.version>1.7.2</slf4j-api.version>
   	<servlet-api.version>3.1.0</servlet-api.version>
   	<selenium.version>2.44.0</selenium.version>
   	<bonecp.version>0.8.0.RELEASE</bonecp.version>
+  	<surefire-plugin.version>2.18.1</surefire-plugin.version>
   </properties>
+  
+  <profiles>
+  	<profile>
+  		<activation>
+  			<property>
+  				<name>environment</name>
+  				<value>dev</value>
+  			</property>
+  		</activation>
+  		<build>
+  			<plugins>
+  				<plugin>
+  					<groupId>org.apache.maven.plugins</groupId>
+      				<artifactId>maven-surefire-plugin</artifactId>
+     				<version>${surefire-plugin.version}</version>
+      				<configuration>
+      					<excludes>
+      						<exclude>**/UITest*.java</exclude>
+      					</excludes>
+      				</configuration>
+  				</plugin>
+  			</plugins>
+  		</build>
+  	</profile>
+  </profiles>
+  
   <build>
   	<finalName>${project.artifactId}-${project.version}</finalName>
     <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
@@ -43,12 +71,7 @@
       <plugin>
       	<groupId>org.apache.maven.plugins</groupId>
       	<artifactId>maven-surefire-plugin</artifactId>
-      	<version>2.18.1</version>
-      	<configuration>
-      		<excludes>
-      			<exclude>**/UITest*.java</exclude>
-      		</excludes>
-      	</configuration>
+      	<version>${surefire-plugin.version}</version>
       </plugin>
       <plugin>
       	<groupId>org.apache.tomcat.maven</groupId>
@@ -93,17 +116,23 @@
   	
   	<!-- Logging dependencies -->
   	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-api</artifactId>
+		<version>${slf4j-api.version}</version>
+	</dependency>
+  	<dependency>
   		<groupId>ch.qos.logback</groupId>
   		<artifactId>logback-classic</artifactId>
   		<version>${logback.version}</version>
-  		<scope>compile</scope>
+  		<scope>runtime</scope>
   	</dependency>
   	<dependency>
   		<groupId>ch.qos.logback</groupId>
   		<artifactId>logback-core</artifactId>
   		<version>${logback.version}</version>
-  		<scope>compile</scope>
+  		<scope>runtime</scope>
   	</dependency>
+  	
   	
   	
   	<!-- Testing dependencies -->

@@ -20,7 +20,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
-import fr.heffebaycay.cdb.dao.impl.CompanyDaoMySQLImpl;
+import fr.heffebaycay.cdb.dao.impl.SQLCompanyDao;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.ICompanyService;
@@ -43,7 +43,7 @@ public class TestCompanyService {
   @Before
   public void setUp() {
 
-    companyDao = mock(CompanyDaoMySQLImpl.class);
+    companyDao = mock(SQLCompanyDao.class);
     companyService = new CompanyServiceJDBCImpl(companyDao);
 
     Company c1 = new Company.Builder().id(1).name("Apple").build();

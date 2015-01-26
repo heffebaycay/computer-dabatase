@@ -21,17 +21,17 @@ import fr.heffebaycay.cdb.util.ComputerSortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
-public class ComputerDaoMySQLImpl implements IComputerDao {
+public class SQLComputerDao implements IComputerDao {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDaoMySQLImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDao.class);
 
   private MySQLUtils          sqlUtils;
 
-  public ComputerDaoMySQLImpl() {
+  public SQLComputerDao() {
     this.sqlUtils = new MySQLUtils();
   }
 
-  public ComputerDaoMySQLImpl(MySQLUtils sqlUtils) {
+  public SQLComputerDao(MySQLUtils sqlUtils) {
     this.sqlUtils = sqlUtils;
   }
 
@@ -412,37 +412,38 @@ public class ComputerDaoMySQLImpl implements IComputerDao {
 
   private String generateOrderPart(String entityAlias, ComputerSortCriteria sortCriterion,
       SortOrder sortOrder) {
-
-    StringBuffer stringBuffer = new StringBuffer(entityAlias);
+    // Thread synchronization isn't an issue in this scope
+    // So using a StringBuilder is safe
+    StringBuilder stringBuilder = new StringBuilder(entityAlias);
 
     switch (sortCriterion) {
 
       case ID:
-        stringBuffer.append(".id");
+        stringBuilder.append(".id");
         break;
       case NAME:
-        stringBuffer.append(".name");
+        stringBuilder.append(".name");
         break;
       case DATE_DISCONTINUED:
-        stringBuffer.append(".discontinued");
+        stringBuilder.append(".discontinued");
         break;
       case DATE_INTRODUCED:
-        stringBuffer.append(".introduced");
+        stringBuilder.append(".introduced");
         break;
       case COMPANY_NAME:
-        stringBuffer.append(".name");
+        stringBuilder.append(".name");
         break;
       default:
-        stringBuffer.append(".id");
+        stringBuilder.append(".id");
     }
 
     if (sortOrder.equals(SortOrder.DESC)) {
-      stringBuffer.append(" desc");
+      stringBuilder.append(" desc");
     } else {
-      stringBuffer.append(" asc");
+      stringBuilder.append(" asc");
     }
 
-    return stringBuffer.toString();
+    return stringBuilder.toString();
 
   }
 

@@ -12,8 +12,8 @@ import com.jolbox.bonecp.BoneCPConfig;
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.exception.DaoException;
-import fr.heffebaycay.cdb.dao.impl.CompanyDaoMySQLImpl;
-import fr.heffebaycay.cdb.dao.impl.ComputerDaoMySQLImpl;
+import fr.heffebaycay.cdb.dao.impl.SQLCompanyDao;
+import fr.heffebaycay.cdb.dao.impl.SQLComputerDao;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.util.AppSettings;
 
@@ -42,8 +42,8 @@ public enum DaoManager {
       throw new DaoException("Failed to load MySQL JDBC driver.", e);
     }
     
-    companyDao = new CompanyDaoMySQLImpl();
-    computerDao = new ComputerDaoMySQLImpl();
+    companyDao = new SQLCompanyDao();
+    computerDao = new SQLComputerDao();
         
     
     sqlUtils = new MySQLUtils();

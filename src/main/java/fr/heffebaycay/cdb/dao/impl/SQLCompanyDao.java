@@ -20,17 +20,17 @@ import fr.heffebaycay.cdb.util.CompanySortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
-public class CompanyDaoMySQLImpl implements ICompanyDao {
+public class SQLCompanyDao implements ICompanyDao {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDaoMySQLImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(SQLCompanyDao.class);
 
   private MySQLUtils          sqlUtils;
 
-  public CompanyDaoMySQLImpl() {
+  public SQLCompanyDao() {
     sqlUtils = new MySQLUtils();
   }
 
-  public CompanyDaoMySQLImpl(MySQLUtils sqlUtils) {
+  public SQLCompanyDao(MySQLUtils sqlUtils) {
     this.sqlUtils = sqlUtils;
   }
 
@@ -221,26 +221,28 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
 
   private String generateOrderPart(String entityAlias, CompanySortCriteria sortCriterion,
       SortOrder sortOrder) {
-    StringBuffer stringBuffer = new StringBuffer(entityAlias);
+    // Thread synchronization isn't an issue in this scope
+    // So using a StringBuilder is safe
+    StringBuilder stringBuilder = new StringBuilder(entityAlias);
 
     switch (sortCriterion) {
       case ID:
-        stringBuffer.append(".id");
+        stringBuilder.append(".id");
         break;
       case NAME:
-        stringBuffer.append(".name");
+        stringBuilder.append(".name");
         break;
       default:
-        stringBuffer.append(".id");
+        stringBuilder.append(".id");
     }
 
     if (sortOrder.equals(SortOrder.DESC)) {
-      stringBuffer.append(" desc");
+      stringBuilder.append(" desc");
     } else {
-      stringBuffer.append(" asc");
+      stringBuilder.append(" asc");
     }
 
-    return stringBuffer.toString();
+    return stringBuilder.toString();
   }
 
   @Override
@@ -249,7 +251,7 @@ public class CompanyDaoMySQLImpl implements ICompanyDao {
 
     SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
     List<Company> companies = new ArrayList<Company>();
-    
+
     if (name == null || name.isEmpty() || offset < 0 || nbRequested <= 0) {
       searchWrapper.setResults(companies);
       searchWrapper.setCurrentPage(0);

@@ -12,7 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import fr.heffebaycay.cdb.dao.impl.CompanyDaoMySQLImpl;
+import fr.heffebaycay.cdb.dao.impl.SQLCompanyDao;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
@@ -26,7 +26,7 @@ public class TestCompanyDaoMySQLImpl {
   MySQLUtils          sqlUtils   = new MySQLUtils();
 
   //Passing a reference to the test SQL utils class to the DAO
-  CompanyDaoMySQLImpl companyDao = new CompanyDaoMySQLImpl(sqlUtils);
+  SQLCompanyDao companyDao = new SQLCompanyDao(sqlUtils);
   List<Company>       localCompanies;
 
   Connection          conn;

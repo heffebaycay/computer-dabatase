@@ -20,7 +20,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import fr.heffebaycay.cdb.dao.IComputerDao;
-import fr.heffebaycay.cdb.dao.impl.ComputerDaoMySQLImpl;
+import fr.heffebaycay.cdb.dao.impl.SQLComputerDao;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.IComputerService;
@@ -43,7 +43,7 @@ public class TestComputerService {
   @Before
   public void setUp() {
 
-    computerDao = mock(ComputerDaoMySQLImpl.class);
+    computerDao = mock(SQLComputerDao.class);
     computerService = new ComputerServiceJDBCImpl(computerDao);
 
     computersDB = new ArrayList<Computer>();
