@@ -11,6 +11,7 @@ import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
+import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.util.CompanySortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
@@ -94,14 +95,13 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Company> findAll(long offset, long nbRequested,
-      CompanySortCriteria sortCriterion, SortOrder sortOrder) {
+  public SearchWrapper<Company> findAll(CompanyPageRequest request) {
     LOGGER.debug("Call to findAll()");
 
     Connection conn = DaoManager.INSTANCE.getConnection();
     SearchWrapper<Company> companies = null;
     try {
-      companies = companyDao.findAll(offset, nbRequested, sortCriterion, sortOrder, conn);
+      companies = companyDao.findAll(request, conn);
     } catch (DaoException e) {
       LOGGER.warn("findAll(): DaoException", e);
     } finally {
@@ -143,14 +143,13 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   }
 
   @Override
-  public SearchWrapper<Company> findByName(String name, long offset, long nbRequested,
-      CompanySortCriteria sortCriterion, SortOrder sortOrder) {
+  public SearchWrapper<Company> findByName(CompanyPageRequest request) {
     LOGGER.debug("Call to findByName()");
 
     Connection conn = DaoManager.INSTANCE.getConnection();
     SearchWrapper<Company> companies = null;
     try {
-      companies = companyDao.findByName(name, offset, nbRequested, sortCriterion, sortOrder, conn);
+      companies = companyDao.findByName(request, conn);
     } catch (DaoException e) {
       LOGGER.warn("findByName(): DaoException: ", e);
     } finally {

@@ -9,7 +9,7 @@
 <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                ${totalCount} Companies found
+                ${searchWrapper.totalCount} Companies found
             </h1>
             
             <c:if test="${ bRemoveSuccess == true }">
@@ -54,17 +54,17 @@
                             </span>
                         </th>
                         <th>
-                        	Company Id <a href="<c:url value="${ u:generateCompanyRoute(1, searchQuery, 'id', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateCompanyRoute(1, searchQuery, 'id', 'desc') }" />">D</a>
+                        	Company Id <a href="<c:url value="${ u:generateCompanyRoute(1, searchWrapper.searchQuery, 'id', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateCompanyRoute(1, searchWrapper.searchQuery, 'id', 'desc') }" />">D</a>
                         </th>
                         <th>
-                            Company name <a href="<c:url value="${ u:generateCompanyRoute(1, searchQuery, 'name', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateCompanyRoute(1, searchQuery, 'name', 'desc') }" />">D</a>
+                            Company name <a href="<c:url value="${ u:generateCompanyRoute(1, searchWrapper.searchQuery, 'name', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateCompanyRoute(1, searchWrapper.searchQuery, 'name', 'desc') }" />">D</a>
                         </th>
 
                     </tr>
                 </thead>
                 <!-- Browse attribute computers -->
                 <tbody id="results">
-                	<c:forEach items="${requestScope.companies}" var="company">
+                	<c:forEach items="${searchWrapper.results}" var="company">
                 		<tr>
                 			<td class="editMode">
                 				<input type="checkbox" name="cb" class="cb" value="${company.id}" />
@@ -85,8 +85,8 @@
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
         
-        	<c:set var="urlPattern" value="${ u:generateCompanyRoute(\"%d\", searchQuery, sortCriterion, sortOrder) }" />
-        	<t:pagination urlPattern="${ urlPattern }" totalPage="${ totalPage }" currentPage="${ currentPage }" delta="${ 3 }"></t:pagination>
+        	<c:set var="urlPattern" value="${ u:generateCompanyRoute(\"%d\", searchWrapper.searchQuery, searchWrapper.sortCriterion, searchWrapper.sortOrder) }" />
+        	<t:pagination urlPattern="${ urlPattern }" totalPage="${ searchWrapper.totalPage }" currentPage="${ searchWrapper.currentPage }" delta="${ 3 }"></t:pagination>
 
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
 	            <button type="button" class="btn btn-default">10</button>

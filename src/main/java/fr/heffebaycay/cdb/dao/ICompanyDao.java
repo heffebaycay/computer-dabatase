@@ -5,6 +5,7 @@ import java.util.List;
 
 import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.model.Company;
+import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.util.CompanySortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
@@ -39,16 +40,18 @@ public interface ICompanyDao {
    */
   int remove(long id, Connection conn) throws DaoException;
 
+
   /**
-   * Queries the data source for nbRequested elements starting at the offset defined by the parameter with the same name
-   * 
-   * @param offset           The offset of the first Company element that should be returned
-   * @param nbRequested      The total number of elements requested
-   * @return                 A SearchWrapper element containing both the results as a List and the total number of elements matched by the query
+   * Queries the data source for a given number of elements starting at the offset defined by the <strong>request</strong> parameter
+   *
+   * @param request         Object containing the details of the findAll() request (offset, number of elements)
+   * @param conn            
+   * @return                A SearchWrapper element containing both the results as a List and additional information about pagination
+   * @throws DaoException
    */
-  SearchWrapper<Company> findAll(long offset, long nbRequested, CompanySortCriteria sortCriterion, SortOrder sortOrder, Connection conn) throws DaoException;
+  SearchWrapper<Company> findAll(CompanyPageRequest request, Connection conn) throws DaoException;
   
-  
-  SearchWrapper<Company> findByName(String name, long offset, long nbRequested, CompanySortCriteria sortCriterion, SortOrder sortOrder, Connection conn ) throws DaoException;
+
+  SearchWrapper<Company> findByName(CompanyPageRequest request, Connection conn ) throws DaoException;
   
 }

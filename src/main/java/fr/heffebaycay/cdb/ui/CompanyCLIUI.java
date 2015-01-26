@@ -1,6 +1,7 @@
 package fr.heffebaycay.cdb.ui;
 
 import fr.heffebaycay.cdb.model.Company;
+import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.manager.ServiceManager;
 import fr.heffebaycay.cdb.util.AppSettings;
@@ -41,7 +42,14 @@ public class CompanyCLIUI {
 	  
 	  long offset = (pageNumber - 1) * AppSettings.NB_RESULTS_PAGE;
 	  
-	  SearchWrapper<Company> sw = companyService.findAll(offset, AppSettings.NB_RESULTS_PAGE, CompanySortCriteria.ID, SortOrder.ASC);
+	  CompanyPageRequest pageRequest = new CompanyPageRequest.Builder()
+	                                                            .offset(offset)
+	                                                            .nbRequested(AppSettings.NB_RESULTS_PAGE)
+	                                                            .sortCriterion(CompanySortCriteria.ID)
+	                                                            .sortOrder(SortOrder.ASC)
+	                                                            .build();
+	  
+	  SearchWrapper<Company> sw = companyService.findAll(pageRequest);
 	  
 	  System.out.printf("Displaying page %d of %d:%n", sw.getCurrentPage(), sw.getTotalPage());
 	  

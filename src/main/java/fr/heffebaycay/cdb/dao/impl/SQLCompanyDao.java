@@ -16,6 +16,7 @@ import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.mapper.CompanyMySQLRowMapper;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.model.Company;
+import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.util.CompanySortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
@@ -108,12 +109,19 @@ public class SQLCompanyDao implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Company> findAll(long offset, long nbRequested,
-      CompanySortCriteria sortCriterion, SortOrder sortOrder, Connection conn) throws DaoException {
+  public SearchWrapper<Company> findAll(CompanyPageRequest request, Connection conn) throws DaoException {
+    
+    if(request == null) {
+      throw new DaoException("CompanyPageRequest parameter cannot be null");
+    }
+    
     SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
     List<Company> companies = new ArrayList<Company>();
+    
+    searchWrapper.setSortOrder(request.getSortOrder().getName());
+    searchWrapper.setSortCriterion(request.getSortCriterion().getName());
 
-    if (offset < 0 || nbRequested <= 0) {
+    if (request.getOffset() < 0 || request.getNbRequested() <= 0) {
       searchWrapper.setResults(companies);
       searchWrapper.setCurrentPage(0);
       searchWrapper.setTotalPage(0);
@@ -122,7 +130,7 @@ public class SQLCompanyDao implements ICompanyDao {
       return searchWrapper;
     }
 
-    String orderPart = generateOrderPart("c", sortCriterion, sortOrder);
+    String orderPart = generateOrderPart("c", request.getSortCriterion(), request.getSortOrder());
 
     String query = "SELECT c.id, c.name FROM company AS c ORDER BY " + orderPart + " LIMIT ?, ?";
     String countQuery = "SELECT COUNT(c.id) AS count FROM company AS c ORDER BY " + orderPart;
@@ -140,16 +148,16 @@ public class SQLCompanyDao implements ICompanyDao {
       // Closing the first statement
       sqlUtils.closeStatement(stmt);
 
-      long currentPage = (long) Math.ceil(offset * 1.0 / nbRequested) + 1;
+      long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
       searchWrapper.setCurrentPage(currentPage);
 
-      long totalPage = (long) Math.ceil(searchWrapper.getTotalCount() * 1.0 / nbRequested);
+      long totalPage = (long) Math.ceil(searchWrapper.getTotalCount() * 1.0 / request.getNbRequested());
 
       searchWrapper.setTotalPage(totalPage);
 
       ps = conn.prepareStatement(query);
-      ps.setLong(1, offset);
-      ps.setLong(2, nbRequested);
+      ps.setLong(1, request.getOffset());
+      ps.setLong(2, request.getNbRequested());
       ResultSet rs = ps.executeQuery();
 
       while (rs.next()) {
@@ -246,13 +254,21 @@ public class SQLCompanyDao implements ICompanyDao {
   }
 
   @Override
-  public SearchWrapper<Company> findByName(String name, long offset, long nbRequested,
-      CompanySortCriteria sortCriterion, SortOrder sortOrder, Connection conn) throws DaoException {
+  public SearchWrapper<Company> findByName(CompanyPageRequest request, Connection conn) throws DaoException {
 
+    if(request == null) {
+      throw new DaoException("CompanyPageRequest parameter cannot be null");
+    }
+    
     SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
     List<Company> companies = new ArrayList<Company>();
+    
+    searchWrapper.setSearchQuery(request.getSearchQuery());
+    searchWrapper.setSortOrder(request.getSortOrder().getName());
+    searchWrapper.setSortCriterion(request.getSortCriterion().getName());
+    
 
-    if (name == null || name.isEmpty() || offset < 0 || nbRequested <= 0) {
+    if (request.getSearchQuery() == null || request.getSearchQuery().isEmpty() || request.getOffset() < 0 || request.getNbRequested() <= 0) {
       searchWrapper.setResults(companies);
       searchWrapper.setCurrentPage(0);
       searchWrapper.setTotalPage(0);
@@ -261,9 +277,9 @@ public class SQLCompanyDao implements ICompanyDao {
       return searchWrapper;
     }
 
-    name = name.replace("%", "\\%");
+    
 
-    String orderPart = generateOrderPart("c", sortCriterion, sortOrder);
+    String orderPart = generateOrderPart("c", request.getSortCriterion(), request.getSortOrder());
 
     String query = "SELECT c.id, c.name FROM company AS c WHERE c.name LIKE ? ORDER BY "
         + orderPart + " LIMIT ?, ?";
@@ -273,7 +289,8 @@ public class SQLCompanyDao implements ICompanyDao {
     PreparedStatement ps = null;
 
     try {
-      String searchKeyword = String.format("%%%s%%", name);
+      String searchKeyword = request.getSearchQuery().replace("%", "\\%");
+      searchKeyword = String.format("%%%s%%", searchKeyword);
       LOGGER.debug(String.format("findByName(): Keyword={%s}", searchKeyword));
 
       PreparedStatement countStmt = conn.prepareStatement(countQuery);
@@ -284,17 +301,17 @@ public class SQLCompanyDao implements ICompanyDao {
       searchWrapper.setTotalCount(countResult.getLong("count"));
       sqlUtils.closeStatement(countStmt);
 
-      long currentPage = (long) Math.ceil(offset * 1.0 / nbRequested) + 1;
+      long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
       searchWrapper.setCurrentPage(currentPage);
 
-      long totalPage = (long) Math.ceil(searchWrapper.getTotalCount() * 1.0 / nbRequested);
+      long totalPage = (long) Math.ceil(searchWrapper.getTotalCount() * 1.0 / request.getNbRequested());
       searchWrapper.setTotalPage(totalPage);
 
       ps = conn.prepareStatement(query);
 
       ps.setString(1, searchKeyword);
-      ps.setLong(2, offset);
-      ps.setLong(3, nbRequested);
+      ps.setLong(2, request.getOffset());
+      ps.setLong(3, request.getNbRequested());
 
       ResultSet rs = ps.executeQuery();
 
