@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.service.IComputerService;
-import fr.heffebaycay.cdb.service.impl.ComputerServiceMockImpl;
+import fr.heffebaycay.cdb.service.impl.ComputerServiceJDBCImpl;
 
 /**
  * Servlet implementation class DeleteComputerController
@@ -30,7 +30,7 @@ public class DeleteComputerController extends HttpServlet {
   protected final IComputerService mComputerService;
 
   public DeleteComputerController() {
-    this.mComputerService = new ComputerServiceMockImpl();
+    this.mComputerService = new ComputerServiceJDBCImpl();
   }
 
   /**

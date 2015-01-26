@@ -14,17 +14,17 @@ import fr.heffebaycay.cdb.util.ComputerSortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
-public class ComputerServiceMockImpl implements IComputerService {
+public class ComputerServiceJDBCImpl implements IComputerService {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ComputerServiceMockImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ComputerServiceJDBCImpl.class);
   
   IComputerDao computerDao;
 
-  public ComputerServiceMockImpl() {
+  public ComputerServiceJDBCImpl() {
     computerDao = DaoManager.INSTANCE.getComputerDao();
   }
 
-  public ComputerServiceMockImpl(IComputerDao computerDao) {
+  public ComputerServiceJDBCImpl(IComputerDao computerDao) {
     this.computerDao = computerDao;
   }
   

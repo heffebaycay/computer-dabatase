@@ -24,7 +24,7 @@ import fr.heffebaycay.cdb.dao.impl.CompanyDaoMySQLImpl;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.ICompanyService;
-import fr.heffebaycay.cdb.service.impl.CompanyServiceMockImpl;
+import fr.heffebaycay.cdb.service.impl.CompanyServiceJDBCImpl;
 import fr.heffebaycay.cdb.util.CompanySortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
@@ -44,7 +44,7 @@ public class TestCompanyService {
   public void setUp() {
 
     companyDao = mock(CompanyDaoMySQLImpl.class);
-    companyService = new CompanyServiceMockImpl(companyDao);
+    companyService = new CompanyServiceJDBCImpl(companyDao);
 
     Company c1 = new Company.Builder().id(1).name("Apple").build();
 

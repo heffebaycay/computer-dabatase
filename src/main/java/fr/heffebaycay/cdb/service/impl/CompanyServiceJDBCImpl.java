@@ -16,19 +16,19 @@ import fr.heffebaycay.cdb.util.CompanySortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
-public class CompanyServiceMockImpl implements ICompanyService {
+public class CompanyServiceJDBCImpl implements ICompanyService {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(CompanyServiceMockImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CompanyServiceJDBCImpl.class);
   
   ICompanyDao companyDao;
   IComputerDao computerDao;
   
-  public CompanyServiceMockImpl() {
+  public CompanyServiceJDBCImpl() {
     companyDao = DaoManager.INSTANCE.getCompanyDao();
     computerDao = DaoManager.INSTANCE.getComputerDao();
   }
   
-  public CompanyServiceMockImpl(ICompanyDao companyDao) {
+  public CompanyServiceJDBCImpl(ICompanyDao companyDao) {
     this.companyDao = companyDao;
   }
 

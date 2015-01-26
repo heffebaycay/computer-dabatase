@@ -24,7 +24,7 @@ import fr.heffebaycay.cdb.dao.impl.ComputerDaoMySQLImpl;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.IComputerService;
-import fr.heffebaycay.cdb.service.impl.ComputerServiceMockImpl;
+import fr.heffebaycay.cdb.service.impl.ComputerServiceJDBCImpl;
 import fr.heffebaycay.cdb.util.ComputerSortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
@@ -44,7 +44,7 @@ public class TestComputerService {
   public void setUp() {
 
     computerDao = mock(ComputerDaoMySQLImpl.class);
-    computerService = new ComputerServiceMockImpl(computerDao);
+    computerService = new ComputerServiceJDBCImpl(computerDao);
 
     computersDB = new ArrayList<Computer>();
 
