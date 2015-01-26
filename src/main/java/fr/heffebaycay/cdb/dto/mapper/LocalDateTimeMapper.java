@@ -10,52 +10,52 @@ import org.slf4j.LoggerFactory;
 
 public class LocalDateTimeMapper {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(LocalDateTimeMapper.class.getSimpleName());
-  
-  private static final String DATE_PATTERN = "yyyy-MM-dd"; 
-  
+  private static final Logger LOGGER       = LoggerFactory.getLogger(LocalDateTimeMapper.class
+                                               .getSimpleName());
+
+  private static final String DATE_PATTERN = "yyyy-MM-dd";
+
+  private LocalDateTimeMapper() {
+    super();
+  }
+
   public static String toDTO(LocalDateTime ldt) {
-   
-    if(ldt == null) {
+
+    if (ldt == null) {
       return null;
     }
-    
+
     try {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
       String strDate = ldt.format(formatter);
       return strDate;
-    } catch(IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       LOGGER.warn("toDTO() : Invalid Object Provided: ", e);
       return null;
     }
-    
-  }
-  
 
-  
+  }
+
   public static LocalDateTime fromDTO(String strDate) {
-    
+
     try {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
       LocalDateTime ldt = LocalDateTime.parse(strDate, formatter);
       return ldt;
-    } catch(DateTimeParseException e) {
+    } catch (DateTimeParseException e) {
       LOGGER.warn("toDAO() : Failed to parse String input: ", e);
       return null;
     }
   }
-  
+
   public static LocalDateTime fromLocalDate(LocalDate ld) {
-    
-    if(ld == null) {
+
+    if (ld == null) {
       return null;
     }
-    
+
     return ld.atStartOfDay();
-    
+
   }
-  
-  
-  
 
 }

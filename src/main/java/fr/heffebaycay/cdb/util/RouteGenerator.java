@@ -11,6 +11,9 @@ public class RouteGenerator {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RouteGenerator.class.getSimpleName());
   
+  private RouteGenerator() {
+    super();
+  }
   
   /**
    * Generates the path to the Dashboard route.
@@ -52,7 +55,7 @@ public class RouteGenerator {
 
         // Build URL
         routeURLBuilder.append(e.getPath());
-        if (e.getParameters().size() > 0) {
+        if (!e.getParameters().isEmpty()) {
           // Need to append some parameters to the url
           routeURLBuilder.append("?");
 

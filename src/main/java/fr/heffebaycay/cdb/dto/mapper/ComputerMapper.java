@@ -13,6 +13,10 @@ public class ComputerMapper {
 
   public static final Logger LOGGER = LoggerFactory.getLogger(ComputerMapper.class.getSimpleName());
 
+  private ComputerMapper() {
+    super();
+  }
+  
   /**
    * Converts a Computer DAO object to is DTO version 
    * 
