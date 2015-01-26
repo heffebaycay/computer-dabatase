@@ -1,2 +1,2 @@
-# computer-dabatase
+# computer-database
 Computer Database
