@@ -6,10 +6,9 @@ import java.sql.Statement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
-
-import com.jolbox.bonecp.BoneCP;
-import com.jolbox.bonecp.BoneCPConfig;
 
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.util.AppSettings;
@@ -20,14 +19,19 @@ import fr.heffebaycay.cdb.util.AppSettings;
  */
 @Component
 public class DaoManager {
-  
-  private BoneCP                  connectionPool;
 
   private ThreadLocal<Connection> threadLocalConnection;
 
   private static final Logger     LOGGER = LoggerFactory.getLogger(DaoManager.class);
 
-  public DaoManager() {
+  private DriverManagerDataSource mgrDataSource;
+
+  @Autowired
+  public DaoManager(DriverManagerDataSource pMgrDataSource) {
+
+    LOGGER.debug("DaoManager(): Creating instance of DaoManager");
+
+    this.mgrDataSource = pMgrDataSource;
 
     try {
       Class.forName("com.mysql.jdbc.Driver");
@@ -35,29 +39,20 @@ public class DaoManager {
       throw new RuntimeException("Failed to load MySQL JDBC driver.", e);
     }
 
-    BoneCPConfig config = new BoneCPConfig();
-    config.setJdbcUrl(MySQLUtils.getMySQLConnectionURL());
-    config.setUsername(AppSettings.DB_USER);
-    config.setPassword(AppSettings.DB_PASSWORD);
-    config.setMinConnectionsPerPartition(3);
-    config.setMaxConnectionsPerPartition(10);
-    config.setPartitionCount(2);
-
-    try {
-      connectionPool = new BoneCP(config);
-    } catch (SQLException e) {
-      throw new RuntimeException("Failed to initialize BoneCP.", e);
-    }
+    mgrDataSource.setUsername(AppSettings.DB_USER);
+    mgrDataSource.setPassword(AppSettings.DB_PASSWORD);
+    mgrDataSource.setUrl(MySQLUtils.getMySQLConnectionURL());
 
     threadLocalConnection = new ThreadLocal<Connection>();
 
   }
+
   public Connection getConnection() {
 
     if (threadLocalConnection.get() == null) {
       // No connection available for current Thread
       try {
-        threadLocalConnection.set(connectionPool.getConnection());
+        threadLocalConnection.set(mgrDataSource.getConnection());
       } catch (SQLException e) {
         LOGGER.warn("Failed to get DB connection.", e);
       }
@@ -118,10 +113,10 @@ public class DaoManager {
       LOGGER.warn("closeConnection(): SQLException: ", e);
     }
   }
-  
+
   public void closeStatement(Statement stmt) {
     try {
-      if(stmt != null) {
+      if (stmt != null) {
         stmt.close();
       }
     } catch (SQLException e) {
