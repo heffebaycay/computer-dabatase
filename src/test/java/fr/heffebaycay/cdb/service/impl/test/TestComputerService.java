@@ -2,7 +2,6 @@ package fr.heffebaycay.cdb.service.impl.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -20,10 +19,12 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import fr.heffebaycay.cdb.dao.IComputerDao;
+import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.SQLComputerDao;
+import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
-import fr.heffebaycay.cdb.service.IComputerService;
+import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.service.impl.ComputerServiceJDBCImpl;
 import fr.heffebaycay.cdb.util.ComputerSortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
@@ -31,20 +32,20 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class TestComputerService {
 
-  private static final int NUMBER_OF_RESULTS = 10;
+  private static final Long NUMBER_OF_RESULTS = 10L;
 
-  IComputerDao             computerDao;
-  IComputerService         computerService;
+  IComputerDao              computerDao;
 
-  Connection               conn;
+  ComputerServiceJDBCImpl   computerService;
 
-  List<Computer>           computersDB;
+  List<Computer>            computersDB;
 
   @Before
   public void setUp() {
 
-    computerDao = mock(SQLComputerDao.class);
-    computerService = new ComputerServiceJDBCImpl(computerDao);
+    computerDao = mock(IComputerDao.class);
+    DaoManager daoManager = mock(DaoManager.class);
+    computerService = new ComputerServiceJDBCImpl(daoManager, computerDao);
 
     computersDB = new ArrayList<Computer>();
 
@@ -87,7 +88,11 @@ public class TestComputerService {
       fail("Computer Service not initialized");
     }
 
-    when(computerDao.findAll(anyObject())).thenReturn(computersDB);
+    try {
+      when(computerDao.findAll()).thenReturn(computersDB);
+    } catch (DaoException e) {
+      fail("testFindAll(): Failed to setup Mockito: " + e.getMessage());
+    }
 
     List<Computer> computers = computerService.findAll();
 
@@ -107,7 +112,11 @@ public class TestComputerService {
     Computer computerExpected = computersDB.stream().filter(c -> c.getId() == COMPUTER_ID)
         .findFirst().get();
 
-    when(computerDao.findById(Matchers.eq(COMPUTER_ID), anyObject())).thenReturn(computerExpected);
+    try {
+      when(computerDao.findById(Matchers.eq(COMPUTER_ID))).thenReturn(computerExpected);
+    } catch (DaoException e) {
+      fail("testFindById(): Failed to setup Mockito: " + e.getMessage());
+    }
 
     Computer computer = computerService.findById(COMPUTER_ID);
 
@@ -122,15 +131,19 @@ public class TestComputerService {
       fail("Computer Service not initialized");
     }
 
-    doAnswer(new Answer<Object>() {
-      public Object answer(InvocationOnMock invocation) {
+    try {
+      doAnswer(new Answer<Object>() {
+        public Object answer(InvocationOnMock invocation) {
 
-        long idToRemove = invocation.getArgumentAt(0, Long.class);
+          long idToRemove = invocation.getArgumentAt(0, Long.class);
 
-        return computersDB.removeIf(c -> c.getId() == idToRemove);
+          return computersDB.removeIf(c -> c.getId() == idToRemove);
 
-      }
-    }).when(computerDao).remove(Matchers.anyLong(), Matchers.anyObject());
+        }
+      }).when(computerDao).remove(Matchers.anyLong());
+    } catch (DaoException e) {
+      fail("testRemove(): Failed to setup Mockito: " + e.getMessage());
+    }
 
     Random rand = new Random();
     int randomIndex = rand.nextInt(computersDB.size());
@@ -153,16 +166,20 @@ public class TestComputerService {
       fail("Computer Service not initialized");
     }
 
-    doAnswer(new Answer<Long>() {
-      public Long answer(InvocationOnMock invocation) {
+    try {
+      doAnswer(new Answer<Long>() {
+        public Long answer(InvocationOnMock invocation) {
 
-        Computer computerToCreate = invocation.getArgumentAt(0, Computer.class);
+          Computer computerToCreate = invocation.getArgumentAt(0, Computer.class);
 
-        computersDB.add(computerToCreate);
+          computersDB.add(computerToCreate);
 
-        return computerToCreate.getId();
-      }
-    }).when(computerDao).create(Matchers.any(Computer.class), Matchers.any(Connection.class));
+          return computerToCreate.getId();
+        }
+      }).when(computerDao).create(Matchers.any(Computer.class));
+    } catch (DaoException e) {
+      fail("testCreate(): Failed to setup Mockito: " + e.getMessage());
+    }
 
     Company apple = new Company.Builder().id(1).name("Apple Inc.").build();
     Computer computer = new Computer.Builder().id(42).name("My Awesome Computer").company(apple)
@@ -182,19 +199,23 @@ public class TestComputerService {
       fail("Computer Service not initialized");
     }
 
-    doAnswer(new Answer<Object>() {
-      public Object answer(InvocationOnMock invocation) {
-        
-        Computer computerToUpdate = invocation.getArgumentAt(0, Computer.class);
-        
-        computersDB.removeIf(c -> c.getId() == computerToUpdate.getId());
-        computersDB.add(computerToUpdate);
-        
-        return null;
-        
-      }
-    }).when(computerDao).update(Matchers.any(Computer.class), Matchers.any(Connection.class));;
-    
+    try {
+      doAnswer(new Answer<Object>() {
+        public Object answer(InvocationOnMock invocation) {
+
+          Computer computerToUpdate = invocation.getArgumentAt(0, Computer.class);
+
+          computersDB.removeIf(c -> c.getId() == computerToUpdate.getId());
+          computersDB.add(computerToUpdate);
+
+          return null;
+
+        }
+      }).when(computerDao).update(Matchers.any(Computer.class));
+    } catch (DaoException e) {
+      fail("testUpdate(): Failed to setup Mockito: " + e.getMessage());
+    }
+
     Random rnd = new Random();
     int randomIndex = rnd.nextInt(computersDB.size());
 
@@ -204,15 +225,16 @@ public class TestComputerService {
         .name(originalComputer.getName()).introduced(originalComputer.getIntroduced())
         .discontinued(originalComputer.getDiscontinued()).company(originalComputer.getCompany())
         .build();
-    
+
     copyComputer.setName("ABCDEFGHIJKLMNOPQZRS");
     copyComputer.setIntroduced(LocalDateTime.now());
     copyComputer.setDiscontinued(LocalDateTime.now());
-    
+
     computerService.update(copyComputer);
 
-    originalComputer = computersDB.stream().filter(c -> c.getId() == copyComputer.getId()).findFirst().get();
-    
+    originalComputer = computersDB.stream().filter(c -> c.getId() == copyComputer.getId())
+        .findFirst().get();
+
     assertEquals(copyComputer, originalComputer);
   }
 
@@ -221,13 +243,23 @@ public class TestComputerService {
     if (computerService == null) {
       fail("Computer Service not initialized");
     }
-    
-    SearchWrapper<Computer> wrapper = new SearchWrapper<Computer>();
-    when(computerDao.findAll(Matchers.anyLong(), Matchers.anyLong(), Matchers.any(ComputerSortCriteria.class), Matchers.any(SortOrder.class), Matchers.any(Connection.class))).thenReturn(wrapper);
 
-    SearchWrapper<Computer> returnedWrapper = computerService.findAll(0, NUMBER_OF_RESULTS,
-        ComputerSortCriteria.ID, SortOrder.ASC);
-    
+    ComputerPageRequest request = new ComputerPageRequest.Builder()
+        .offset(0L)
+        .nbRequested(NUMBER_OF_RESULTS)
+        .sortCriterion(ComputerSortCriteria.ID)
+        .sortOrder(SortOrder.ASC)
+        .build();
+
+    SearchWrapper<Computer> wrapper = new SearchWrapper<Computer>();
+    try {
+      when(computerDao.findAll(Matchers.any(ComputerPageRequest.class))).thenReturn(wrapper);
+    } catch (DaoException e) {
+      fail("testFindAllWithOffset(): Failed to setup Mockito: " + e.getMessage());
+    }
+
+    SearchWrapper<Computer> returnedWrapper = computerService.findAll(request);
+
     assertEquals(wrapper, returnedWrapper);
   }
 

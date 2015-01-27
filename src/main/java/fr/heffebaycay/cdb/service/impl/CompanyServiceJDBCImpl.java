@@ -22,15 +22,18 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CompanyServiceJDBCImpl.class);
 
-  @Autowired
+  
   ICompanyDao                 companyDao;
-  @Autowired
+  
   IComputerDao                computerDao;
-  @Autowired
+  
   private DaoManager daoManager;
 
-  public CompanyServiceJDBCImpl() {
-    
+  @Autowired
+  public CompanyServiceJDBCImpl(DaoManager daoManager, IComputerDao computerDao, ICompanyDao companyDao) {
+    this.daoManager = daoManager;
+    this.computerDao = computerDao;
+    this.companyDao = companyDao;
   }
 
   public CompanyServiceJDBCImpl(ICompanyDao companyDao) {
@@ -156,4 +159,18 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
     return companies;
   }
 
+  public void setCompanyDao(ICompanyDao companyDao) {
+    this.companyDao = companyDao;
+  }
+
+  public void setComputerDao(IComputerDao computerDao) {
+    this.computerDao = computerDao;
+  }
+
+  public void setDaoManager(DaoManager daoManager) {
+    this.daoManager = daoManager;
+  }
+
+  
+  
 }

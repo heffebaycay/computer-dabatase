@@ -21,14 +21,14 @@ public class ComputerServiceJDBCImpl implements IComputerService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ComputerServiceJDBCImpl.class);
   
-  @Autowired
   IComputerDao computerDao;
   
-  @Autowired
   private DaoManager daoManager;
 
-  public ComputerServiceJDBCImpl() {
-    
+  @Autowired
+  public ComputerServiceJDBCImpl(DaoManager daoManager, IComputerDao computerDao) {
+    this.daoManager = daoManager;
+    this.computerDao = computerDao;
   }
   
   public void setDaoManager(DaoManager daoManager) {

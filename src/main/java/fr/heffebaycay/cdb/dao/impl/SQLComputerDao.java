@@ -30,10 +30,12 @@ public class SQLComputerDao implements IComputerDao {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDao.class);
 
-  @Autowired
+  
   private DaoManager daoManager;
   
-  public SQLComputerDao() {
+  @Autowired
+  public SQLComputerDao(DaoManager daoManager) {
+    this.daoManager = daoManager;
   }
 
 
@@ -66,7 +68,7 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.error("findAll(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      MySQLUtils.closeStatement(stmt);
+      daoManager.closeStatement(stmt);
     }
 
     return computers;
@@ -102,7 +104,7 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.error("findById(): SQLException:", e);
       throw new DaoException(e);
     } finally {
-      MySQLUtils.closeStatement(ps);
+      daoManager.closeStatement(ps);
     }
 
     return computer;
@@ -130,7 +132,7 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.error("remove(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      MySQLUtils.closeStatement(ps);
+      daoManager.closeStatement(ps);
     }
 
   }
@@ -185,7 +187,7 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.error("create(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      MySQLUtils.closeStatement(ps);
+      daoManager.closeStatement(ps);
     }
 
     return newComputerId;
@@ -237,7 +239,7 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.error("update(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      MySQLUtils.closeStatement(ps);
+      daoManager.closeStatement(ps);
     }
 
   }
@@ -319,7 +321,7 @@ public class SQLComputerDao implements IComputerDao {
       ResultSet countResult = countStmt.executeQuery();
       countResult.first();
       searchWrapper.setTotalCount(countResult.getLong("count"));
-      MySQLUtils.closeStatement(countStmt);
+      daoManager.closeStatement(countStmt);
 
       long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
       searchWrapper.setCurrentPage(currentPage);
@@ -349,7 +351,7 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.warn("findByName(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      MySQLUtils.closeStatement(ps);
+      daoManager.closeStatement(ps);
     }
 
     return searchWrapper;
@@ -400,7 +402,7 @@ public class SQLComputerDao implements IComputerDao {
       ResultSet countResult = stmt.executeQuery(countQuery);
       countResult.first();
       searchWrapper.setTotalCount(countResult.getLong("count"));
-      MySQLUtils.closeStatement(stmt);
+      daoManager.closeStatement(stmt);
 
       long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
       searchWrapper.setCurrentPage(currentPage);
@@ -426,7 +428,7 @@ public class SQLComputerDao implements IComputerDao {
       LOGGER.error("findAll: SQL Exception: ", e);
       throw new DaoException(e);
     } finally {
-      MySQLUtils.closeStatement(ps);
+      daoManager.closeStatement(ps);
     }
 
     return searchWrapper;

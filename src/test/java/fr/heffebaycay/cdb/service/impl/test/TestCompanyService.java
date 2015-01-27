@@ -6,12 +6,9 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import javax.naming.ldap.Rdn;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,10 +17,11 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
-import fr.heffebaycay.cdb.dao.impl.SQLCompanyDao;
+import fr.heffebaycay.cdb.dao.IComputerDao;
+import fr.heffebaycay.cdb.dao.exception.DaoException;
+import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
-import fr.heffebaycay.cdb.model.Computer;
-import fr.heffebaycay.cdb.service.ICompanyService;
+import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.service.impl.CompanyServiceJDBCImpl;
 import fr.heffebaycay.cdb.util.CompanySortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
@@ -31,20 +29,23 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class TestCompanyService {
 
-  private static final int NUMBER_OF_RESULTS = 10;
+  private static final Long NUMBER_OF_RESULTS = 10L;
 
-  ICompanyService          companyService;
-  ICompanyDao              companyDao;
+  ICompanyDao               companyDao;
 
-  Connection               conn              = null;
+  CompanyServiceJDBCImpl    companyService;
 
-  List<Company>            companiesDB;
+  List<Company>             companiesDB;
 
   @Before
   public void setUp() {
 
-    companyDao = mock(SQLCompanyDao.class);
-    companyService = new CompanyServiceJDBCImpl(companyDao);
+    IComputerDao computerDao = mock(IComputerDao.class);
+
+    DaoManager daoManager = mock(DaoManager.class);
+    companyDao = mock(ICompanyDao.class);
+
+    companyService = new CompanyServiceJDBCImpl(daoManager, computerDao, companyDao);
 
     Company c1 = new Company.Builder().id(1).name("Apple").build();
 
@@ -68,7 +69,11 @@ public class TestCompanyService {
       fail("Company Service isn't initialized");
     }
 
-    when(companyDao.findAll(Matchers.any(Connection.class))).thenReturn(companiesDB);
+    try {
+      when(companyDao.findAll()).thenReturn(companiesDB);
+    } catch (DaoException e) {
+      fail("testFindAll(): Failed to setup Mockito: " + e.getMessage());
+    }
 
     List<Company> companies = companyService.findAll();
 
@@ -83,16 +88,20 @@ public class TestCompanyService {
       fail("Company Service isn't initialized");
     }
 
-    doAnswer(new Answer<Company>() {
+    try {
+      doAnswer(new Answer<Company>() {
 
-      @Override
-      public Company answer(InvocationOnMock invocation) {
-        long idToFind = invocation.getArgumentAt(0, Long.class);
+        @Override
+        public Company answer(InvocationOnMock invocation) {
+          long idToFind = invocation.getArgumentAt(0, Long.class);
 
-        return companiesDB.stream().filter(c -> c.getId() == idToFind).findFirst().get();
-      }
+          return companiesDB.stream().filter(c -> c.getId() == idToFind).findFirst().get();
+        }
 
-    }).when(companyDao).findById(Matchers.anyLong(), Matchers.any(Connection.class));
+      }).when(companyDao).findById(Matchers.anyLong());
+    } catch (DaoException e) {
+      fail("testFindById(): Failed to setup Mockito: " + e.getMessage());
+    }
 
     Random rnd = new Random();
     int randomIndex = rnd.nextInt(companiesDB.size());
@@ -112,19 +121,23 @@ public class TestCompanyService {
       fail("CompanyService isn't initialized");
     }
 
-    doAnswer(new Answer<Long>() {
+    try {
+      doAnswer(new Answer<Long>() {
 
-      @Override
-      public Long answer(InvocationOnMock invocation) {
+        @Override
+        public Long answer(InvocationOnMock invocation) {
 
-        Company companyToCreate = invocation.getArgumentAt(0, Company.class);
+          Company companyToCreate = invocation.getArgumentAt(0, Company.class);
 
-        companiesDB.add(companyToCreate);
+          companiesDB.add(companyToCreate);
 
-        return companyToCreate.getId();
-      }
+          return companyToCreate.getId();
+        }
 
-    }).when(companyDao).create(Matchers.any(Company.class), Matchers.any(Connection.class));
+      }).when(companyDao).create(Matchers.any(Company.class));
+    } catch (DaoException e) {
+      fail("testCreate(): Failed to setup Mockito: " + e.getMessage());
+    }
 
     Company c4 = new Company.Builder().id(4).name("Compaq").build();
 
@@ -146,17 +159,24 @@ public class TestCompanyService {
 
     SearchWrapper<Company> wrapper = new SearchWrapper<Company>();
 
-    when(
-        companyDao.findAll(Matchers.anyLong(), Matchers.anyLong(),
-            Matchers.any(CompanySortCriteria.class), Matchers.any(SortOrder.class),
-            Matchers.any(Connection.class))).thenReturn(wrapper);
+    try {
+      when(
+          companyDao.findAll(Matchers.any(CompanyPageRequest.class))).thenReturn(wrapper);
+    } catch (DaoException e) {
+      fail("testFindAllWithOffset(): Failed to setup Mockito: " + e.getMessage());
+    }
 
-    SearchWrapper<Company> returnedWrapper = companyService.findAll(0, NUMBER_OF_RESULTS,
-        CompanySortCriteria.ID, SortOrder.ASC);
+    CompanyPageRequest request = new CompanyPageRequest.Builder()
+        .offset(0L)
+        .nbRequested(NUMBER_OF_RESULTS)
+        .sortCriterion(CompanySortCriteria.ID)
+        .sortOrder(SortOrder.ASC)
+        .build();
 
-    
+    SearchWrapper<Company> returnedWrapper = companyService.findAll(request);
+
     assertEquals(wrapper, returnedWrapper);
-    
+
   }
 
 }

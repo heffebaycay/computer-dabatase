@@ -2,6 +2,7 @@ package fr.heffebaycay.cdb.dao.manager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,10 +11,6 @@ import org.springframework.stereotype.Component;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 
-import fr.heffebaycay.cdb.dao.ICompanyDao;
-import fr.heffebaycay.cdb.dao.IComputerDao;
-import fr.heffebaycay.cdb.dao.impl.SQLCompanyDao;
-import fr.heffebaycay.cdb.dao.impl.SQLComputerDao;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.util.AppSettings;
 
@@ -119,6 +116,16 @@ public class DaoManager {
       threadLocalConnection.remove();
     } catch (SQLException e) {
       LOGGER.warn("closeConnection(): SQLException: ", e);
+    }
+  }
+  
+  public void closeStatement(Statement stmt) {
+    try {
+      if(stmt != null) {
+        stmt.close();
+      }
+    } catch (SQLException e) {
+      LOGGER.warn("closeStatement(): SQLException: ", e);
     }
   }
 

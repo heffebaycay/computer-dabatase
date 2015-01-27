@@ -29,10 +29,12 @@ public class SQLCompanyDao implements ICompanyDao {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLCompanyDao.class);
 
-  @Autowired
+  
   private DaoManager daoManager;
   
-  public SQLCompanyDao() {
+  @Autowired
+  public SQLCompanyDao(DaoManager daoManager) {
+    this.daoManager = daoManager;
   }
 
   /**
@@ -64,7 +66,7 @@ public class SQLCompanyDao implements ICompanyDao {
       LOGGER.error("SQLException: {}", e);
       throw new DaoException(e);
     } finally {
-      MySQLUtils.closeStatement(stmt);
+      daoManager.closeStatement(stmt);
     }
 
     return companies;
@@ -100,7 +102,7 @@ public class SQLCompanyDao implements ICompanyDao {
       throw new DaoException(e);
 
     } finally {
-      MySQLUtils.closeStatement(ps);
+      daoManager.closeStatement(ps);
     }
 
     return company;
@@ -149,7 +151,7 @@ public class SQLCompanyDao implements ICompanyDao {
       searchWrapper.setTotalCount(countResult.getLong("count"));
 
       // Closing the first statement
-      MySQLUtils.closeStatement(stmt);
+      daoManager.closeStatement(stmt);
 
       long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
       searchWrapper.setCurrentPage(currentPage);
@@ -178,7 +180,7 @@ public class SQLCompanyDao implements ICompanyDao {
       LOGGER.error("SQLException: {}", e);
       throw new DaoException(e);
     } finally {
-      MySQLUtils.closeStatement(ps);
+      daoManager.closeStatement(ps);
     }
 
     return searchWrapper;
@@ -203,7 +205,7 @@ public class SQLCompanyDao implements ICompanyDao {
       LOGGER.error("SQLException: {}", e);
       throw new DaoException(e);
     } finally {
-      MySQLUtils.closeStatement(ps);
+      daoManager.closeStatement(ps);
     }
 
   }
@@ -227,7 +229,7 @@ public class SQLCompanyDao implements ICompanyDao {
       LOGGER.warn("remove(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      MySQLUtils.closeStatement(ps);
+      daoManager.closeStatement(ps);
     }
 
   }
@@ -305,7 +307,7 @@ public class SQLCompanyDao implements ICompanyDao {
       ResultSet countResult = countStmt.executeQuery();
       countResult.first();
       searchWrapper.setTotalCount(countResult.getLong("count"));
-      MySQLUtils.closeStatement(countStmt);
+      daoManager.closeStatement(countStmt);
 
       long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
       searchWrapper.setCurrentPage(currentPage);
@@ -333,7 +335,7 @@ public class SQLCompanyDao implements ICompanyDao {
       LOGGER.warn("findByName(): SQLException: ", e);
       throw new DaoException(e);
     } finally {
-      MySQLUtils.closeStatement(ps);
+      daoManager.closeStatement(ps);
     }
 
     return searchWrapper;

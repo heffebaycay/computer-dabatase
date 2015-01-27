@@ -120,14 +120,19 @@
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-context</artifactId>
   		<version>${spring-context.version}</version>
-  		<scope>runtime</scope>
+  		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-web</artifactId>
   		<version>${spring-context.version}</version>
-  		<scope>runtime</scope>
+  		<scope>compile</scope>
   	</dependency>
+  	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-test</artifactId>
+		<version>${spring-context.version}</version>
+	</dependency>
   	
   	<!-- Logging dependencies -->
   	<dependency>
@@ -147,6 +152,8 @@
   		<version>${logback.version}</version>
   		<scope>runtime</scope>
   	</dependency>
+  	
+  	
   	
   	
   	

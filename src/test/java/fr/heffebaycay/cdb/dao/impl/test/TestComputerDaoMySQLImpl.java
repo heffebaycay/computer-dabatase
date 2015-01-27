@@ -1,6 +1,7 @@
 package fr.heffebaycay.cdb.dao.impl.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,29 +13,42 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.SQLComputerDao;
 import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
 import fr.heffebaycay.cdb.dao.manager.DaoManager;
-import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.Company;
+import fr.heffebaycay.cdb.model.Computer;
+import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.util.ComputerSortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath:/WEB-INF/applicationContext.xml" })
 public class TestComputerDaoMySQLImpl {
 
-  MySQLUtils           sqlUtils    = new MySQLUtils();
+  @Autowired
+  MySQLUtils     sqlUtils;
 
   //Passing a reference to the test SQL utils class to the DAO
-  SQLComputerDao computerDao = new SQLComputerDao(sqlUtils);
-  List<Computer>       localComputers;
+  @Autowired
+  SQLComputerDao computerDao;
 
-  Connection           conn;
+  @Autowired
+  DaoManager     daoManager;
+
+  List<Computer> localComputers;
 
   @Before
   public void setUp() throws Exception {
+
+    Connection conn;
 
     sqlUtils.truncateTables();
 
@@ -71,7 +85,7 @@ public class TestComputerDaoMySQLImpl {
     companies.add(c9);
     companies.add(c10);
 
-    conn = DaoManager.INSTANCE.getConnection();
+    conn = daoManager.getConnection();
 
     final String insertCompanySQL = "INSERT INTO company(id, name) VALUES(?,?)";
     final PreparedStatement companyPS = conn.prepareStatement(insertCompanySQL);
@@ -83,7 +97,7 @@ public class TestComputerDaoMySQLImpl {
       companyPS.executeUpdate();
     }
 
-    sqlUtils.closeStatement(companyPS);
+    daoManager.closeStatement(companyPS);
 
     // Setting up computers
 
@@ -149,7 +163,7 @@ public class TestComputerDaoMySQLImpl {
       computerPS.executeUpdate();
     }
 
-    sqlUtils.closeStatement(computerPS);
+    daoManager.closeStatement(computerPS);
 
   }
 
@@ -158,7 +172,7 @@ public class TestComputerDaoMySQLImpl {
 
     sqlUtils.truncateTables();
 
-    DaoManager.INSTANCE.closeConnection(conn);
+    daoManager.closeConnection();
 
   }
 
@@ -166,10 +180,10 @@ public class TestComputerDaoMySQLImpl {
   public void testFindAll() {
 
     List<Computer> computers = null;
-    
+
     try {
-      computers = computerDao.findAll(conn);
-    } catch(DaoException e) {
+      computers = computerDao.findAll();
+    } catch (DaoException e) {
       fail("DaoException thrown by findAll()");
     }
 
@@ -180,8 +194,19 @@ public class TestComputerDaoMySQLImpl {
   @Test
   public void testFindAllWithOffset() {
 
-    SearchWrapper<Computer> wrapper = computerDao.findAll(0, 5, ComputerSortCriteria.ID,
-        SortOrder.ASC, conn);
+    ComputerPageRequest request = new ComputerPageRequest.Builder()
+        .offset(0L)
+        .nbRequested(5L)
+        .sortCriterion(ComputerSortCriteria.ID)
+        .sortOrder(SortOrder.ASC)
+        .build();
+
+    SearchWrapper<Computer> wrapper = null;
+    try {
+      wrapper = computerDao.findAll(request);
+    } catch (DaoException e) {
+      fail("IComputerDao::findAll() threw a DaoException: " + e.getMessage());
+    }
 
     assertEquals(1, wrapper.getCurrentPage());
     assertEquals(7, wrapper.getTotalCount());
@@ -196,7 +221,12 @@ public class TestComputerDaoMySQLImpl {
   @Test
   public void testFindById() {
 
-    Computer computer = computerDao.findById(4, conn);
+    Computer computer = null;
+    try {
+      computer = computerDao.findById(4);
+    } catch (DaoException e) {
+      fail("IComputerDao::findById() threw a DaoException: " + e.getMessage());
+    }
 
     boolean checked = false;
 
@@ -223,7 +253,12 @@ public class TestComputerDaoMySQLImpl {
         .introduced(LocalDateTime.parse("2014-06-26T00:00:00"))
         .discontinued(LocalDateTime.parse("2015-01-01T00:00:00")).company(company).build();
 
-    long computerId = computerDao.create(computer, conn);
+    long computerId = -1;
+    try {
+      computerId = computerDao.create(computer);
+    } catch (DaoException e) {
+      fail("IComputerDao::create() threw a DaoException: " + e.getMessage());
+    }
 
     if (computerId == -1) {
       fail("Computer was not created, as no valid id was returned");
@@ -231,7 +266,12 @@ public class TestComputerDaoMySQLImpl {
 
     computer.setId(computerId);
 
-    Computer fetchedComputer = computerDao.findById(computerId, conn);
+    Computer fetchedComputer = null;
+    try {
+      fetchedComputer = computerDao.findById(computerId);
+    } catch (DaoException e) {
+      fail("IComputerDao::findById() threw a DaoException: " + e.getMessage());
+    }
 
     assertEquals(computer, fetchedComputer);
   }
@@ -240,7 +280,7 @@ public class TestComputerDaoMySQLImpl {
   public void testCreateWithNullComputer() {
 
     try {
-      long computerId = computerDao.create(null, conn);
+      long computerId = computerDao.create(null);
 
       fail("Expected an IllegalArgumentException to be thrown");
 
@@ -248,6 +288,8 @@ public class TestComputerDaoMySQLImpl {
 
       assertEquals("'computer' argument cannot be null", e.getMessage());
 
+    } catch (DaoException e) {
+      fail("IComputerDao::create() threw a DaoException: " + e.getMessage());
     }
 
   }
@@ -255,7 +297,12 @@ public class TestComputerDaoMySQLImpl {
   @Test
   public void testUpdate() {
 
-    Computer computer = computerDao.findById(7, conn);
+    Computer computer = null;
+    try {
+      computer = computerDao.findById(7);
+    } catch (DaoException e) {
+      fail("IComputerDao::findById() threw a DaoException: " + e.getMessage());
+    }
 
     Company company = new Company.Builder().id(8).name("Sanyo").build();
 
@@ -264,9 +311,18 @@ public class TestComputerDaoMySQLImpl {
     computer.setIntroduced(LocalDateTime.parse("2011-09-02T00:00:00"));
     computer.setDiscontinued(LocalDateTime.parse("2013-03-27T00:00:00"));
 
-    computerDao.update(computer, conn);
+    try {
+      computerDao.update(computer);
+    } catch (DaoException e) {
+      fail("IComputerDao::update() threw a DaoException: " + e.getMessage());
+    }
 
-    Computer updatedComputer = computerDao.findById(7, conn);
+    Computer updatedComputer = null;
+    try {
+      updatedComputer = computerDao.findById(7);
+    } catch (DaoException e) {
+      fail("IComputerDao::findById() threw a DaoException: " + e.getMessage());
+    }
 
     assertEquals(computer, updatedComputer);
   }
@@ -276,7 +332,7 @@ public class TestComputerDaoMySQLImpl {
 
     try {
 
-      computerDao.update(null, conn);
+      computerDao.update(null);
 
       fail("Expected an IllegalArgumentException to be thrown");
 
@@ -284,6 +340,8 @@ public class TestComputerDaoMySQLImpl {
 
       assertEquals("'computer' argument cannot be null", e.getMessage());
 
+    } catch (DaoException e) {
+      fail("IComputerDao::update() threw a DaoException: " + e.getMessage());
     }
 
   }
