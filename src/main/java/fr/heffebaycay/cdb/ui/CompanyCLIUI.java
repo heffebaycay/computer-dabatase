@@ -3,7 +3,6 @@ package fr.heffebaycay.cdb.ui;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
-import fr.heffebaycay.cdb.service.manager.ServiceManager;
 import fr.heffebaycay.cdb.util.AppSettings;
 import fr.heffebaycay.cdb.util.CompanySortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
@@ -11,13 +10,18 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+@Service
 public class CompanyCLIUI {
 	
+    @Autowired
 	ICompanyService companyService;
 	
 	
 	public CompanyCLIUI() {
-		companyService = ServiceManager.INSTANCE.getCompanyService();
 	}
 	
 	/**

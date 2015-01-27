@@ -13,10 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import fr.heffebaycay.cdb.dto.CompanyDTO;
 import fr.heffebaycay.cdb.dto.ComputerDTO;
-import fr.heffebaycay.cdb.dto.ComputerDTO.Builder;
 import fr.heffebaycay.cdb.dto.mapper.CompanyMapper;
 import fr.heffebaycay.cdb.dto.mapper.ComputerMapper;
 import fr.heffebaycay.cdb.dto.validator.ComputerDTOValidator;
@@ -24,27 +24,26 @@ import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.IComputerService;
-import fr.heffebaycay.cdb.service.manager.ServiceManager;
 
 /**
  * Servlet implementation class EditComputerController
  */
 @WebServlet("/computers/edit")
-public class EditComputerController extends HttpServlet {
+public class EditComputerController extends AbstractSpringHttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	private static final Logger LOGGER = LoggerFactory.getLogger(EditComputerController.class.getSimpleName());
 	
-	protected IComputerService mComputerService;
-	protected ICompanyService mCompanyService;
+	@Autowired
+	private IComputerService mComputerService;
+	@Autowired
+	private ICompanyService mCompanyService;
 	
     /**
      * @see HttpServlet#HttpServlet()
      */
     public EditComputerController() {
         super();
-        mComputerService = ServiceManager.INSTANCE.getComputerService();
-        mCompanyService = ServiceManager.INSTANCE.getCompanyService();
     }
 
 	/**

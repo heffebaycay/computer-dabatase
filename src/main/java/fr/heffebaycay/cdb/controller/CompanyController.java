@@ -12,35 +12,33 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import fr.heffebaycay.cdb.dto.CompanyDTO;
 import fr.heffebaycay.cdb.dto.mapper.CompanyMapper;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
-import fr.heffebaycay.cdb.service.manager.ServiceManager;
 import fr.heffebaycay.cdb.util.AppSettings;
-import fr.heffebaycay.cdb.util.CompanySortCriteria;
-import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 /**
  * Servlet implementation class CompanyController
  */
 @WebServlet("/companies/list")
-public class CompanyController extends HttpServlet {
+public class CompanyController extends AbstractSpringHttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	private static final Logger LOGGER = LoggerFactory.getLogger(CompanyController.class);
 	
-	protected ICompanyService mCompanyService;
+	@Autowired
+	private ICompanyService mCompanyService;
 	
     /**
      * @see HttpServlet#HttpServlet()
      */
     public CompanyController() {
         super();
-        mCompanyService = ServiceManager.INSTANCE.getCompanyService();
     }
 
 	/**

@@ -66,7 +66,7 @@ public class ComputerMapper {
    * @param computerDTO     The DTO object to be converted
    * @return                An instance of <i>Computer</i>, or <strong>null</strong> if <strong>computerDTO</strong> is null.
    */
-  public static Computer toDAO(ComputerDTO computerDTO) {
+  public static Computer fromDTO(ComputerDTO computerDTO) {
    
     if(computerDTO == null) {
       return null;
@@ -95,7 +95,7 @@ public class ComputerMapper {
       return;
     }
     
-    Computer localComputer = toDAO(computerDTO);
+    Computer localComputer = fromDTO(computerDTO);
     
     computer.setName(localComputer.getName());
     computer.setIntroduced(localComputer.getIntroduced());

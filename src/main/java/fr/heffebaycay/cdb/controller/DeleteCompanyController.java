@@ -12,27 +12,27 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import fr.heffebaycay.cdb.service.ICompanyService;
-import fr.heffebaycay.cdb.service.manager.ServiceManager;
 
 /**
  * Servlet implementation class DeleteCompanyController
  */
 @WebServlet("/companies/delete")
-public class DeleteCompanyController extends HttpServlet {
+public class DeleteCompanyController extends AbstractSpringHttpServlet {
   private static final long serialVersionUID = 1L;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DeleteCompanyController.class);
   
-  protected ICompanyService mCompanyService;
+  @Autowired
+  private ICompanyService mCompanyService;
   
   /**
    * @see HttpServlet#HttpServlet()
    */
   public DeleteCompanyController() {
     super();
-    mCompanyService = ServiceManager.INSTANCE.getCompanyService();
   }
 
   /**

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import fr.heffebaycay.cdb.service.IComputerService;
 import fr.heffebaycay.cdb.service.impl.ComputerServiceJDBCImpl;
@@ -20,17 +21,18 @@ import fr.heffebaycay.cdb.service.impl.ComputerServiceJDBCImpl;
  * Servlet implementation class DeleteComputerController
  */
 @WebServlet("/computers/delete")
-public class DeleteComputerController extends HttpServlet {
+public class DeleteComputerController extends AbstractSpringHttpServlet {
   private static final long        serialVersionUID = 1L;
 
   private static final Logger      LOGGER           = LoggerFactory
                                                         .getLogger(DeleteComputerController.class
                                                             .getSimpleName());
 
-  protected final IComputerService mComputerService;
+  @Autowired
+  private IComputerService mComputerService;
 
   public DeleteComputerController() {
-    this.mComputerService = new ComputerServiceJDBCImpl();
+    
   }
 
   /**

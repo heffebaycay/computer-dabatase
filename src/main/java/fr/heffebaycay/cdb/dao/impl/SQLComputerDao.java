@@ -11,6 +11,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.exception.DaoException;
@@ -23,10 +25,14 @@ import fr.heffebaycay.cdb.util.ComputerSortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+@Repository
 public class SQLComputerDao implements IComputerDao {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDao.class);
 
+  @Autowired
+  private DaoManager daoManager;
+  
   public SQLComputerDao() {
   }
 
@@ -36,7 +42,7 @@ public class SQLComputerDao implements IComputerDao {
    */
   @Override
   public List<Computer> findAll() throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     Statement stmt = null;
 
     String query = "SELECT c.id, c.name, c.introduced, c.discontinued, cp.id AS cpId, cp.name AS cpName FROM computer AS c LEFT JOIN company AS cp ON c.company_id = cp.id";
@@ -71,7 +77,7 @@ public class SQLComputerDao implements IComputerDao {
    */
   @Override
   public Computer findById(long id) throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     Computer computer = null;
     PreparedStatement ps = null;
 
@@ -107,7 +113,7 @@ public class SQLComputerDao implements IComputerDao {
    */
   @Override
   public boolean remove(long id) throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     String query = "DELETE FROM computer WHERE id = ?";
     PreparedStatement ps = null;
 
@@ -134,7 +140,7 @@ public class SQLComputerDao implements IComputerDao {
    */
   @Override
   public long create(Computer computer) throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     
     if (computer == null) {
       throw new IllegalArgumentException("'computer' argument cannot be null");
@@ -191,7 +197,7 @@ public class SQLComputerDao implements IComputerDao {
    */
   @Override
   public void update(Computer computer) throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     
     if (computer == null) {
       throw new IllegalArgumentException("'computer' argument cannot be null");
@@ -241,7 +247,7 @@ public class SQLComputerDao implements IComputerDao {
    */
   @Override
   public int removeForCompany(long companyId) throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     
     String removeForCompanySQL = "DELETE FROM computer WHERE company_id = ?";
 
@@ -261,7 +267,7 @@ public class SQLComputerDao implements IComputerDao {
    */
   @Override
   public SearchWrapper<Computer> findByName(ComputerPageRequest request) throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     
     if(request == null) {
       throw new DaoException("PageRequest object cannot be null");
@@ -351,7 +357,7 @@ public class SQLComputerDao implements IComputerDao {
 
   @Override
   public SearchWrapper<Computer> findAll(ComputerPageRequest request) throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     
     if(request == null) {
       throw new DaoException("PageRequest object cannot be null");

@@ -1,10 +1,12 @@
 package fr.heffebaycay.cdb.service.impl;
 
-import java.sql.Connection;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.IComputerDao;
@@ -13,20 +15,22 @@ import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
-import fr.heffebaycay.cdb.util.CompanySortCriteria;
-import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+@Service
 public class CompanyServiceJDBCImpl implements ICompanyService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CompanyServiceJDBCImpl.class);
 
+  @Autowired
   ICompanyDao                 companyDao;
+  @Autowired
   IComputerDao                computerDao;
+  @Autowired
+  private DaoManager daoManager;
 
   public CompanyServiceJDBCImpl() {
-    companyDao = DaoManager.INSTANCE.getCompanyDao();
-    computerDao = DaoManager.INSTANCE.getComputerDao();
+    
   }
 
   public CompanyServiceJDBCImpl(ICompanyDao companyDao) {
@@ -46,7 +50,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
     } catch (DaoException e) {
       LOGGER.warn("findAll(): DaoException: ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection();
+      daoManager.closeConnection();
     }
 
     return companies;
@@ -65,7 +69,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
     } catch (DaoException e) {
       LOGGER.warn("findById(): DaoException: ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection();
+      daoManager.closeConnection();
     }
 
     return company;
@@ -83,7 +87,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
     } catch (DaoException e) {
       LOGGER.warn("create(): DaoException: ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection();
+      daoManager.closeConnection();
     }
 
   }
@@ -101,7 +105,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
     } catch (DaoException e) {
       LOGGER.warn("findAll(): DaoException", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection();
+      daoManager.closeConnection();
     }
 
     return companies;
@@ -111,7 +115,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   public void remove(long id) {
     LOGGER.debug("Call to remove()");
 
-    DaoManager.INSTANCE.startTransaction();
+    daoManager.startTransaction();
 
     int nbComputers = -1;
     int nbCompany = -1;
@@ -123,13 +127,13 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
       // Remove company X
       nbCompany = companyDao.remove(id);
 
-      DaoManager.INSTANCE.commitTransaction();
+      daoManager.commitTransaction();
 
     } catch (DaoException e) {
-      DaoManager.INSTANCE.rollbackTransaction();
+      daoManager.rollbackTransaction();
 
     } finally {
-      DaoManager.INSTANCE.endTransaction();
+      daoManager.endTransaction();
     }
 
     LOGGER.debug(String.format("Removed %d computers and %d company", nbComputers, nbCompany));
@@ -146,7 +150,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
     } catch (DaoException e) {
       LOGGER.warn("findByName(): DaoException: ", e);
     } finally {
-      DaoManager.INSTANCE.closeConnection();
+      daoManager.closeConnection();
     }
     
     return companies;

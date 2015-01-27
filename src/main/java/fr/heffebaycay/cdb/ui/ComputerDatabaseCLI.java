@@ -1,9 +1,18 @@
 package fr.heffebaycay.cdb.ui;
 
 import java.util.Scanner;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class ComputerDatabaseCLI {
 
   public static final String  CLI_VERSION = "1.0";
@@ -29,13 +38,14 @@ public class ComputerDatabaseCLI {
     private MenuOption() { }
   }
 
-  protected static CompanyCLIUI  companyUI;
-  protected static ComputerCLIUI computerUI;
+  @Autowired
+  protected CompanyCLIUI  companyUI;
+  @Autowired
+  protected ComputerCLIUI computerUI;
 
-  public static void main(String[] args) {
-
+  public void start(String[] args) {
+    
     printWelcome();
-    initServices();
     menuLogic();
 
   }
@@ -43,7 +53,7 @@ public class ComputerDatabaseCLI {
   /**
    * Prints the "Welcome" header in the console
    */
-  protected static void printWelcome() {
+  protected void printWelcome() {
     LOGGER.debug("Starting application v{}", CLI_VERSION);
     System.out.println("-------------------------------------------");
     System.out.printf("       Computer Database CLI - v%s         %n", CLI_VERSION);
@@ -51,17 +61,9 @@ public class ComputerDatabaseCLI {
   }
 
   /**
-   * Initializes the basic UI services the CLI application requires
-   */
-  protected static void initServices() {
-    companyUI = new CompanyCLIUI();
-    computerUI = new ComputerCLIUI();
-  }
-
-  /**
    * Handles the logic of the application menu.
    */
-  protected static void menuLogic() {
+  protected void menuLogic() {
 
     boolean bMenuLoop = true;
 
@@ -89,7 +91,7 @@ public class ComputerDatabaseCLI {
   /**
    * Prints the list of options offered by the CLI application
    */
-  protected static void printMenu() {
+  protected void printMenu() {
     System.out.println("%nThe following actions are available to choose:");
 
     System.out.printf("\t#%d - List Companies%n", MenuOption.COMPANY_LIST);
@@ -116,7 +118,7 @@ public class ComputerDatabaseCLI {
    * @return A boolean indicating whether the main application should exit the menu loop
    * (<strong>true</strong>: the loop should be exited ; <strong>false</strong>: the loop should not be exited)
    */
-  protected static boolean handleMenuChoice(final Scanner sc) {
+  protected boolean handleMenuChoice(final Scanner sc) {
 
     int iChoice;
     if (sc.hasNextInt()) {

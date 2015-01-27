@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.exception.DaoException;
@@ -22,10 +24,14 @@ import fr.heffebaycay.cdb.util.CompanySortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+@Repository
 public class SQLCompanyDao implements ICompanyDao {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLCompanyDao.class);
 
+  @Autowired
+  private DaoManager daoManager;
+  
   public SQLCompanyDao() {
   }
 
@@ -34,7 +40,7 @@ public class SQLCompanyDao implements ICompanyDao {
    */
   @Override
   public List<Company> findAll() throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     
     Statement stmt = null;
 
@@ -70,7 +76,7 @@ public class SQLCompanyDao implements ICompanyDao {
    */
   @Override
   public Company findById(long id) throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     
     Company company = null;
     PreparedStatement ps = null;
@@ -106,7 +112,7 @@ public class SQLCompanyDao implements ICompanyDao {
    */
   @Override
   public SearchWrapper<Company> findAll(CompanyPageRequest request) throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     
     if(request == null) {
       throw new DaoException("CompanyPageRequest parameter cannot be null");
@@ -180,7 +186,7 @@ public class SQLCompanyDao implements ICompanyDao {
 
   @Override
   public void create(Company company) throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     
     String query = "INSERT INTO company(name) VALUES(?)";
 
@@ -207,7 +213,7 @@ public class SQLCompanyDao implements ICompanyDao {
    */
   @Override
   public int remove(long id) throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     
     String removeCompanyQuery = "DELETE FROM company WHERE id = ?";
     PreparedStatement ps = null;
@@ -254,7 +260,7 @@ public class SQLCompanyDao implements ICompanyDao {
 
   @Override
   public SearchWrapper<Company> findByName(CompanyPageRequest request) throws DaoException {
-    Connection conn = DaoManager.INSTANCE.getConnection();
+    Connection conn = daoManager.getConnection();
     
     if(request == null) {
       throw new DaoException("CompanyPageRequest parameter cannot be null");

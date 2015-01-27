@@ -6,28 +6,31 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.IComputerService;
-import fr.heffebaycay.cdb.service.manager.ServiceManager;
 import fr.heffebaycay.cdb.util.AppSettings;
 import fr.heffebaycay.cdb.util.ComputerSortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+@Service
 public class ComputerCLIUI {
 
+  @Autowired
   IComputerService computerService;
+  @Autowired
   ICompanyService  companyService;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ComputerCLIUI.class.getSimpleName());
   
   public ComputerCLIUI() {
-    computerService = ServiceManager.INSTANCE.getComputerService();
-    companyService = ServiceManager.INSTANCE.getCompanyService();
+    
   }
 
   /**
