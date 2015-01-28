@@ -52,7 +52,6 @@ public class CompanyController extends AbstractSpringHttpServlet {
 	      request.setAttribute("bRemoveSuccess", true);
 	    }
 		
-		List<CompanyDTO> companies = null;
 		SearchWrapper<Company> searchWrapper;
 		
 		long nbResultsPerPage = AppSettings.NB_RESULTS_PAGE;
@@ -102,8 +101,6 @@ public class CompanyController extends AbstractSpringHttpServlet {
 		} else {
 			searchWrapper = mCompanyService.findAll(pageRequest);
 		}
-		
-		companies = CompanyMapper.toDTO(searchWrapper.getResults());
 		
 		request.setAttribute("searchWrapper", searchWrapper);
 		

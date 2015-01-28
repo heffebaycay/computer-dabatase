@@ -55,7 +55,6 @@ public class ComputerController extends AbstractSpringHttpServlet {
       request.setAttribute("bRemoveSuccess", true);
     }
     
-    List<ComputerDTO> computers = null;
     SearchWrapper<Computer> searchWrapper;
 
     long nbResultsPerPage = AppSettings.NB_RESULTS_PAGE;
@@ -106,8 +105,6 @@ public class ComputerController extends AbstractSpringHttpServlet {
     } else {
       searchWrapper = mComputerService.findAll(pageRequest);
     }
-    
-    computers = ComputerMapper.toDTO( searchWrapper.getResults() );
     
     
     request.setAttribute("searchWrapper", searchWrapper);

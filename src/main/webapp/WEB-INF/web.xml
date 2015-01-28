@@ -6,6 +6,16 @@
   	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
   
+  <servlet>
+  	<servlet-name>ViewStatusMessages</servlet-name>
+  	<servlet-class>ch.qos.logback.classic.ViewStatusMessagesServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>ViewStatusMessages</servlet-name>
+  	<url-pattern>/lbClassicStatus</url-pattern>
+  </servlet-mapping>
+  
   <error-page>
     <error-code>404</error-code>
     <location>/WEB-INF/views/404.jsp</location>
