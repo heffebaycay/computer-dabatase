@@ -149,13 +149,14 @@ public class TestCompanyDaoMySQLImpl {
   @Test
   public void testFindByIdNegativeId() {
     Company company = null;
+    
     try {
       company = companyDao.findById(-1);
     } catch (DaoException e) {
-      fail("ICompanyDao::findById() threw a DaoException: " + e.getMessage());
+      return;
     }
-
-    assertEquals(null, company);
+    
+    fail("A DaoException was expected but was not thrown");
   }
 
   @Test

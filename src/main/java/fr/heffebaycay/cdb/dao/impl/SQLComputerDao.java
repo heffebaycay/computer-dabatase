@@ -22,7 +22,6 @@ import org.springframework.stereotype.Repository;
 import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.mapper.ComputerMySQLRowMapper;
-import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.util.ComputerSortCriteria;
@@ -52,7 +51,7 @@ public class SQLComputerDao implements IComputerDao {
     List<Computer> computers = null;
 
     try {
-      jdbcTemplate.query(query, new ComputerMySQLRowMapper());
+      computers = jdbcTemplate.query(query, new ComputerMySQLRowMapper());
     } catch (DataAccessException e) {
       LOGGER.warn("findAll(): Failed to query DB: {}", e);
       throw new DaoException("findAll(): Failed to query DB", e);
