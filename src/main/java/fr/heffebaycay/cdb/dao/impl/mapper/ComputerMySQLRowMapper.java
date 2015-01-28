@@ -7,12 +7,12 @@ import java.time.LocalDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.RowMapper;
 
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
-import fr.heffebaycay.cdb.dao.IRowMapper;
 
-public class ComputerMySQLRowMapper implements IRowMapper<Computer> {
+public class ComputerMySQLRowMapper implements RowMapper<Computer> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ComputerMySQLRowMapper.class);
   
@@ -25,7 +25,7 @@ public class ComputerMySQLRowMapper implements IRowMapper<Computer> {
    * 
    */
   @Override
-  public Computer mapRow(ResultSet resultSet) {
+  public Computer mapRow(ResultSet resultSet, int rowNum) {
     
     Computer computer = null;
     Company company = null;

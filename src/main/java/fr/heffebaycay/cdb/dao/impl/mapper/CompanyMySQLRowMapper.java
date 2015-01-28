@@ -5,11 +5,11 @@ import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.RowMapper;
 
-import fr.heffebaycay.cdb.dao.IRowMapper;
 import fr.heffebaycay.cdb.model.Company;
 
-public class CompanyMySQLRowMapper implements IRowMapper<Company> {
+public class CompanyMySQLRowMapper implements RowMapper<Company> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CompanyMySQLRowMapper.class);
 
@@ -22,7 +22,7 @@ public class CompanyMySQLRowMapper implements IRowMapper<Company> {
    * 
    */
   @Override
-  public Company mapRow(ResultSet resultSet) {
+  public Company mapRow(ResultSet resultSet, int rowNum) {
 
     Company company = null;
 
