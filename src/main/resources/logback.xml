@@ -26,6 +26,4 @@
 		<appender-ref ref="FILE" />
 	</root>
 	
-	<consolePlugin />
-	
 </configuration>

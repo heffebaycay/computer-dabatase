@@ -39,10 +39,6 @@ public class DaoManager {
       throw new RuntimeException("Failed to load MySQL JDBC driver.", e);
     }
 
-    mgrDataSource.setUsername(AppSettings.DB_USER);
-    mgrDataSource.setPassword(AppSettings.DB_PASSWORD);
-    mgrDataSource.setUrl(MySQLUtils.getMySQLConnectionURL());
-
     threadLocalConnection = new ThreadLocal<Connection>();
 
   }
