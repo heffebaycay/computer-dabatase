@@ -57,49 +57,6 @@ public class DaoManager {
     return threadLocalConnection.get();
   }
 
-  public void startTransaction() {
-    try {
-      LOGGER.debug("startTransaction(): Begining new transaction");
-      Connection conn = getConnection();
-      conn.setAutoCommit(false);
-      conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
-    } catch (SQLException e) {
-      LOGGER.warn("startTransaction(): Failed to start transaction: ", e);
-    }
-  }
-
-  public void commitTransaction() {
-
-    try {
-      LOGGER.debug("commitTransaction(): Commiting transaction");
-      getConnection().commit();
-    } catch (SQLException e) {
-      LOGGER.warn("commitTransaction(): Failed to commit transaction: ", e);
-      rollbackTransaction();
-    }
-  }
-
-  public void endTransaction() {
-
-    try {
-      LOGGER.debug("endTransaction(): About to end transaction");
-      getConnection().setAutoCommit(true);
-      closeConnection();
-    } catch (SQLException e) {
-      LOGGER.warn("endTransaction(): Failed to end transaction: ", e);
-    }
-  }
-
-  public void rollbackTransaction() {
-
-    try {
-      LOGGER.debug("rollbackTransaction(): About to rollback transaction");
-      getConnection().rollback();
-    } catch (SQLException e) {
-      LOGGER.warn("rollbackTransaction(): Failed to rollback transaction: ", e);
-    }
-  }
-
   public void closeConnection() {
     LOGGER.debug("closeConnection(): About to close connection");
     try {

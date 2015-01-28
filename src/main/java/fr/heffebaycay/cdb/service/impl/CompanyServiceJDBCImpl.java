@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.IComputerDao;
@@ -115,28 +117,22 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   }
 
   @Override
+  @Transactional
   public void remove(long id) {
     LOGGER.debug("Call to remove()");
 
-    daoManager.startTransaction();
-
+    LOGGER.debug("Are we in a transactionnal context?: {}", TransactionSynchronizationManager.isActualTransactionActive());
     int nbComputers = -1;
     int nbCompany = -1;
-
+    
     try {
       // Remove computers linked to company X
       nbComputers = computerDao.removeForCompany(id);
 
       // Remove company X
       nbCompany = companyDao.remove(id);
-
-      daoManager.commitTransaction();
-
     } catch (DaoException e) {
-      daoManager.rollbackTransaction();
-
-    } finally {
-      daoManager.endTransaction();
+      throw new RuntimeException("CompanyServiceJDBCImpl::remove() failed", e);
     }
 
     LOGGER.debug(String.format("Removed %d computers and %d company", nbComputers, nbCompany));
