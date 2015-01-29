@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <jsp:include page="include/header.jsp" />
 
@@ -19,37 +21,48 @@
 	             		</div>
                    </c:if>
                    
-                    <form action="<c:url value="/computers/add" />" method="POST">
-                        <input type="hidden" value="0"/>
+                   <spring:url value="/computers/add" htmlEscape="true" var="formAction" />
+                   <form:form modelAttribute="computerDTO" action="${ formAction }" method="POST">
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" value="<c:if test="${ computerNameValue != null }" ><c:out value="${ computerNameValue }" /></c:if>">
+                                <form:input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name"  path="name" value="${ computerNameValue }"/>
+                                <form:errors path="name" cssClass="error"></form:errors>
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="text" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="<c:if test="${ dateIntroducedValue != null }"><c:out value="${ dateIntroducedValue }" /> </c:if>">
+                                <form:input type="text" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" path="introduced" value="${ dateIntroducedValue }" />
+                                <form:errors path="introduced" cssClass="error"></form:errors>
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="text" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="<c:if test="${ dateDiscontinuedValue != null }"><c:out value="${ dateDiscontinuedValue }" /> </c:if>">
+                                <form:input type="text" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" path="discontinued" value="${ dateDiscontinuedValue }"/>
+                                <form:errors path="discontinued" cssClass="error"></form:errors>
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
-                                <select class="form-control" id="companyId" name="companyId">
-                                    <option value="-1">--</option>
+                                <form:select class="form-control" id="companyId" name="companyId" path="companyId">
+                                    <form:option value="-1">--</form:option>
                                     <c:forEach items="${ companies }" var="company">
-                                    	<option value="${ company.id }" <c:if test="${ companyIdValue != null && company.id == companyIdValue }"></c:if>><c:out value="${ company.name }" /></option>
+                                        <c:choose>
+                                            <c:when test="${ company.id == companyIdValue }">
+                                                <form:option value="${ company.id }" selected="selected">${ company.name }</form:option>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <form:option value="${ company.id }">${ company.name }</form:option>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:forEach>
-                                </select>
-                            </div>            
+                                </form:select>
+                                <form:errors path="companyId" cssClass="error"></form:errors>
+                            </div>  
                         </fieldset>
                         <div class="actions pull-right">
                             <input type="submit" value="Add" class="btn btn-primary" id="submit">
                             or
                             <a href="<c:url value="/" />" class="btn btn-default">Cancel</a>
                         </div>
-                    </form>
+                   </form:form>
                 </div>
             </div>            
         </div>

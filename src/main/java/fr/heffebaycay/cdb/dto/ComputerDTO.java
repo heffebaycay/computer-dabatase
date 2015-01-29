@@ -1,15 +1,28 @@
 package fr.heffebaycay.cdb.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import fr.heffebaycay.cdb.dto.validator.LocalDateFormat;
+import fr.heffebaycay.cdb.util.AppSettings;
+
 
 public class ComputerDTO implements IObjectDTO {
   
   
   private long id;
   
+  @NotBlank(message = "Computer name cannot neither null nor empty")
+  @Size(min = 1, max = 255, message = "Computer name length must be between {min} and {max} characters")
   private String name;
   
+  @LocalDateFormat(message = "Invalid Date Introduced. Correct pattern is {pattern}")
   private String introduced;
   
+  @LocalDateFormat(message = "Invalid Date Discontinued. Correct pattern is {pattern}")
   private String discontinued;
   
   private Long companyId;

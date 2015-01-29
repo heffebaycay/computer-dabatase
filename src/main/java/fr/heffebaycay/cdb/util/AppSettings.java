@@ -22,8 +22,8 @@ public class AppSettings {
   private static final String CONFIG_FILE     = "config.properties";
   private static final String KEY_DB_USER     = "db.username";
   private static final String KEY_DB_PASSWORD = "db.password";
-  private static final String KEY_DB_NAME     = "db.name";
-
+  private static final String KEY_DB_NAME     = "db.name";  
+  
   public static String        DB_USER;
   public static String        DB_PASSWORD;
   public static String        DB_NAME;

@@ -20,6 +20,9 @@
   	<bonecp.version>0.8.0.RELEASE</bonecp.version>
   	<surefire-plugin.version>2.18.1</surefire-plugin.version>
   	<spring.version>4.1.4.RELEASE</spring.version>
+  	<validation-api.version>1.1.0.Final</validation-api.version>
+  	<hibernate-validator.version>5.1.3.Final</hibernate-validator.version>
+    <apache-commons-lang.version>3.3.2</apache-commons-lang.version>
   </properties>
   
   <profiles>
@@ -109,6 +112,14 @@
   		<scope>runtime</scope>
   	</dependency>
   	
+    <!-- Apache Commons Lang -->
+    <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${apache-commons-lang.version}</version>
+     </dependency>
+    
+   
   	<!-- Spring framework -->
   	<dependency>
   		<groupId>org.springframework</groupId>
@@ -172,7 +183,17 @@
   		<version>${jcl-over-slf4j.version}</version>
   	</dependency>
   	
-  	
+  	<!-- Validation -->
+  	<dependency>
+  		<groupId>javax.validation</groupId>
+  		<artifactId>validation-api</artifactId>
+  		<version>${validation-api.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.hibernate</groupId>
+  		<artifactId>hibernate-validator</artifactId>
+  		<version>${hibernate-validator.version}</version>
+  	</dependency>
   	
   	<!-- Testing dependencies -->
   	<dependency>
