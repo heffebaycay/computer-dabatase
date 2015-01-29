@@ -1,111 +1,78 @@
 package fr.heffebaycay.cdb.controller;
 
-import java.io.IOException;
-import java.util.List;
-
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import fr.heffebaycay.cdb.dto.CompanyDTO;
-import fr.heffebaycay.cdb.dto.mapper.CompanyMapper;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
+import fr.heffebaycay.cdb.model.view.DashboardRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.util.AppSettings;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
-/**
- * Servlet implementation class CompanyController
- */
-@WebServlet("/companies/list")
-public class CompanyController extends AbstractSpringHttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-	private static final Logger LOGGER = LoggerFactory.getLogger(CompanyController.class);
-	
-	@Autowired
-	private ICompanyService mCompanyService;
-	
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public CompanyController() {
-        super();
+@Controller
+@RequestMapping("/companies/list")
+public class CompanyController {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(CompanyController.class);
+
+  @Autowired
+  private ICompanyService     mCompanyService;
+
+  public CompanyController() {
+    super();
+  }
+
+  @RequestMapping(method = RequestMethod.GET)
+  protected String doGet(DashboardRequest requestModel, ModelMap map) {
+    LOGGER.debug("Call to doGet()");
+
+    if ("removeSuccess".equals(requestModel.getMsg())) {
+      map.addAttribute("bRemoveSuccess", true);
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		LOGGER.debug("Call to doGet()");
-		
-		String msgResult = request.getParameter("msg");
-	    if("removeSuccess".equals(msgResult)) {
-	      request.setAttribute("bRemoveSuccess", true);
-	    }
-		
-		SearchWrapper<Company> searchWrapper;
-		
-		long nbResultsPerPage = AppSettings.NB_RESULTS_PAGE;
-		
-		long currentPage;
-		
-		String strPage = request.getParameter("p");
-		if(strPage == null || strPage.isEmpty()) {
-			strPage = "1";
-		}
-		
-		try {
-			currentPage = Long.parseLong(strPage);
-			if(currentPage < 0) {
-				currentPage = 1;
-			}
-		} catch(NumberFormatException e) {
-			LOGGER.warn("doGet(): Invalid page argument", e);
-			currentPage = 1;
-		}
-		request.setAttribute("currentPage", currentPage);
-		
-		// Page parameters
-		long offset = (currentPage - 1) * nbResultsPerPage;
-		
-		// Fetching search parameters
-		String searchQuery = request.getParameter("search");
-		if ("%".equals(searchQuery)) {
-			searchQuery = "";
-		}
-		
-		// Fetching sorting parameters
-		String uSortBy = request.getParameter("sortBy");
-		String uSortOrder = request.getParameter("order");
-		
-		CompanyPageRequest pageRequest = new CompanyPageRequest.Builder()
-		                                                          .sortOrder(uSortOrder)
-		                                                          .sortCriterion(uSortBy)
-		                                                          .searchQuery(searchQuery)
-		                                                          .offset(offset)
-		                                                          .nbRequested(nbResultsPerPage)
-		                                                          .build();
-		
-		
-		if( searchQuery != null && !searchQuery.isEmpty() ) {
-			searchWrapper = mCompanyService.findByName(pageRequest);
-		} else {
-			searchWrapper = mCompanyService.findAll(pageRequest);
-		}
-		
-		request.setAttribute("searchWrapper", searchWrapper);
-		
-		RequestDispatcher rd = getServletContext().getRequestDispatcher(response.encodeURL("/WEB-INF/views/companies.jsp"));
-		rd.forward(request, response);
-	}
+    SearchWrapper<Company> searchWrapper;
+
+    long nbResultsPerPage = AppSettings.NB_RESULTS_PAGE;
+
+    long currentPage = requestModel.getCurrentPage();
+    if (currentPage < 1) {
+      currentPage = 1;
+    }
+
+    // Page parameters
+    long offset = (currentPage - 1) * nbResultsPerPage;
+
+    // Fetching search parameters
+    String searchQuery = requestModel.getSearchQuery();
+    if ("%".equals(searchQuery)) {
+      searchQuery = "";
+    }
+
+    CompanyPageRequest pageRequest = new CompanyPageRequest.Builder()
+        .sortOrder(requestModel.getOrder())
+        .sortCriterion(requestModel.getSortBy())
+        .searchQuery(searchQuery)
+        .offset(offset)
+        .nbRequested(nbResultsPerPage)
+        .build();
+
+    if (searchQuery != null && !searchQuery.isEmpty()) {
+      searchWrapper = mCompanyService.findByName(pageRequest);
+    } else {
+      searchWrapper = mCompanyService.findAll(pageRequest);
+    }
+
+    map.addAttribute("searchWrapper", searchWrapper);
+
+    return "companies";
+  }
 
 }

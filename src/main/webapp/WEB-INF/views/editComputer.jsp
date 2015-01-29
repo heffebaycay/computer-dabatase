@@ -66,7 +66,7 @@
                                     				</c:if>
                                     			</c:when>
                                     			<c:otherwise>
-                                    				<c:if test="${ computer.company != null && company.id == computer.company.id }">
+                                    				<c:if test="${ company.id == computer.companyId }">
                                     					selected="selected"
                                     				</c:if>
                                     			</c:otherwise>

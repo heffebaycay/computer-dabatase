@@ -1,19 +1,18 @@
 package fr.heffebaycay.cdb.dto;
 
-import java.io.Serializable;
 
 public class ComputerDTO implements IObjectDTO {
   
   
-  protected long id;
+  private long id;
   
-  protected String name;
+  private String name;
   
-  protected String introduced;
+  private String introduced;
   
-  protected String discontinued;
+  private String discontinued;
   
-  protected CompanyDTO company;
+  private Long companyId;
   
   public ComputerDTO() {
     
@@ -35,6 +34,10 @@ public class ComputerDTO implements IObjectDTO {
   public void setName(String name) {
     this.name = name;
   }
+  
+  public void setComputerName(String name) {
+    this.name = name;
+  }
 
   public String getIntroduced() {
     return introduced;
@@ -51,15 +54,14 @@ public class ComputerDTO implements IObjectDTO {
   public void setDiscontinued(String discontinued) {
     this.discontinued = discontinued;
   }
-
-  public CompanyDTO getCompany() {
-    return company;
-  }
-
-  public void setCompany(CompanyDTO company) {
-    this.company = company;
-  }
   
+  public Long getCompanyId() {
+    return companyId;
+  }
+
+  public void setCompanyId(Long companyId) {
+    this.companyId = companyId;
+  }
   
   public static class Builder {
     
@@ -89,8 +91,8 @@ public class ComputerDTO implements IObjectDTO {
       return this;
     }
     
-    public Builder company(CompanyDTO company) {
-      computerDTO.setCompany(company);
+    public Builder companyId(Long companyId) {
+      computerDTO.setCompanyId(companyId);
       return this;
     }
     

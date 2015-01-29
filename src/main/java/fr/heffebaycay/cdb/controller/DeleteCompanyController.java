@@ -13,35 +13,28 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import fr.heffebaycay.cdb.service.ICompanyService;
 
-/**
- * Servlet implementation class DeleteCompanyController
- */
-@WebServlet("/companies/delete")
-public class DeleteCompanyController extends AbstractSpringHttpServlet {
-  private static final long serialVersionUID = 1L;
+
+@Controller
+@RequestMapping("/companies/delete")
+public class DeleteCompanyController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DeleteCompanyController.class);
   
   @Autowired
   private ICompanyService mCompanyService;
   
-  /**
-   * @see HttpServlet#HttpServlet()
-   */
   public DeleteCompanyController() {
     super();
   }
 
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-
-    String selection = request.getParameter("selection");
+  @RequestMapping(method = RequestMethod.POST)
+  protected String doPost(String selection) {
 
     String[] strCompanyIds = selection.split(",");
     List<Long> companyIds = new ArrayList<>();
@@ -53,7 +46,8 @@ public class DeleteCompanyController extends AbstractSpringHttpServlet {
         
       } catch(NumberFormatException e) {
         LOGGER.warn("doPost(): Invalid number sent by user.", e);
-        response.sendError(response.SC_BAD_REQUEST, "");
+        // response.sendError(response.SC_BAD_REQUEST, "");
+        // 500 ?
       }
     }
     
@@ -61,8 +55,7 @@ public class DeleteCompanyController extends AbstractSpringHttpServlet {
       mCompanyService.remove(id);
     }
     
-    
-    response.sendRedirect(request.getContextPath() + "/companies/list?msg=removeSuccess");
+    return "redirect:/companies/list?msg=removeSuccess";
 
   }
 

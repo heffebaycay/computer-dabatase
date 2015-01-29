@@ -34,7 +34,6 @@ public class ComputerDTOValidator implements IDTOValidator<ComputerDTO> {
     validateDiscontinued(computerDTO.getDiscontinued(), errors);
     
     CompanyDTOValidator companyValidator = new CompanyDTOValidator();
-    companyValidator.validate(computerDTO.getCompany(), errors);
     
     return errors.isEmpty();
   }

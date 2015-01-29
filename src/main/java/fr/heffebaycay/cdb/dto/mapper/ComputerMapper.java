@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.dto.ComputerDTO;
+import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 
 public class ComputerMapper {
@@ -16,7 +17,7 @@ public class ComputerMapper {
   private ComputerMapper() {
     super();
   }
-  
+
   /**
    * Converts a Computer DAO object to is DTO version 
    * 
@@ -30,19 +31,22 @@ public class ComputerMapper {
     }
 
     ComputerDTO.Builder builder = new ComputerDTO.Builder();
-    
+
+    Long companyId = 0L;
+    if (computerDAO.getCompany() != null) {
+      companyId = computerDAO.getCompany().getId();
+    }
+
     builder
-      .id(computerDAO.getId())
-      .name(computerDAO.getName())
-      .introduced( LocalDateTimeMapper.toDTO(computerDAO.getIntroduced()) )
-      .discontinued(LocalDateTimeMapper.toDTO(computerDAO.getDiscontinued()))
-      .company(CompanyMapper.toDTO(computerDAO.getCompany()))
-      ;
-    
+        .id(computerDAO.getId())
+        .name(computerDAO.getName())
+        .introduced(LocalDateTimeMapper.toDTO(computerDAO.getIntroduced()))
+        .discontinued(LocalDateTimeMapper.toDTO(computerDAO.getDiscontinued()))
+        .companyId(companyId);
+
     return builder.build();
 
   }
-
 
   /**
    * Converts a List of Computer to a List of ComputerDTO objects.
@@ -51,15 +55,15 @@ public class ComputerMapper {
    * @return                A List of ComputerDTO objects, or <strong>null</strong> if <strong>computers</strong> is null.
    */
   public static List<ComputerDTO> toDTO(List<Computer> computers) {
-    
-    if(computers == null) {
+
+    if (computers == null) {
       return null;
     }
-    
+
     return computers.stream().map(c -> toDTO(c)).collect(Collectors.toList());
-    
+
   }
-  
+
   /**
    * Converts a ComputerDTO object to its DAO version
    * 
@@ -67,19 +71,21 @@ public class ComputerMapper {
    * @return                An instance of <i>Computer</i>, or <strong>null</strong> if <strong>computerDTO</strong> is null.
    */
   public static Computer fromDTO(ComputerDTO computerDTO) {
-   
-    if(computerDTO == null) {
+
+    if (computerDTO == null) {
       return null;
     }
     
     Computer computer = new Computer.Builder()
-                                        .id(computerDTO.getId())
-                                        .name(computerDTO.getName())
-                                        .introduced(LocalDateTimeMapper.fromLocalDate(LocalDateMapper.fromDTO(computerDTO.getIntroduced())))
-                                        .discontinued(LocalDateTimeMapper.fromLocalDate(LocalDateMapper.fromDTO(computerDTO.getDiscontinued())))
-                                        .company(CompanyMapper.fromDTO(computerDTO.getCompany()))
-                                        .build();
-    
+        .id(computerDTO.getId())
+        .name(computerDTO.getName())
+        .introduced(
+            LocalDateTimeMapper.fromLocalDate(LocalDateMapper.fromDTO(computerDTO.getIntroduced())))
+        .discontinued(
+            LocalDateTimeMapper.fromLocalDate(LocalDateMapper.fromDTO(computerDTO.getDiscontinued())))
+        .company(new Company.Builder().id(computerDTO.getCompanyId()).build())
+        .build();
+
     return computer;
   }
 
@@ -90,19 +96,18 @@ public class ComputerMapper {
    * @param computerDTO
    */
   public static void updateDAO(Computer computer, ComputerDTO computerDTO) {
-    
-    if(computer == null || computerDTO == null) {
+
+    if (computer == null || computerDTO == null) {
       return;
     }
-    
+
     Computer localComputer = fromDTO(computerDTO);
-    
+
     computer.setName(localComputer.getName());
     computer.setIntroduced(localComputer.getIntroduced());
     computer.setDiscontinued(localComputer.getDiscontinued());
     computer.setCompany(localComputer.getCompany());
-    
+
   }
-  
-  
+
 }
