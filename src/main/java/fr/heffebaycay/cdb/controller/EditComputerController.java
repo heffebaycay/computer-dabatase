@@ -22,6 +22,7 @@ import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.IComputerService;
+import fr.heffebaycay.cdb.web.exception.ComputerNotFoundException;
 
 @Controller
 @RequestMapping("/computers/edit")
@@ -61,7 +62,7 @@ public class EditComputerController {
     if (computerDTO == null) {
       // Unable to find any computer based on the given Id
       LOGGER.warn("doGet() : Inexisting computer requested by user");
-      // 500 / 400 ?
+      throw new ComputerNotFoundException();
     }
 
     List<CompanyDTO> companies = CompanyMapper.toDTO(mCompanyService.findAll());

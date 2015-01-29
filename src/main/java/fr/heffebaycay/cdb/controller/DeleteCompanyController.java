@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import fr.heffebaycay.cdb.service.ICompanyService;
+import fr.heffebaycay.cdb.web.exception.InvalidCompanyException;
 
 
 @Controller
@@ -46,8 +47,7 @@ public class DeleteCompanyController {
         
       } catch(NumberFormatException e) {
         LOGGER.warn("doPost(): Invalid number sent by user.", e);
-        // response.sendError(response.SC_BAD_REQUEST, "");
-        // 500 ?
+        throw new InvalidCompanyException();
       }
     }
     

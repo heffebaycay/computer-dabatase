@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import fr.heffebaycay.cdb.service.IComputerService;
+import fr.heffebaycay.cdb.web.exception.InvalidComputerException;
 
 @Controller
 @RequestMapping("/computers/delete")
@@ -49,8 +50,7 @@ public class DeleteComputerController {
         computerIds.add(computerId);
       } catch (NumberFormatException e) {
         LOGGER.warn("doPost(): Invalid number sent by user. {}", e);
-        //response.sendError(response.SC_BAD_REQUEST, "");
-        // 400
+        throw new InvalidComputerException();
       }
 
     }
