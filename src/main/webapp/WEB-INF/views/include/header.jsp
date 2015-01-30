@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -15,6 +16,20 @@
 	<body>
 		<header class="navbar navbar-inverse navbar-fixed-top">
         	<div class="container">
-            	<a class="navbar-brand" href="<c:url value="/" />"> Application - Computer Database </a>
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="<c:url value="/" />"> Application - Computer Database </a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><spring:message code="header.lang_dropdown" /><span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="?lang=fr"><img src="<c:url value="/png/fr.png" />" />  <spring:message code="header.lang_french" /></a></li>
+                                <li><a href="?lang=en"><img src="<c:url value="/png/gb.png" />" />  <spring:message code="header.lang_english" /></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                </div>
         	</div>
     	</header>
