@@ -14,27 +14,25 @@
                     <div class="label label-default pull-right">
                         id: ${ computer.id }
                     </div>
-                    <h1>Edit Computer</h1>
+                    <h1><spring:message code="computer_form.edit_computer_title"/></h1>
                    
                    <c:if test="${ msgValidationFailed == true }">
                         <div id="msgErrors" class="alert alert-danger">
                             <p>
-                                <strong>Oh snap!</strong> It seems you left some mistakes on our sweet form.
-                                <br />
-                                Please refer to the error messages located next to each invalid form entry.
+                                <spring:message code="computer_form.validation_failed_msg" arguments="<strong>,</strong>,<br />" />
                             </p>
                         </div>
                    </c:if>
                    <c:if test="${ msgSuccess == true }">
                         <div id="msgComputerUpdated" class="alert alert-success">
                             <p>
-                                <strong>Success!</strong> Your modifications were saved successfully.
+                                <spring:message code="computer_form.update_success_msg" arguments="<strong>,</strong>" />
                             </p>
                         </div>
                    </c:if>
                    <c:if test="${ bAddSuccess != null && bAddSuccess == true }">
                    		<div id="msgComputerAdded" class="alert alert-success">
-                   			<strong>Success!</strong> Computer was added successfully. Feel free to take a moment to check for any typo!
+                            <spring:message code="computer_form.creation_success_msg" arguments="<strong>,</strong>,<br />" />
                    		</div>
                    </c:if>
                    
@@ -43,37 +41,40 @@
                    <form:form action="${ formAction }" method="POST" modelAttribute="computerDTO">
                         <fieldset>
                             <div class="form-group">
-                                <label for="computerName">Computer name</label>
+                                <label for="computerName"><spring:message code="computer_form.name_label" /></label>
                                 <c:choose>
                                     <c:when test="${ computerNameValue == null }">
                                         <c:set var="computerNameValue" value="${ computer.name }" />
                                     </c:when>
                                 </c:choose>
-                                <form:input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" path="name" value="${ computerNameValue }" />
+                                <spring:message code="computer_form.name_placeholder" var="name_placeholder" />
+                                <form:input type="text" class="form-control" id="computerName" name="computerName" placeholder="${ name_placeholder }" path="name" value="${ computerNameValue }" />
                                 <form:errors path="name" cssClass="error"></form:errors>
                             </div>
                             <div class="form-group">
-                                <label for="introduced">Introduced date</label>
+                                <label for="introduced"><spring:message code="computer_form.introduced_label" /></label>
                                 <c:choose>
                                     <c:when test="${ dateIntroducedValue == null }">
                                         <c:set var="dateIntroducedValue" value="${ computer.introduced }" />
                                     </c:when>
                                 </c:choose>
-                                <form:input type="text" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" path="introduced" value="${ dateIntroducedValue }" />
+                                <spring:message code="computer_form.introduced_placeholder" var="introduced_placeholder"/>
+                                <form:input type="text" class="form-control" id="introduced" name="introduced" placeholder="${ introduced_placeholder }" path="introduced" value="${ dateIntroducedValue }" />
                                 <form:errors path="introduced" cssClass="error"></form:errors>
                             </div>
                             <div class="form-group">
-                                <label for="discontinued">Discontinued date</label>
+                                <label for="discontinued"><spring:message code="computer_form.discontinued_label" /></label>
                                 <c:choose>
                                     <c:when test="${ dateDiscontinuedValue == null }">
                                         <c:set var="dateDiscontinuedValue" value="${ computer.discontinued }" />
                                     </c:when>
                                 </c:choose>
-                                <form:input type="text" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" path="discontinued" value="${ dateDiscontinuedValue }" />
+                                <spring:message code="computer_form.discontinued_placeholder" var="discontinued_placeholder"/>
+                                <form:input type="text" class="form-control" id="discontinued" name="discontinued" placeholder="${ discontinued_placeholder }" path="discontinued" value="${ dateDiscontinuedValue }" />
                                 <form:errors path="discontinued" cssClass="error"></form:errors>
                             </div>
                             <div class="form-group">
-                                <label for="companyId">Company</label>
+                                <label for="companyId"><spring:message code="computer_form.company_label" /></label>
                                 <form:select class="form-control" id="companyId" name="companyId" path="companyId">
                                     <form:option value="-1">--</form:option>
                                     <c:forEach items="${ companies }" var="company">
@@ -106,9 +107,9 @@
                         </fieldset>
                         <div class="actions pull-right">
                             <input type="hidden" name="computerId" id="computerId" value="${ computer.id }" />
-                            <input type="submit" value="Edit" class="btn btn-primary">
+                            <input type="submit" value="<spring:message code="computer_form.edit_button" />" class="btn btn-primary">
                             or
-                            <a href="<c:url value="/" />" class="btn btn-default">Cancel</a>
+                            <a href="<c:url value="/" />" class="btn btn-default"><spring:message code="computer_form.cancel_button" /></a>
                         </div>
                    </form:form>
                 </div>

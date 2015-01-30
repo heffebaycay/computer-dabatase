@@ -3,13 +3,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="u" uri="/WEB-INF/utils.tld" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 .
 <jsp:include page="include/header.jsp" />
 
 <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                ${searchWrapper.totalCount} Computers found
+                <spring:message code="dashboard.n_computers_msg" arguments="${searchWrapper.totalCount}" />
             </h1>
             
             <c:if test="${ bRemoveSuccess == true }">
@@ -22,14 +23,15 @@
                 <div class="pull-left">
                     <form id="searchForm" action="#" method="GET" class="form-inline">
 
-                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" />
-                        <input type="submit" id="searchsubmit" value="Filter by name"
-                        class="btn btn-primary" />
+                        <spring:message code="dashboard.search_placeholder" var="search_placeholder" />
+                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="${ search_placeholder }" />
+                        <spring:message code="dashboard.search_filter_button" var="search_filter_button" />
+                        <input type="submit" id="searchsubmit" value="${ search_filter_button }" class="btn btn-primary" />
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="<c:url value="/computers/add" />">Add Computer</a> 
-                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
+                    <a class="btn btn-success" id="addComputer" href="<c:url value="/computers/add" />"><spring:message code="dashboard.add_computer_button" /></a> 
+                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message code="dashboard.edit_button" /></a>
                 </div>
             </div>
         </div>
@@ -54,18 +56,18 @@
                             </span>
                         </th>
                         <th>
-                            Computer name <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'name', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'name', 'desc') }" />">D</a>
+                            <spring:message code="dashboard.name_label" /> <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'name', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'name', 'desc') }" />">D</a>
                         </th>
                         <th>
-                            Introduced date <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'introduced', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'introduced', 'desc') }" />">D</a>
+                            <spring:message code="dashboard.introduced_label" /> <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'introduced', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'introduced', 'desc') }" />">D</a>
                         </th>
                         <!-- Table header for Discontinued Date -->
                         <th>
-                            Discontinued date <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'discontinued', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'discontinued', 'desc') }" />">D</a>
+                            <spring:message code="dashboard.discontinued_label" /> <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'discontinued', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'discontinued', 'desc') }" />">D</a>
                         </th>
                         <!-- Table header for Company -->
                         <th>
-                            Company <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'company', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'company', 'desc') }" />">D</a>
+                            <spring:message code="dashboard.company_label" /> <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'company', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'company', 'desc') }" />">D</a>
                         </th>
 
                     </tr>
