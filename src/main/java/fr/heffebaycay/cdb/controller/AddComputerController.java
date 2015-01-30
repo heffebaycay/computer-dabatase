@@ -93,6 +93,7 @@ public class AddComputerController {
         }
       }
       
+      map.addAttribute("msgValidationFailed", true);
       
       //return "addComputer";
       return doGet(computerDTO, map);

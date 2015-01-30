@@ -16,24 +16,22 @@
                     </div>
                     <h1>Edit Computer</h1>
                    
-                   <c:if test="${ errors != null }">
-                   	<c:choose>
-                   		<c:when test="${ errors.size() > 0 }">
-                   			<div id="msgErrors" class="alert alert-danger">
-                   				<strong>Oh snap!</strong> It seems you left some mistakes on our sweet form.
-                   				<c:forEach items="${ errors }" var="error">
-                   					<p>${ error }</p>
-                   				</c:forEach>
-                   			</div>
-                   		</c:when>
-                   		<c:otherwise>
-                   			<div id="msgComputerUpdated" class="alert alert-success">
-                   				<strong>Success!</strong> Your modifications were saved successfully.
-                   			</div>
-                   		</c:otherwise>
-                   	</c:choose>
+                   <c:if test="${ msgValidationFailed == true }">
+                        <div id="msgErrors" class="alert alert-danger">
+                            <p>
+                                <strong>Oh snap!</strong> It seems you left some mistakes on our sweet form.
+                                <br />
+                                Please refer to the error messages located next to each invalid form entry.
+                            </p>
+                        </div>
                    </c:if>
-                   
+                   <c:if test="${ msgSuccess == true }">
+                        <div id="msgComputerUpdated" class="alert alert-success">
+                            <p>
+                                <strong>Success!</strong> Your modifications were saved successfully.
+                            </p>
+                        </div>
+                   </c:if>
                    <c:if test="${ bAddSuccess != null && bAddSuccess == true }">
                    		<div id="msgComputerAdded" class="alert alert-success">
                    			<strong>Success!</strong> Computer was added successfully. Feel free to take a moment to check for any typo!

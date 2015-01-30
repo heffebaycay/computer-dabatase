@@ -12,12 +12,13 @@
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <h1>Add computer</h1>
                    
-                   <c:if test="${ errors != null && errors.size() > 0}">
+                   <c:if test="${ msgValidationFailed == true}">
 	                   	<div class="alert alert-danger" id="msgErrors">
-	             			<strong>Oh snap!</strong> It seems you left some mistakes on our sweet form.
-	             			<c:forEach items="${ errors }" var="error">
-	             				<p>${ error }</p>
-	             			</c:forEach>
+	             			<p>
+                                <strong>Oh snap!</strong> It seems you left some mistakes on our sweet form.
+                                <br />
+                                Please refer to the error messages located next to each invalid form entry.
+                            </p>
 	             		</div>
                    </c:if>
                    

@@ -43,7 +43,8 @@ public class EditComputerController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  protected String doGet(Long id, @RequestParam(required = false) String msg, ComputerDTO computerDTO, ModelMap map) {
+  protected String doGet(Long id, @RequestParam(required = false) String msg,
+      ComputerDTO computerDTO, ModelMap map) {
 
     LOGGER.debug("Received call to EditComputerController::doGet()");
 
@@ -77,7 +78,8 @@ public class EditComputerController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  protected String doPost(@Valid ComputerDTO computerDTO, BindingResult result, ModelMap map, RedirectAttributes redirectAttrs) {
+  protected String doPost(@Valid ComputerDTO computerDTO, BindingResult result, ModelMap map,
+      RedirectAttributes redirectAttrs) {
 
     LOGGER.debug("Received call to EditComputerController:doPost()");
 
@@ -87,7 +89,7 @@ public class EditComputerController {
     if (computer == null) {
       LOGGER.warn("doPost() :: User supplied an Id for a non-existing computer.");
       // 40X ?
-      
+
     }
 
     // Storing given value in case something goes wrong and we need to display it back to the user
@@ -106,23 +108,26 @@ public class EditComputerController {
         result.addError(new ObjectError("companyId", "Selected company does not exist"));
       }
     }
-    
-    if(result.hasErrors()) {
+
+    if (result.hasErrors()) {
       // Validation failed
       LOGGER.debug("doPost(): ComputerDTO has errors [JSR 303 Validation]");
-      
-      if(LOGGER.isDebugEnabled()) {
-        for(ObjectError error : result.getAllErrors()) {
+
+      if (LOGGER.isDebugEnabled()) {
+        for (ObjectError error : result.getAllErrors()) {
           LOGGER.debug("doPost(): JSR 303 Validation error: {}", error.getDefaultMessage());
         }
+        map.addAttribute("msgValidationFailed", true);
       }
-      
-      return doGet(computerDTO.getId(), null, computerDTO, map); 
-      
+
+      return doGet(computerDTO.getId(), null, computerDTO, map);
+
     } else {
       // Validation succeeded
+      map.addAttribute("msgSuccess", true);
+
       ComputerMapper.updateDAO(computer, computerDTO);
-      
+
       computer.setCompany(company);
       mComputerService.update(computer);
     }
