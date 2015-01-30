@@ -97,6 +97,14 @@
                 </tbody>
             </table>
         </div>
+        
+        <script type="text/javascript">
+        	var strings = new Array();
+        	strings['delete_confirm_msg'] = "<spring:message code='dashboard.delete_confirm_msg' />";
+        	strings['view_button'] = "<spring:message code='dashboard.view_button' />";
+        	strings['edit_button'] = "<spring:message code='dashboard.edit_button' />";
+        </script>
+        
     </section>
 
     <footer class="navbar-fixed-bottom">

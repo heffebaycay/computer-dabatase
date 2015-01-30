@@ -12,14 +12,14 @@ public class ComputerDTO implements IObjectDTO {
   
   private long id;
   
-  @NotBlank(message = "Computer name cannot neither null nor empty")
-  @Size(min = 1, max = 255, message = "Computer name length must be between {min} and {max} characters")
+  @NotBlank(message = "{computer_dto.name_not_blank}")
+  @Size(min = 1, max = 255, message = "{computer_dto.name_length}")
   private String name;
   
-  @LocalDateFormat(message = "Invalid Date Introduced. Correct pattern is {pattern}")
+  @LocalDateFormat(message = "{computer_dto.date_introduced_format}")
   private String introduced;
   
-  @LocalDateFormat(message = "Invalid Date Discontinued. Correct pattern is {pattern}")
+  @LocalDateFormat(message = "{computer_dto.date_discontinued_format}")
   private String discontinued;
   
   private Long companyId;
