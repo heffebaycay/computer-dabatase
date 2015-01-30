@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>computer-database</groupId>
   <artifactId>computer-database</artifactId>
-  <version>0.2.2-BETA</version>
+  <version>0.2.2</version>
   <name>Computer Database</name>
   <packaging>war</packaging>
   <properties>
