@@ -1,5 +1,7 @@
 package fr.heffebaycay.cdb.dto;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -7,9 +9,14 @@ import org.hibernate.validator.constraints.NotBlank;
 import fr.heffebaycay.cdb.dto.validator.LocalDateFormat;
 
 
-public class ComputerDTO implements IObjectDTO {
+public class ComputerDTO implements Serializable {
   
   
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 163956444219807087L;
+
   private long id;
   
   @NotBlank(message = "{computer_dto.name_not_blank}")

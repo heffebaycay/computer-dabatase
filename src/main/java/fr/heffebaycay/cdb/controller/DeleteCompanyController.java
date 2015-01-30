@@ -13,16 +13,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.web.exception.InvalidCompanyException;
 
-
 @Controller
 @RequestMapping("/companies/delete")
 public class DeleteCompanyController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DeleteCompanyController.class);
-  
+
   @Autowired
-  private ICompanyService mCompanyService;
-  
+  private ICompanyService     mCompanyService;
+
   public DeleteCompanyController() {
     super();
   }
@@ -37,17 +36,17 @@ public class DeleteCompanyController {
       try {
         long companyId = Long.parseLong(strCompanyIds[i]);
         companyIds.add(companyId);
-        
-      } catch(NumberFormatException e) {
+
+      } catch (NumberFormatException e) {
         LOGGER.warn("doPost(): Invalid number sent by user.", e);
         throw new InvalidCompanyException();
       }
     }
-    
-    for(Long id : companyIds) {
+
+    for (Long id : companyIds) {
       mCompanyService.remove(id);
     }
-    
+
     return "redirect:/companies/list?msg=removeSuccess";
 
   }

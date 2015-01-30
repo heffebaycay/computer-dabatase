@@ -2,10 +2,21 @@ package fr.heffebaycay.cdb.dto;
 
 import java.io.Serializable;
 
-public class CompanyDTO implements IObjectDTO {
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
+
+public class CompanyDTO implements Serializable {
   
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -3227468289968810021L;
+
   protected long id;
   
+  @NotBlank
+  @Size(min = 1, max = 255)
   protected String name;
   
   public CompanyDTO() {

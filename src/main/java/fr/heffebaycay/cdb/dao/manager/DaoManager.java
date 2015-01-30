@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
 
-import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
-import fr.heffebaycay.cdb.util.AppSettings;
-
 /**
  * The <i>DaoManager</i> object can be used to access the various objects that
  * allow some CRUD actions on the <i>Computer</i> and <i>Company</i> objects 

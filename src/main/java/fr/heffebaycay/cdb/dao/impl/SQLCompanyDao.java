@@ -25,9 +25,8 @@ public class SQLCompanyDao implements ICompanyDao {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLCompanyDao.class);
 
-  
-  private JdbcTemplate jdbcTemplate;
-    
+  private JdbcTemplate        jdbcTemplate;
+
   @Autowired
   public SQLCompanyDao(JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
@@ -40,7 +39,8 @@ public class SQLCompanyDao implements ICompanyDao {
   public List<Company> findAll() throws DaoException {
 
     final String query = "SELECT id, name FROM company";
-    List<Company> companies = jdbcTemplate.query(query, new Object[] { }, new CompanyMySQLRowMapper());
+    List<Company> companies = jdbcTemplate.query(query, new Object[] {},
+        new CompanyMySQLRowMapper());
 
     return companies;
 
@@ -51,18 +51,18 @@ public class SQLCompanyDao implements ICompanyDao {
    */
   @Override
   public Company findById(long id) throws DaoException {
-    
+
     Company company = null;
 
     String query = "SELECT id, name FROM company WHERE id = ?";
-    
+
     try {
       company = jdbcTemplate.queryForObject(query, new CompanyMySQLRowMapper(), id);
-    } catch(IncorrectResultSizeDataAccessException e) {
+    } catch (IncorrectResultSizeDataAccessException e) {
       LOGGER.warn("findById(): No result for id {}: {}", id, e);
       throw new DaoException(e);
     }
-    
+
     return company;
 
   }
@@ -72,14 +72,14 @@ public class SQLCompanyDao implements ICompanyDao {
    */
   @Override
   public SearchWrapper<Company> findAll(CompanyPageRequest request) throws DaoException {
-    
-    if(request == null) {
+
+    if (request == null) {
       throw new DaoException("CompanyPageRequest parameter cannot be null");
     }
-    
+
     SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
     List<Company> companies = new ArrayList<Company>();
-    
+
     searchWrapper.setSortOrder(request.getSortOrder().getName());
     searchWrapper.setSortCriterion(request.getSortCriterion().getName());
 
@@ -101,21 +101,23 @@ public class SQLCompanyDao implements ICompanyDao {
     Long count;
     try {
       count = jdbcTemplate.queryForObject(countQuery, Long.class);
-    } catch(IncorrectResultSizeDataAccessException e) {
+    } catch (IncorrectResultSizeDataAccessException e) {
       LOGGER.warn("findAll(request): Incorrect countQuery result: {}", e);
       throw new DaoException(e);
     }
     searchWrapper.setTotalCount(count);
-    
+
     // Current Page
     long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
     searchWrapper.setCurrentPage(currentPage);
-    
+
     // Total page
-    long totalPage = (long) Math.ceil(searchWrapper.getTotalCount() * 1.0 / request.getNbRequested());
+    long totalPage = (long) Math.ceil(searchWrapper.getTotalCount() * 1.0
+        / request.getNbRequested());
     searchWrapper.setTotalPage(totalPage);
-    
-    companies = jdbcTemplate.query(query, new CompanyMySQLRowMapper(), request.getOffset(), request.getNbRequested());
+
+    companies = jdbcTemplate.query(query, new CompanyMySQLRowMapper(), request.getOffset(),
+        request.getNbRequested());
     searchWrapper.setResults(companies);
 
     return searchWrapper;
@@ -124,14 +126,14 @@ public class SQLCompanyDao implements ICompanyDao {
   @Override
   public void create(Company company) throws DaoException {
     String query = "INSERT INTO company(name) VALUES(?)";
-    
+
     try {
       jdbcTemplate.update(query, company.getName());
-    } catch(DataAccessException e) {
+    } catch (DataAccessException e) {
       LOGGER.warn("create(): failed to create Company: {}", e);
       throw new DaoException("create(): failed to create Company", e);
     }
-    
+
   }
 
   /**
@@ -139,17 +141,17 @@ public class SQLCompanyDao implements ICompanyDao {
    */
   @Override
   public int remove(long id) throws DaoException {
-    
+
     String removeCompanyQuery = "DELETE FROM company WHERE id = ?";
-    
+
     int nbCompany;
     try {
       nbCompany = jdbcTemplate.update(removeCompanyQuery, id);
-    } catch(DataAccessException e) {
+    } catch (DataAccessException e) {
       LOGGER.warn("remove(): failed to remove Company: {}", e);
       throw new DaoException("remove(): failed to remove Company", e);
     }
-    
+
     return nbCompany;
   }
 
@@ -181,20 +183,20 @@ public class SQLCompanyDao implements ICompanyDao {
 
   @Override
   public SearchWrapper<Company> findByName(CompanyPageRequest request) throws DaoException {
-    
-    if(request == null) {
+
+    if (request == null) {
       throw new DaoException("CompanyPageRequest parameter cannot be null");
     }
-    
+
     SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
     List<Company> companies = new ArrayList<Company>();
-    
+
     searchWrapper.setSearchQuery(request.getSearchQuery());
     searchWrapper.setSortOrder(request.getSortOrder().getName());
     searchWrapper.setSortCriterion(request.getSortCriterion().getName());
-    
 
-    if (request.getSearchQuery() == null || request.getSearchQuery().isEmpty() || request.getOffset() < 0 || request.getNbRequested() <= 0) {
+    if (request.getSearchQuery() == null || request.getSearchQuery().isEmpty()
+        || request.getOffset() < 0 || request.getNbRequested() <= 0) {
       searchWrapper.setResults(companies);
       searchWrapper.setCurrentPage(0);
       searchWrapper.setTotalPage(0);
@@ -202,8 +204,6 @@ public class SQLCompanyDao implements ICompanyDao {
 
       return searchWrapper;
     }
-
-    
 
     String orderPart = generateOrderPart("c", request.getSortCriterion(), request.getSortOrder());
 
@@ -215,30 +215,32 @@ public class SQLCompanyDao implements ICompanyDao {
     String searchKeyword = request.getSearchQuery().replace("%", "\\%");
     searchKeyword = String.format("%%%s%%", searchKeyword);
     LOGGER.debug(String.format("findByName(): Keyword={%s}", searchKeyword));
-    
+
     Long count;
     try {
       count = jdbcTemplate.queryForObject(countQuery, Long.class, searchKeyword);
       searchWrapper.setTotalCount(count);
-      
+
       // Current Page
       long currentPage = (long) Math.ceil(request.getOffset() * 1.0 / request.getNbRequested()) + 1;
       searchWrapper.setCurrentPage(currentPage);
-      
+
       // Total Page
-      long totalPage = (long) Math.ceil(searchWrapper.getTotalCount() * 1.0 / request.getNbRequested());
+      long totalPage = (long) Math.ceil(searchWrapper.getTotalCount() * 1.0
+          / request.getNbRequested());
       searchWrapper.setTotalPage(totalPage);
-      
-      companies = jdbcTemplate.query(query, new CompanyMySQLRowMapper(), searchKeyword, request.getOffset(), request.getNbRequested());
+
+      companies = jdbcTemplate.query(query, new CompanyMySQLRowMapper(), searchKeyword,
+          request.getOffset(), request.getNbRequested());
       searchWrapper.setResults(companies);
-    } catch(IncorrectResultSizeDataAccessException e) {
+    } catch (IncorrectResultSizeDataAccessException e) {
       LOGGER.warn("findbyName(): Incorrect countQuery result: {}", e);
       throw new DaoException("findByName(): Incorrect countQuery result", e);
-    } catch(DataAccessException e) {
+    } catch (DataAccessException e) {
       LOGGER.warn("findByName(): Failed to issue DB query: {}", e);
       throw new DaoException("findByName(): Failed to issue DB query", e);
     }
-    
+
     return searchWrapper;
   }
 

@@ -4,8 +4,6 @@ import java.util.List;
 
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
-import fr.heffebaycay.cdb.util.ComputerSortCriteria;
-import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public interface IComputerService {

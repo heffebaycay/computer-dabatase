@@ -61,7 +61,7 @@
                         </fieldset>
                         <div class="actions pull-right">
                             <input type="submit" value="<spring:message code="computer_form.add_button" />" class="btn btn-primary" id="submit">
-                            or
+                            <spring:message value="computer_form.button_separator" />
                             <a href="<c:url value="/" />" class="btn btn-default"><spring:message code="computer_form.cancel_button" /></a>
                         </div>
                    </form:form>

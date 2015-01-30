@@ -1,13 +1,10 @@
 package fr.heffebaycay.cdb.dao;
 
-import java.sql.Connection;
 import java.util.List;
 
 import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
-import fr.heffebaycay.cdb.util.CompanySortCriteria;
-import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public interface ICompanyDao {

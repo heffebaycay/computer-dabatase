@@ -87,14 +87,14 @@ public class AddComputerController {
     if (result.hasErrors()) {
       LOGGER.debug("doPost(): ComputerDTO has errors [JSR 303 Validation].");
 
-      if(LOGGER.isDebugEnabled()) {
+      if (LOGGER.isDebugEnabled()) {
         for (ObjectError error : result.getAllErrors()) {
           LOGGER.debug("doPost(): JSR 303 Validation: {}", error.getDefaultMessage());
         }
       }
-      
+
       map.addAttribute("msgValidationFailed", true);
-      
+
       //return "addComputer";
       return doGet(computerDTO, map);
     } else {

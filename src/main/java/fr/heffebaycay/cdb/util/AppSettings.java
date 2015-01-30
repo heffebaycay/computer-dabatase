@@ -3,10 +3,8 @@ package fr.heffebaycay.cdb.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -15,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import fr.heffebaycay.cdb.dao.exception.ConfigFileException;
 import fr.heffebaycay.cdb.model.Route;
-import fr.heffebaycay.cdb.taglib.Utils;
 
 public class AppSettings {
 

@@ -23,14 +23,14 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 public class ComputerCLIUI {
 
   @Autowired
-  IComputerService computerService;
+  IComputerService            computerService;
   @Autowired
-  ICompanyService  companyService;
+  ICompanyService             companyService;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ComputerCLIUI.class.getSimpleName());
-  
+
   public ComputerCLIUI() {
-    
+
   }
 
   /**
@@ -108,7 +108,7 @@ public class ComputerCLIUI {
       System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
       return;
     }
-    
+
     System.out.println("On what date was the computer introduced (format: year-month-day)?");
     String introduced = sc.nextLine();
 
@@ -155,7 +155,7 @@ public class ComputerCLIUI {
 
       computer.setCompany(company);
 
-    } else if(companyId > 0) {
+    } else if (companyId > 0) {
       // Need to fetch company with requested Id
       Company company = companyService.findById(companyId);
       if (company == null) {
@@ -213,13 +213,13 @@ public class ComputerCLIUI {
 
     if (introduced != null && introduced.length() > 0) {
       // User typed something
-      if ( "null".equals(introduced) ) {
+      if ("null".equals(introduced)) {
         computer.setIntroduced((LocalDateTime) null);
       } else {
         try {
           computer.setIntroduced(introduced);
         } catch (IllegalArgumentException iae) {
-          LOGGER.debug("updateComputer(): Invalid date introduced for computer. {}", iae); 
+          LOGGER.debug("updateComputer(): Invalid date introduced for computer. {}", iae);
           System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
           return;
         }
@@ -237,7 +237,7 @@ public class ComputerCLIUI {
 
     if (discontinued != null && discontinued.length() > 0) {
       // User typed something
-      if ( "null".equals(discontinued) ) {
+      if ("null".equals(discontinued)) {
         computer.setDiscontinued((LocalDateTime) null);
       } else {
         try {
@@ -265,38 +265,38 @@ public class ComputerCLIUI {
       } else {
         computer.setCompany(company);
       }
-    } else if(companyId == 0) {
+    } else if (companyId == 0) {
       computer.setCompany(null);
     }
 
     computerService.update(computer);
 
   }
-  
+
   /**
    * Prints the list of Computers located on a given page
    * 
    * @param pageNumber
    */
   public void printComputersWithPage(long pageNumber) {
-    
+
     long offset = (pageNumber - 1) * AppSettings.NB_RESULTS_PAGE;
-    
+
     ComputerPageRequest request = new ComputerPageRequest.Builder()
-                                                              .offset(offset)
-                                                              .nbRequested(AppSettings.NB_RESULTS_PAGE)
-                                                              .sortCriterion(ComputerSortCriteria.ID)
-                                                              .sortOrder(SortOrder.ASC)
-                                                              .build();
-    
+        .offset(offset)
+        .nbRequested(AppSettings.NB_RESULTS_PAGE)
+        .sortCriterion(ComputerSortCriteria.ID)
+        .sortOrder(SortOrder.ASC)
+        .build();
+
     SearchWrapper<Computer> sw = computerService.findAll(request);
-    
+
     System.out.printf("Displaying page %d of %d:%n", sw.getCurrentPage(), sw.getTotalPage());
-    
-    for(Computer c : sw.getResults()) {
+
+    for (Computer c : sw.getResults()) {
       System.out.println(c);
     }
-    
+
   }
 
 }

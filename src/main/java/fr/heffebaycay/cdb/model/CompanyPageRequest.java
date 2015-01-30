@@ -61,27 +61,27 @@ public class CompanyPageRequest extends PageRequest {
 
       return this;
     }
-    
+
     public Builder sortCriterion(CompanySortCriteria sortCriterion) {
       request.setSortCriterion(sortCriterion);
       return this;
     }
-    
+
     public Builder sortCriterion(String strSortCriterion) {
       CompanySortCriteria sortCriterion;
-      
-      if("id".equals(strSortCriterion)) {
+
+      if ("id".equals(strSortCriterion)) {
         sortCriterion = CompanySortCriteria.ID;
-      } else if( "name".equals(strSortCriterion) ) {
+      } else if ("name".equals(strSortCriterion)) {
         sortCriterion = CompanySortCriteria.NAME;
       } else {
         sortCriterion = CompanySortCriteria.ID;
       }
-      
+
       request.setSortCriterion(sortCriterion);
       return this;
     }
-    
+
     public CompanyPageRequest build() {
       return request;
     }

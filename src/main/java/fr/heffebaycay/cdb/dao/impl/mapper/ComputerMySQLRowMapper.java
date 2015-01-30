@@ -15,7 +15,7 @@ import fr.heffebaycay.cdb.model.Computer;
 public class ComputerMySQLRowMapper implements RowMapper<Computer> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ComputerMySQLRowMapper.class);
-  
+
   /**
    * Maps the current <i>ResultSet</i> object to an instance of <i>Computer</i>
    * 
@@ -26,60 +26,56 @@ public class ComputerMySQLRowMapper implements RowMapper<Computer> {
    */
   @Override
   public Computer mapRow(ResultSet resultSet, int rowNum) {
-    
+
     Computer computer = null;
     Company company = null;
-    
-    if(resultSet == null) {
+
+    if (resultSet == null) {
       return null;
     }
-    
+
     try {
-      
-      
+
       long computerId = resultSet.getLong("id");
       String computerName = resultSet.getString("name");
-      
+
       LocalDateTime introduced = null;
       Timestamp introducedStamp = resultSet.getTimestamp("introduced");
-      if(introducedStamp != null) {
+      if (introducedStamp != null) {
         introduced = introducedStamp.toLocalDateTime();
       }
-      
+
       LocalDateTime discontinued = null;
       Timestamp discontinuedStamp = resultSet.getTimestamp("discontinued");
-      if(discontinuedStamp != null) {
+      if (discontinuedStamp != null) {
         discontinued = discontinuedStamp.toLocalDateTime();
       }
 
       long companyId = resultSet.getLong("cpId");
       String companyName = resultSet.getString("cpName");
-      
-      if(companyId > 0) {
+
+      if (companyId > 0) {
         company = new Company.Builder()
-                                .id(companyId)
-                                .name(companyName)
-                                .build();
+            .id(companyId)
+            .name(companyName)
+            .build();
       }
-      
-    
-      
+
       computer = new Computer.Builder()
-                                  .id(computerId)
-                                  .name(computerName)
-                                  .discontinued(discontinued)
-                                  .introduced(introduced)
-                                  .company(company)
-                                  .build();
-      
-    } catch(SQLException e) {
-      
+          .id(computerId)
+          .name(computerName)
+          .discontinued(discontinued)
+          .introduced(introduced)
+          .company(company)
+          .build();
+
+    } catch (SQLException e) {
+
       LOGGER.error("SQLException in mapRow: {}", e);
-      
+
     }
-    
+
     return computer;
   }
-  
-  
+
 }

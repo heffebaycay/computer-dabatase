@@ -1,13 +1,10 @@
 package fr.heffebaycay.cdb.dao;
 
-import java.sql.Connection;
 import java.util.List;
 
 import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
-import fr.heffebaycay.cdb.util.ComputerSortCriteria;
-import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public interface IComputerDao {
