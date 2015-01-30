@@ -1,13 +1,10 @@
 package fr.heffebaycay.cdb.dto;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import fr.heffebaycay.cdb.dto.validator.LocalDateFormat;
-import fr.heffebaycay.cdb.util.AppSettings;
 
 
 public class ComputerDTO implements IObjectDTO {
