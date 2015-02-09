@@ -19,8 +19,6 @@ public @interface LocalDateFormat {
 
   String message() default "{LocalDateFormat}";
   
-  String pattern() default "yyyy-MM-dd";
-  
   Class<?>[] groups() default {};
   
   Class<? extends Payload>[] payload() default {};

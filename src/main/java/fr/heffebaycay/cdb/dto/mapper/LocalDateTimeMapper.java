@@ -4,16 +4,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.FormatStyle;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 public class LocalDateTimeMapper {
 
   private static final Logger LOGGER       = LoggerFactory.getLogger(LocalDateTimeMapper.class
                                                .getSimpleName());
-
-  private static final String DATE_PATTERN = "yyyy-MM-dd";
 
   private LocalDateTimeMapper() {
     super();
@@ -26,8 +27,9 @@ public class LocalDateTimeMapper {
     }
 
     try {
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
-      String strDate = ldt.format(formatter);
+      Locale userLocale = LocaleContextHolder.getLocale();
+      DateTimeFormatter localeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(userLocale);
+      String strDate = ldt.format(localeFormatter);
       return strDate;
     } catch (IllegalArgumentException e) {
       LOGGER.warn("toDTO() : Invalid Object Provided: ", e);
@@ -39,8 +41,10 @@ public class LocalDateTimeMapper {
   public static LocalDateTime fromDTO(String strDate) {
 
     try {
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
-      LocalDateTime ldt = LocalDateTime.parse(strDate, formatter);
+      Locale userLocale = LocaleContextHolder.getLocale();
+      
+      DateTimeFormatter localeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(userLocale);
+      LocalDateTime ldt = LocalDateTime.parse(strDate, localeFormatter);
       return ldt;
     } catch (DateTimeParseException e) {
       LOGGER.warn("toDAO() : Failed to parse String input: ", e);

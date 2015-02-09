@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import fr.heffebaycay.cdb.dto.ComputerDTO;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
+import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 public class ComputerMapper {
 
@@ -19,7 +20,7 @@ public class ComputerMapper {
   }
 
   /**
-   * Converts a Computer DAO object to is DTO version 
+   * Converts a Computer DO object to is DTO version 
    * 
    * @param computerDAO     The DAO object to be converted
    * @return                An instance of <i>ComputerDTO</i>, or <strong>null</strong> if <strong>computerDAO</strong> is null.
@@ -37,14 +38,19 @@ public class ComputerMapper {
       companyId = computerDAO.getCompany().getId();
     }
 
-    builder
+    ComputerDTO computerDTO = builder
         .id(computerDAO.getId())
         .name(computerDAO.getName())
         .introduced(LocalDateTimeMapper.toDTO(computerDAO.getIntroduced()))
         .discontinued(LocalDateTimeMapper.toDTO(computerDAO.getDiscontinued()))
-        .companyId(companyId);
+        .companyId(companyId)
+        .build();
 
-    return builder.build();
+    if(computerDAO.getCompany() != null) {
+      computerDTO.setCompany( CompanyMapper.toDTO(computerDAO.getCompany()) );
+    }
+    
+    return computerDTO;
 
   }
 
@@ -65,7 +71,7 @@ public class ComputerMapper {
   }
 
   /**
-   * Converts a ComputerDTO object to its DAO version
+   * Converts a ComputerDTO object to its DO version
    * 
    * @param computerDTO     The DTO object to be converted
    * @return                An instance of <i>Computer</i>, or <strong>null</strong> if <strong>computerDTO</strong> is null.
@@ -75,7 +81,7 @@ public class ComputerMapper {
     if (computerDTO == null) {
       return null;
     }
-    
+
     Computer computer = new Computer.Builder()
         .id(computerDTO.getId())
         .name(computerDTO.getName())
@@ -108,6 +114,22 @@ public class ComputerMapper {
     computer.setDiscontinued(localComputer.getDiscontinued());
     computer.setCompany(localComputer.getCompany());
 
+  }
+
+  public static SearchWrapper<ComputerDTO> convertWrappertoDTO(SearchWrapper<Computer> wrapper) {
+
+    SearchWrapper<ComputerDTO> dtoWrapper = new SearchWrapper<>();
+
+    dtoWrapper.setTotalCount(wrapper.getTotalCount());
+    dtoWrapper.setCurrentPage(wrapper.getCurrentPage());
+    dtoWrapper.setTotalPage(wrapper.getTotalPage());
+    dtoWrapper.setSortOrder(wrapper.getSortOrder());
+    dtoWrapper.setSortCriterion(wrapper.getSortCriterion());
+    dtoWrapper.setSearchQuery(wrapper.getSearchQuery());
+
+    dtoWrapper.setResults(toDTO(wrapper.getResults()));
+
+    return dtoWrapper;
   }
 
 }

@@ -8,6 +8,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import fr.heffebaycay.cdb.dto.ComputerDTO;
+import fr.heffebaycay.cdb.dto.mapper.ComputerMapper;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.model.view.DashboardRequest;
@@ -70,7 +72,9 @@ public class ComputerController {
       searchWrapper = mComputerService.findAll(pageRequest);
     }
 
-    map.addAttribute("searchWrapper", searchWrapper);
+    SearchWrapper<ComputerDTO> dtoSearchWrapper = ComputerMapper.convertWrappertoDTO(searchWrapper);
+    
+    map.addAttribute("searchWrapper", dtoSearchWrapper);
 
     return "dashboard";
 
