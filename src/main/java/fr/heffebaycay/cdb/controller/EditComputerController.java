@@ -72,7 +72,7 @@ public class EditComputerController {
     List<CompanyDTO> companies = CompanyMapper.toDTO(mCompanyService.findAll());
 
     map.addAttribute("companies", companies);
-    map.addAttribute("computer", computer);
+    map.addAttribute("computerDTO", computer);
 
     return "editComputer";
   }
@@ -91,12 +91,6 @@ public class EditComputerController {
       // 40X ?
 
     }
-
-    // Storing given value in case something goes wrong and we need to display it back to the user
-    map.addAttribute("computerNameValue", computerDTO.getName());
-    map.addAttribute("dateIntroducedValue", computerDTO.getIntroduced());
-    map.addAttribute("dateDiscontinuedValue", computerDTO.getDiscontinued());
-    map.addAttribute("companyIdValue", computerDTO.getCompanyId());
 
     // Creating the Company object
     Company company = null;

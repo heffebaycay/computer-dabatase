@@ -26,19 +26,19 @@
                             <div class="form-group">
                                 <label for="computerName"><spring:message code="computer_form.name_label" /></label>
                                 <spring:message code="computer_form.name_placeholder" var="name_placeholder" />
-                                <form:input type="text" class="form-control" id="computerName" name="computerName" placeholder="${ name_placeholder }"  path="name" value="${ computerNameValue }"/>
+                                <form:input type="text" class="form-control" id="computerName" name="computerName" placeholder="${ name_placeholder }"  path="name"/>
                                 <form:errors path="name" cssClass="error"></form:errors>
                             </div>
                             <div class="form-group">
                                 <label for="introduced"><spring:message code="computer_form.introduced_label" /></label>
                                 <spring:message code="computer_form.introduced_placeholder" var="introduced_placeholder"/>
-                                <form:input type="text" class="form-control" id="introduced" name="introduced" placeholder="${ introduced_placeholder }" path="introduced" value="${ dateIntroducedValue }" />
+                                <form:input type="text" class="form-control" id="introduced" name="introduced" placeholder="${ introduced_placeholder }" path="introduced"/>
                                 <form:errors path="introduced" cssClass="error"></form:errors>
                             </div>
                             <div class="form-group">
                                 <label for="discontinued"><spring:message code="computer_form.discontinued_label" /></label>
                                 <spring:message code="computer_form.discontinued_placeholder" var="discontinued_placeholder"/>
-                                <form:input type="text" class="form-control" id="discontinued" name="discontinued" placeholder="${ discontinued_placeholder }" path="discontinued" value="${ dateDiscontinuedValue }"/>
+                                <form:input type="text" class="form-control" id="discontinued" name="discontinued" placeholder="${ discontinued_placeholder }" path="discontinued"/>
                                 <form:errors path="discontinued" cssClass="error"></form:errors>
                             </div>
                             <div class="form-group">
@@ -47,7 +47,7 @@
                                     <form:option value="-1">--</form:option>
                                     <c:forEach items="${ companies }" var="company">
                                         <c:choose>
-                                            <c:when test="${ company.id == companyIdValue }">
+                                            <c:when test="${ company.id == computerDTO.companyId }">
                                                 <form:option value="${ company.id }" selected="selected">${ company.name }</form:option>
                                             </c:when>
                                             <c:otherwise>
@@ -61,7 +61,7 @@
                         </fieldset>
                         <div class="actions pull-right">
                             <input type="submit" value="<spring:message code="computer_form.add_button" />" class="btn btn-primary" id="submit">
-                            <spring:message value="computer_form.button_separator" />
+                            <spring:message code="computer_form.button_separator" />
                             <a href="<c:url value="/" />" class="btn btn-default"><spring:message code="computer_form.cancel_button" /></a>
                         </div>
                    </form:form>

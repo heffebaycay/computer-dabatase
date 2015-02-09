@@ -62,12 +62,6 @@ public class AddComputerController {
 
     Computer computer = new Computer();
 
-    // Storing given value in case something goes wrong and we need to display it back to the user
-    map.addAttribute("computerNameValue", computerDTO.getName());
-    map.addAttribute("dateIntroducedValue", computerDTO.getIntroduced());
-    map.addAttribute("dateDiscontinuedValue", computerDTO.getDiscontinued());
-    map.addAttribute("companyIdValue", computerDTO.getCompanyId());
-
     ComputerDTOValidator computerValidator = new ComputerDTOValidator();
     computerValidator.validate(computerDTO, errors);
 
