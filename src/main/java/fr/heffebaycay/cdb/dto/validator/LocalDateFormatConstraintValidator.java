@@ -1,13 +1,10 @@
 package fr.heffebaycay.cdb.dto.validator;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.GenericValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,16 +26,13 @@ public class LocalDateFormatConstraintValidator implements
 
     if (!StringUtils.isBlank(str)) {
 
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern(this.datePattern);
-      try {
-        LocalDate.parse(str, formatter);
+      if (GenericValidator.isDate(str, this.datePattern, true)) {
         return true;
-      } catch (DateTimeParseException e) {
+      } else {
         LOGGER.debug("isValid(): Invalid date supplied: '{}' for Pattern: '{}'", str,
             this.datePattern);
         return false;
       }
-
     } else {
       // Blank strings are deemed valid
       return true;

@@ -43,8 +43,7 @@ public class EditComputerController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  protected String doGet(Long id, @RequestParam(required = false) String msg,
-      ComputerDTO computerDTO, ModelMap map) {
+  protected String doGet(Long id, @RequestParam(required = false) String msg, ModelMap map) {
 
     LOGGER.debug("Received call to EditComputerController::doGet()");
 
@@ -60,19 +59,24 @@ public class EditComputerController {
 
     if ("addSuccess".equals(msg)) {
       map.addAttribute("bAddSuccess", true);
+    } else if ("editSuccess".equals(msg)) {
+      map.addAttribute("msgSuccess", true);
     }
 
-    ComputerDTO computer = ComputerMapper.toDTO(mComputerService.findById(id));
+    ComputerDTO computerDTO = ComputerMapper.toDTO(mComputerService.findById(id));
     if (computerDTO == null) {
       // Unable to find any computer based on the given Id
       LOGGER.warn("doGet() : Inexisting computer requested by user");
       throw new ComputerNotFoundException();
     }
+    
+    map.addAttribute("computerDTO", computerDTO);
+    
 
     List<CompanyDTO> companies = CompanyMapper.toDTO(mCompanyService.findAll());
 
     map.addAttribute("companies", companies);
-    map.addAttribute("computerDTO", computer);
+    
 
     return "editComputer";
   }
@@ -113,23 +117,25 @@ public class EditComputerController {
         }
         map.addAttribute("msgValidationFailed", true);
       }
-
-      return doGet(computerDTO.getId(), null, computerDTO, map);
+      
+      // The edit page needs the list of companies
+      List<CompanyDTO> companies = CompanyMapper.toDTO(mCompanyService.findAll());
+      map.addAttribute("companies", companies);
+      
+      map.addAttribute("computerDTO", computerDTO);
+      // Returning the editComputer view
+      return "editComputer";
 
     } else {
       // Validation succeeded
-      map.addAttribute("msgSuccess", true);
-
       ComputerMapper.updateDAO(computer, computerDTO);
 
       computer.setCompany(company);
       mComputerService.update(computer);
+      
+      redirectAttrs.addAttribute("id", computerDTO.getId());
+      return "redirect:/computers/edit?id={id}&msg=editSuccess";
     }
-
-    map.addAttribute("id", computerDTO.getId());
-
-    return doGet(computerDTO.getId(), null, computerDTO, map);
-
   }
 
 }
