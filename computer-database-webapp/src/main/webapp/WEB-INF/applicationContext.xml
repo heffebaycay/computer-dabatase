@@ -42,7 +42,7 @@
             <property name="hibernateProperties">
                 <props>
                     <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
-                    <prop key="hibernate.show_sql">true</prop>
+                    <prop key="hibernate.show_sql">false</prop>
                 </props>
             </property>
             <property name="packagesToScan" value="fr.heffebaycay.cdb.model" />

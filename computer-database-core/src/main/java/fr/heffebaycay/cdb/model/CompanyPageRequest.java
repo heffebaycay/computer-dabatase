@@ -1,6 +1,5 @@
 package fr.heffebaycay.cdb.model;
 
-import fr.heffebaycay.cdb.model.ComputerPageRequest.Builder;
 import fr.heffebaycay.cdb.util.CompanySortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 

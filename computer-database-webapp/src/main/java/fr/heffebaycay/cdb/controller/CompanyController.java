@@ -8,9 +8,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import fr.heffebaycay.cdb.controller.viewmodel.DashboardRequest;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
-import fr.heffebaycay.cdb.model.view.DashboardRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.util.AppSettings;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;

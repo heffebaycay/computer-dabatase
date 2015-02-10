@@ -1,4 +1,4 @@
-package fr.heffebaycay.cdb.model.view;
+package fr.heffebaycay.cdb.controller.viewmodel;
 
 public class DashboardRequest {
 
