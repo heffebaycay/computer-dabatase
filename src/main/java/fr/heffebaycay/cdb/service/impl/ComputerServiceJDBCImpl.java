@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.exception.DaoException;
-import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.service.IComputerService;
@@ -24,18 +23,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
 
   IComputerDao                computerDao;
 
-  private DaoManager          daoManager;
-
   @Autowired
-  public ComputerServiceJDBCImpl(DaoManager daoManager, IComputerDao computerDao) {
-    this.daoManager = daoManager;
-    this.computerDao = computerDao;
-  }
-
-  public void setDaoManager(DaoManager daoManager) {
-    this.daoManager = daoManager;
-  }
-
   public ComputerServiceJDBCImpl(IComputerDao computerDao) {
     this.computerDao = computerDao;
   }
@@ -53,8 +41,6 @@ public class ComputerServiceJDBCImpl implements IComputerService {
       computers = computerDao.findAll();
     } catch (DaoException e) {
       LOGGER.warn("findAll(): DaoException", e);
-    } finally {
-      daoManager.closeConnection();
     }
 
     return computers;
@@ -73,8 +59,6 @@ public class ComputerServiceJDBCImpl implements IComputerService {
       computer = computerDao.findById(id);
     } catch (DaoException e) {
       LOGGER.warn("findById(): DaoException: ", e);
-    } finally {
-      daoManager.closeConnection();
     }
 
     return computer;
@@ -93,8 +77,6 @@ public class ComputerServiceJDBCImpl implements IComputerService {
       result = computerDao.remove(id);
     } catch (DaoException e) {
       LOGGER.warn("remove(): DaoException: ", e);
-    } finally {
-      daoManager.closeConnection();
     }
 
     return result;
@@ -114,8 +96,6 @@ public class ComputerServiceJDBCImpl implements IComputerService {
       computerId = computerDao.create(computer);
     } catch (DaoException e) {
       LOGGER.warn("create(): DaoException: ", e);
-    } finally {
-      daoManager.closeConnection();
     }
 
     return computerId;
@@ -133,8 +113,6 @@ public class ComputerServiceJDBCImpl implements IComputerService {
       computerDao.update(computer);
     } catch (DaoException e) {
       LOGGER.warn("update(): ", e);
-    } finally {
-      daoManager.closeConnection();
     }
 
   }
@@ -153,10 +131,8 @@ public class ComputerServiceJDBCImpl implements IComputerService {
       wrapper = computerDao.findAll(request);
     } catch (DaoException e) {
       LOGGER.warn("findAll(): DaoException: ", e);
-    } finally {
-      daoManager.closeConnection();
     }
-
+    
     return wrapper;
   }
 
@@ -174,8 +150,6 @@ public class ComputerServiceJDBCImpl implements IComputerService {
       wrapper = computerDao.findByName(request);
     } catch (DaoException e) {
       LOGGER.warn("findByName(): DaoException: ", e);
-    } finally {
-      daoManager.closeConnection();
     }
 
     return wrapper;

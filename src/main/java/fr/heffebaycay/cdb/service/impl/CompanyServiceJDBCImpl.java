@@ -13,7 +13,6 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.exception.DaoException;
-import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
@@ -24,16 +23,12 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CompanyServiceJDBCImpl.class);
 
-  
   ICompanyDao                 companyDao;
-  
+
   IComputerDao                computerDao;
-  
-  private DaoManager daoManager;
 
   @Autowired
-  public CompanyServiceJDBCImpl(DaoManager daoManager, IComputerDao computerDao, ICompanyDao companyDao) {
-    this.daoManager = daoManager;
+  public CompanyServiceJDBCImpl(IComputerDao computerDao, ICompanyDao companyDao) {
     this.computerDao = computerDao;
     this.companyDao = companyDao;
   }
@@ -50,14 +45,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   public List<Company> findAll() {
     LOGGER.debug("Call to findAll()");
 
-    List<Company> companies = null;
-    try {
-      companies = companyDao.findAll();
-    } catch (DaoException e) {
-      LOGGER.warn("findAll(): DaoException: ", e);
-    } finally {
-      daoManager.closeConnection();
-    }
+    List<Company> companies = companyDao.findAll();
 
     return companies;
   }
@@ -70,14 +58,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   public Company findById(long id) {
     LOGGER.debug("Call to findById()");
 
-    Company company = null;
-    try {
-      company = companyDao.findById(id);
-    } catch (DaoException e) {
-      LOGGER.warn("findById(): DaoException: ", e);
-    } finally {
-      daoManager.closeConnection();
-    }
+    Company company = companyDao.findById(id);;
 
     return company;
   }
@@ -90,13 +71,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   public void create(Company company) {
     LOGGER.debug("Call to create()");
 
-    try {
-      companyDao.create(company);
-    } catch (DaoException e) {
-      LOGGER.warn("create(): DaoException: ", e);
-    } finally {
-      daoManager.closeConnection();
-    }
+    companyDao.create(company);
 
   }
 
@@ -109,13 +84,14 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
     LOGGER.debug("Call to findAll()");
 
     SearchWrapper<Company> companies = null;
+    
     try {
-      companies = companyDao.findAll(request);
-    } catch (DaoException e) {
+       companies = companyDao.findAll(request);
+    } catch(DaoException e) {
       LOGGER.warn("findAll(): DaoException", e);
-    } finally {
-      daoManager.closeConnection();
     }
+    
+    
 
     return companies;
   }
@@ -125,8 +101,9 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   public void remove(long id) {
     LOGGER.debug("Call to remove()");
 
-    LOGGER.debug("Are we in a transactionnal context?: {}", TransactionSynchronizationManager.isActualTransactionActive());
-    
+    LOGGER.debug("Are we in a transactionnal context?: {}",
+        TransactionSynchronizationManager.isActualTransactionActive());
+
     try {
       // Remove computers linked to company X
       computerDao.removeForCompany(id);
@@ -149,10 +126,8 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
       companies = companyDao.findByName(request);
     } catch (DaoException e) {
       LOGGER.warn("findByName(): DaoException: ", e);
-    } finally {
-      daoManager.closeConnection();
     }
-    
+
     return companies;
   }
 
@@ -164,10 +139,4 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
     this.computerDao = computerDao;
   }
 
-  public void setDaoManager(DaoManager daoManager) {
-    this.daoManager = daoManager;
-  }
-
-  
-  
 }

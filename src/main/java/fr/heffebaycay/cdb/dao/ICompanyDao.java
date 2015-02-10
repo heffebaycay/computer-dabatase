@@ -14,28 +14,28 @@ public interface ICompanyDao {
    * 
    * @return The list of all Companies
    */
-  List<Company> findAll() throws DaoException;
+  List<Company> findAll();
 
   /**
    * Find a Company from the data source
    * @param id
    * @return
    */
-  Company findById(long id) throws DaoException;
+  Company findById(long id);
 
   /**
    * Create a Company in the data source based on an instance of Company
    * 
    * @param company The company object that should be created
    */
-  void create(Company company) throws DaoException;
+  void create(Company company);
   
   /**
    * Removes a Company from the data source along with all the Computers tied to it
    * 
    * @param id      Identifier of the company that should be removed.
    */
-  boolean remove(long id) throws DaoException;
+  boolean remove(long id);
 
 
   /**

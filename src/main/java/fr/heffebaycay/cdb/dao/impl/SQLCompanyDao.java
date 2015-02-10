@@ -8,14 +8,11 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.exception.DaoException;
-import fr.heffebaycay.cdb.dao.impl.mapper.CompanyMySQLRowMapper;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.util.CompanySortCriteria;
@@ -45,7 +42,7 @@ public class SQLCompanyDao implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public List<Company> findAll() throws DaoException {
+  public List<Company> findAll() {
     Session session = sessionFactory.getCurrentSession();
 
     @SuppressWarnings("unchecked")
@@ -59,7 +56,7 @@ public class SQLCompanyDao implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public Company findById(long id) throws DaoException {
+  public Company findById(long id) {
     Session session = sessionFactory.getCurrentSession();
 
     Company company = (Company) session
@@ -128,7 +125,7 @@ public class SQLCompanyDao implements ICompanyDao {
   }
 
   @Override
-  public void create(Company company) throws DaoException {
+  public void create(Company company) {
     Session session = sessionFactory.getCurrentSession();
 
     session.save(company);
@@ -138,7 +135,7 @@ public class SQLCompanyDao implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public boolean remove(long id) throws DaoException {
+  public boolean remove(long id) {
     Session session = sessionFactory.getCurrentSession();
 
     Company company = (Company) session.get(Company.class, id);
