@@ -1,0 +1,249 @@
+package fr.heffebaycay.cdb.model;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import fr.heffebaycay.cdb.dao.converter.LocalDateTimePersistenceConverter;
+
+@Entity
+@Table(name = "computer")
+public class Computer {
+
+  @Id
+  @GeneratedValue
+  protected long          id;
+
+  @Column(name = "name")
+  protected String        name;
+
+  @Convert(converter = LocalDateTimePersistenceConverter.class)
+  @Column(name = "introduced")
+  protected LocalDateTime introduced;
+
+  @Convert(converter = LocalDateTimePersistenceConverter.class)
+  @Column(name = "discontinued")
+  protected LocalDateTime discontinued;
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  protected Company       company;
+
+  public Computer() {
+
+  }
+
+  public long getId() {
+    return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public LocalDateTime getIntroduced() {
+    return introduced;
+  }
+
+  public void setIntroduced(LocalDateTime introduced) {
+    this.introduced = introduced;
+  }
+
+  public void setIntroduced(String strIntroduced) {
+    if (strIntroduced == null || strIntroduced.length() == 0) {
+      this.introduced = null;
+      return;
+    }
+
+    strIntroduced += "T00:00:00";
+
+    try {
+      LocalDateTime ldt = LocalDateTime.parse(strIntroduced);
+      setIntroduced(ldt);
+    } catch (DateTimeParseException dtpe) {
+      throw new IllegalArgumentException("Invalid introduced string", dtpe);
+    }
+  }
+
+  public LocalDateTime getDiscontinued() {
+    return discontinued;
+  }
+
+  public void setDiscontinued(LocalDateTime discontinued) {
+    this.discontinued = discontinued;
+  }
+
+  public void setDiscontinued(String strDiscontinued) {
+    if (strDiscontinued == null || strDiscontinued.length() == 0) {
+      this.discontinued = null;
+      return;
+    }
+
+    strDiscontinued += "T00:00:00";
+
+    try {
+      LocalDateTime ldt = LocalDateTime.parse(strDiscontinued);
+      setDiscontinued(ldt);
+    } catch (DateTimeParseException dtpe) {
+      throw new IllegalArgumentException("Invalid discontinued string", dtpe);
+    }
+  }
+
+  public Company getCompany() {
+    return company;
+  }
+
+  public void setCompany(Company company) {
+    this.company = company;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((company == null) ? 0 : company.hashCode());
+    result = prime * result + ((discontinued == null) ? 0 : discontinued.hashCode());
+    result = prime * result + (int) (id ^ (id >>> 32));
+    result = prime * result + ((introduced == null) ? 0 : introduced.hashCode());
+    result = prime * result + ((name == null) ? 0 : name.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Computer other = (Computer) obj;
+    if (company == null) {
+      if (other.company != null)
+        return false;
+    } else if (!company.equals(other.company))
+      return false;
+    if (discontinued == null) {
+      if (other.discontinued != null)
+        return false;
+    } else if (!discontinued.equals(other.discontinued))
+      return false;
+    if (id != other.id)
+      return false;
+    if (introduced == null) {
+      if (other.introduced != null)
+        return false;
+    } else if (!introduced.equals(other.introduced))
+      return false;
+    if (name == null) {
+      if (other.name != null)
+        return false;
+    } else if (!name.equals(other.name))
+      return false;
+    return true;
+  }
+
+  @Override
+  public String toString() {
+
+    return String.format(
+        "Computer: id[%1$d], name[%2$s], introduced[%4$s], discontinued[%5$s], company[%3$s]",
+        getId(), getName(), getCompany(), getIntroduced(), getDiscontinued());
+
+  }
+
+  /**
+   * Builder class for a <i>Computer</i> object
+   *
+   */
+  public static class Builder {
+
+    private Computer computer;
+
+    public Builder() {
+      computer = new Computer();
+    }
+
+    /**
+     * Sets the <strong>id</strong> attribute of the underlying <i>Computer</i> object.
+     * 
+     * @param id    The id that should be set
+     * @return      A reference to the current instance of <i>Builder</i>
+     */
+    public Builder id(long id) {
+      computer.setId(id);
+      return this;
+    }
+
+    /**
+     * Sets the <strong>name</strong> attribute of the underlying <i>Computer</i> object.
+     * 
+     * @param name  The name that should be set
+     * @return      A reference to the current instance of <i>Builder</i>
+     */
+    public Builder name(String name) {
+      computer.setName(name);
+      return this;
+    }
+
+    /**
+     * Sets the <strong>introduced</strong> attribute of the underlying <i>Computer</i> object.
+     * 
+     * @param introduced    The introduction date that should be set
+     * @return              A reference to the current instance of <i>Builder</i>
+     */
+    public Builder introduced(LocalDateTime introduced) {
+      computer.setIntroduced(introduced);
+      return this;
+    }
+
+    /**
+     * Sets the <strong>discontinued</strong> attribute of the underlying <i>Computer</i> object.
+     * 
+     * @param discontinued  The date on which the computer was discontinued
+     * @return              A reference to the current instance of <i>Builder</i>
+     */
+    public Builder discontinued(LocalDateTime discontinued) {
+      computer.setDiscontinued(discontinued);
+      return this;
+    }
+
+    /**
+     * Sets the <strong>company</strong> attribute of the underlying <i>Computer</i> object.
+     * 
+     * @param company   The company that should be set
+     * @return          A reference to the current instance of <i>Builder</i>
+     */
+    public Builder company(Company company) {
+      computer.setCompany(company);
+      return this;
+    }
+
+    /**
+     * Creates an instance of <i>Computer</i>. Each attribute of <i>Computer</i> have a matching method
+     * in the <i>Builder</i> class
+     * 
+     * @return An instance of <i>Computer</i>
+     */
+    public Computer build() {
+      return computer;
+    }
+
+  }
+
+}

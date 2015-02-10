@@ -19,3 +19,4 @@ bin/
 # Application config files
 src/main/resources/config.properties
 #src/test/resources/config.properties
+/target/

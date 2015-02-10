@@ -2,9 +2,19 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>computer-database</groupId>
   <artifactId>computer-database</artifactId>
-  <version>0.2.2</version>
+  <version>0.3.0</version>
   <name>Computer Database</name>
-  <packaging>war</packaging>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>computer-database-core</module>
+    <module>computer-database-persistence</module>
+    <module>computer-database-service</module>
+    <module>computer-database-binding</module>
+    <module>computer-database-webapp</module>
+    <module>computer-database-console</module>
+  </modules>
+
   <properties>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   	<sonar.language>java</sonar.language>
@@ -54,10 +64,6 @@
   
   <build>
   	<finalName>${project.artifactId}-${project.version}</finalName>
-    <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-    <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
-    <outputDirectory>${basedir}/target/classes</outputDirectory>
-    <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -68,59 +74,13 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory>
-          <failOnMissingWebXml>true</failOnMissingWebXml>
-        </configuration>
-      </plugin>
-      <plugin>
       	<groupId>org.apache.maven.plugins</groupId>
       	<artifactId>maven-surefire-plugin</artifactId>
       	<version>${surefire-plugin.version}</version>
       </plugin>
-      <plugin>
-      	<groupId>org.apache.tomcat.maven</groupId>
-      	<artifactId>tomcat7-maven-plugin</artifactId>
-      	<version>2.2</version>
-      	<configuration>
-      		<path>/cdb</path>
-      		<url>http://localhost:8080/manager/text</url>
-      		<server>TomcatServer</server>
-      	</configuration>
-      </plugin>
     </plugins>
   </build>
   <dependencies>
-  	<!-- Servlet dependencies -->
-  	<dependency>
-  		<groupId>javax.servlet</groupId>
-  		<artifactId>jstl</artifactId>
-  		<version>${jstl.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>javax.servlet</groupId>
-  		<artifactId>javax.servlet-api</artifactId>
-  		<version>${servlet-api.version}</version>
-  		<scope>provided</scope>
-  	</dependency>
-  
-  	<!-- DB Dependencies -->
-  	<dependency>
-  		<groupId>mysql</groupId>
-  		<artifactId>mysql-connector-java</artifactId>
-  		<version>${mysql.version}</version>
-  		<scope>runtime</scope>
-  	</dependency>
-   
-   <!-- Hibernate ORM -->
-   <dependency>
-       <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-core</artifactId>
-        <version>${hibernate-orm.version}</version>
-   </dependency>
-  	
     <!-- Apache Commons Lang -->
     <dependency>
         <groupId>org.apache.commons</groupId>
@@ -148,11 +108,7 @@
   			</exclusion>
   		</exclusions>
   	</dependency>
-  	<dependency>
-  		<groupId>org.springframework</groupId>
-  		<artifactId>spring-web</artifactId>
-  		<version>${spring.version}</version>
-  	</dependency>
+  	
   	<dependency>
 		<groupId>org.springframework</groupId>
 		<artifactId>spring-test</artifactId>
@@ -169,18 +125,10 @@
 		<artifactId>spring-tx</artifactId>
 		<version>${spring.version}</version>
 	</dependency>
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-webmvc</artifactId>
-		<version>${spring.version}</version>
-	</dependency>
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-orm</artifactId>
-        <version>${spring.version}</version>
-    </dependency>
+	
+    
   	
-  	<!-- Logging dependencies -->
+  	<!-- Logging dependencies: Common -->
   	<dependency>
 		<groupId>org.slf4j</groupId>
 		<artifactId>slf4j-api</artifactId>
