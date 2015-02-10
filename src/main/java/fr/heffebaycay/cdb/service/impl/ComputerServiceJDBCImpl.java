@@ -2,6 +2,8 @@ package fr.heffebaycay.cdb.service.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
    * {@inheritDoc}
    */
   @Override
+  @Transactional
   public List<Computer> findAll() {
     LOGGER.debug("Call to findAll()");
 
@@ -61,6 +64,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
    * {@inheritDoc}
    */
   @Override
+  @Transactional
   public Computer findById(long id) {
     LOGGER.debug("Call to findById()");
 
@@ -80,6 +84,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
    * {@inheritDoc}
    */
   @Override
+  @Transactional
   public boolean remove(long id) {
     LOGGER.debug("Call to remove()");
 
@@ -100,6 +105,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
    * {@inheritDoc}
    */
   @Override
+  @Transactional
   public long create(Computer computer) {
     LOGGER.debug("Call to create()");
 
@@ -119,6 +125,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
    * {@inheritDoc}
    */
   @Override
+  @Transactional
   public void update(Computer computer) {
     LOGGER.debug("Call to update()");
 
@@ -136,6 +143,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
    * {@inheritDoc}
    */
   @Override
+  @Transactional
   public SearchWrapper<Computer> findAll(ComputerPageRequest request) {
     LOGGER.debug("Call to findAll(long, long)");
 
@@ -156,6 +164,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
    * {@inheritDoc}
    */
   @Override
+  @Transactional
   public SearchWrapper<Computer> findByName(ComputerPageRequest request) {
     LOGGER.debug("Call to findByName()");
 

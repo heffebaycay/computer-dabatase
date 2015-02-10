@@ -2,11 +2,12 @@ package fr.heffebaycay.cdb.service.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
@@ -45,6 +46,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
    * {@inheritDoc}
    */
   @Override
+  @Transactional
   public List<Company> findAll() {
     LOGGER.debug("Call to findAll()");
 
@@ -64,6 +66,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
    * {@inheritDoc}
    */
   @Override
+  @Transactional
   public Company findById(long id) {
     LOGGER.debug("Call to findById()");
 
@@ -83,6 +86,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
    * {@inheritDoc}
    */
   @Override
+  @Transactional
   public void create(Company company) {
     LOGGER.debug("Call to create()");
 
@@ -100,6 +104,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
    * {@inheritDoc}
    */
   @Override
+  @Transactional
   public SearchWrapper<Company> findAll(CompanyPageRequest request) {
     LOGGER.debug("Call to findAll()");
 
@@ -121,24 +126,21 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
     LOGGER.debug("Call to remove()");
 
     LOGGER.debug("Are we in a transactionnal context?: {}", TransactionSynchronizationManager.isActualTransactionActive());
-    int nbComputers = -1;
-    int nbCompany = -1;
     
     try {
       // Remove computers linked to company X
-      nbComputers = computerDao.removeForCompany(id);
+      computerDao.removeForCompany(id);
 
       // Remove company X
-      nbCompany = companyDao.remove(id);
+      companyDao.remove(id);
     } catch (DaoException e) {
       throw new RuntimeException("CompanyServiceJDBCImpl::remove() failed", e);
     }
 
-    LOGGER.debug(String.format("Removed %d computers and %d company", nbComputers, nbCompany));
-
   }
 
   @Override
+  @Transactional
   public SearchWrapper<Company> findByName(CompanyPageRequest request) {
     LOGGER.debug("Call to findByName()");
 

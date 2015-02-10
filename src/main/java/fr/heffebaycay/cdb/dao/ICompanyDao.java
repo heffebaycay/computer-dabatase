@@ -35,7 +35,7 @@ public interface ICompanyDao {
    * 
    * @param id      Identifier of the company that should be removed.
    */
-  int remove(long id) throws DaoException;
+  boolean remove(long id) throws DaoException;
 
 
   /**
