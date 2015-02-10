@@ -14,5 +14,12 @@
   		<artifactId>computer-database-core</artifactId>
   		<version>${project.version}</version>
   	</dependency>
+   
+    <!-- Apache Validator  -->
+    <dependency>
+        <groupId>commons-validator</groupId>
+        <artifactId>commons-validator</artifactId>
+        <version>${apache-commons-validator}</version>
+    </dependency>
   </dependencies>
 </project>

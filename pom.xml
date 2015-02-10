@@ -87,14 +87,6 @@
         <artifactId>commons-lang3</artifactId>
         <version>${apache-commons-lang.version}</version>
      </dependency>
-    
-   
-   <!-- Apache Validator  -->
-   <dependency>
-       <groupId>commons-validator</groupId>
-       <artifactId>commons-validator</artifactId>
-       <version>${apache-commons-validator}</version>
-   </dependency>
    
   	<!-- Spring framework -->
   	<dependency>
@@ -130,19 +122,8 @@
   	
   	<!-- Logging dependencies: Common -->
   	<dependency>
-		<groupId>org.slf4j</groupId>
-		<artifactId>slf4j-api</artifactId>
-		<version>${slf4j-api.version}</version>
-	</dependency>
-  	<dependency>
   		<groupId>ch.qos.logback</groupId>
   		<artifactId>logback-classic</artifactId>
-  		<version>${logback.version}</version>
-  		<scope>runtime</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>ch.qos.logback</groupId>
-  		<artifactId>logback-core</artifactId>
   		<version>${logback.version}</version>
   		<scope>runtime</scope>
   	</dependency>
@@ -151,19 +132,7 @@
   		<artifactId>jcl-over-slf4j</artifactId>
   		<version>${jcl-over-slf4j.version}</version>
   	</dependency>
-  	
-  	<!-- Validation -->
-  	<dependency>
-  		<groupId>javax.validation</groupId>
-  		<artifactId>validation-api</artifactId>
-  		<version>${validation-api.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.hibernate</groupId>
-  		<artifactId>hibernate-validator</artifactId>
-  		<version>${hibernate-validator.version}</version>
-  	</dependency>
-  	
+  	  	
   	<!-- Testing dependencies -->
   	<dependency>
   		<groupId>org.mockito</groupId>
