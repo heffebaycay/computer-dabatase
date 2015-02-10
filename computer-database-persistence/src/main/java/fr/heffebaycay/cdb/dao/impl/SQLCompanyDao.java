@@ -25,17 +25,10 @@ public class SQLCompanyDao implements ICompanyDao {
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLCompanyDao.class);
 
   @Autowired
-  private JdbcTemplate        jdbcTemplate;
-
-  @Autowired
   private SessionFactory      sessionFactory;
 
   public SQLCompanyDao() {
 
-  }
-
-  public SQLCompanyDao(JdbcTemplate jdbcTemplate) {
-    this.jdbcTemplate = jdbcTemplate;
   }
 
   /**
@@ -210,7 +203,10 @@ public class SQLCompanyDao implements ICompanyDao {
     searchKeyword = String.format("%%%s%%", searchKeyword);
     LOGGER.debug(String.format("findByName(): Keyword={%s}", searchKeyword));
 
-    Long count = (Long) session.createQuery(countQuery).iterate().next();
+    Long count = (Long) session.createQuery(countQuery)
+        .setString("keyword", searchKeyword)
+        .iterate()
+        .next();
     searchWrapper.setTotalCount(count);
 
     // Current Page

@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +22,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.SQLComputerDao;
-import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
-import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
@@ -39,9 +39,6 @@ public class TestComputerDaoMySQLImpl {
   //Passing a reference to the test SQL utils class to the DAO
   @Autowired
   SQLComputerDao computerDao;
-
-  @Autowired
-  DaoManager     daoManager;
 
   List<Computer> localComputers;
 
@@ -85,7 +82,7 @@ public class TestComputerDaoMySQLImpl {
     companies.add(c9);
     companies.add(c10);
 
-    conn = daoManager.getConnection();
+    conn = sqlUtils.getConnection();
 
     final String insertCompanySQL = "INSERT INTO company(id, name) VALUES(?,?)";
     final PreparedStatement companyPS = conn.prepareStatement(insertCompanySQL);
@@ -97,7 +94,7 @@ public class TestComputerDaoMySQLImpl {
       companyPS.executeUpdate();
     }
 
-    daoManager.closeStatement(companyPS);
+    sqlUtils.closeStatement(companyPS);
 
     // Setting up computers
 
@@ -163,7 +160,8 @@ public class TestComputerDaoMySQLImpl {
       computerPS.executeUpdate();
     }
 
-    daoManager.closeStatement(computerPS);
+    sqlUtils.closeStatement(computerPS);
+    sqlUtils.closeConnection(conn);
 
   }
 
@@ -172,11 +170,10 @@ public class TestComputerDaoMySQLImpl {
 
     sqlUtils.truncateTables();
 
-    daoManager.closeConnection();
-
   }
 
   @Test
+  @Transactional
   public void testFindAll() {
 
     List<Computer> computers = null;
@@ -192,6 +189,7 @@ public class TestComputerDaoMySQLImpl {
   }
 
   @Test
+  @Transactional
   public void testFindAllWithOffset() {
 
     ComputerPageRequest request = new ComputerPageRequest.Builder()
@@ -219,6 +217,7 @@ public class TestComputerDaoMySQLImpl {
   }
 
   @Test
+  @Transactional
   public void testFindById() {
 
     Computer computer = null;
@@ -245,6 +244,7 @@ public class TestComputerDaoMySQLImpl {
   }
 
   @Test
+  @Transactional
   public void testCreate() {
 
     Company company = new Company.Builder().id(4).name("Compaq").build();
@@ -295,6 +295,7 @@ public class TestComputerDaoMySQLImpl {
   }
 
   @Test
+  @Transactional
   public void testUpdate() {
 
     Computer computer = null;

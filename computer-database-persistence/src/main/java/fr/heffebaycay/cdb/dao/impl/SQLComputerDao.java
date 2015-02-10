@@ -26,23 +26,12 @@ public class SQLComputerDao implements IComputerDao {
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDao.class);
 
   @Autowired
-  private JdbcTemplate        jdbcTemplate;
-
-  @Autowired
   private SessionFactory      sessionFactory;
 
   public SQLComputerDao() {
 
   }
-
-  public SQLComputerDao(JdbcTemplate jdbcTemplate) {
-    this.jdbcTemplate = jdbcTemplate;
-  }
-
-  public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-    this.jdbcTemplate = jdbcTemplate;
-  }
-
+  
   public void setSessionFactory(SessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;
   }

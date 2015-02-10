@@ -19,7 +19,6 @@ import org.mockito.stubbing.Answer;
 
 import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.exception.DaoException;
-import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
@@ -42,8 +41,7 @@ public class TestComputerService {
   public void setUp() {
 
     computerDao = mock(IComputerDao.class);
-    DaoManager daoManager = mock(DaoManager.class);
-    computerService = new ComputerServiceJDBCImpl(daoManager, computerDao);
+    computerService = new ComputerServiceJDBCImpl(computerDao);
 
     computersDB = new ArrayList<Computer>();
 

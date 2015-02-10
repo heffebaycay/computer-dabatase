@@ -19,7 +19,6 @@ import org.mockito.stubbing.Answer;
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.IComputerDao;
 import fr.heffebaycay.cdb.dao.exception.DaoException;
-import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.service.impl.CompanyServiceJDBCImpl;
@@ -42,10 +41,9 @@ public class TestCompanyService {
 
     IComputerDao computerDao = mock(IComputerDao.class);
 
-    DaoManager daoManager = mock(DaoManager.class);
     companyDao = mock(ICompanyDao.class);
 
-    companyService = new CompanyServiceJDBCImpl(daoManager, computerDao, companyDao);
+    companyService = new CompanyServiceJDBCImpl(computerDao, companyDao);
 
     Company c1 = new Company.Builder().id(1).name("Apple").build();
 
@@ -69,11 +67,7 @@ public class TestCompanyService {
       fail("Company Service isn't initialized");
     }
 
-    try {
-      when(companyDao.findAll()).thenReturn(companiesDB);
-    } catch (DaoException e) {
-      fail("testFindAll(): Failed to setup Mockito: " + e.getMessage());
-    }
+    when(companyDao.findAll()).thenReturn(companiesDB);
 
     List<Company> companies = companyService.findAll();
 
@@ -88,20 +82,16 @@ public class TestCompanyService {
       fail("Company Service isn't initialized");
     }
 
-    try {
-      doAnswer(new Answer<Company>() {
+    doAnswer(new Answer<Company>() {
 
-        @Override
-        public Company answer(InvocationOnMock invocation) {
-          long idToFind = invocation.getArgumentAt(0, Long.class);
+      @Override
+      public Company answer(InvocationOnMock invocation) {
+        long idToFind = invocation.getArgumentAt(0, Long.class);
 
-          return companiesDB.stream().filter(c -> c.getId() == idToFind).findFirst().get();
-        }
+        return companiesDB.stream().filter(c -> c.getId() == idToFind).findFirst().get();
+      }
 
-      }).when(companyDao).findById(Matchers.anyLong());
-    } catch (DaoException e) {
-      fail("testFindById(): Failed to setup Mockito: " + e.getMessage());
-    }
+    }).when(companyDao).findById(Matchers.anyLong());
 
     Random rnd = new Random();
     int randomIndex = rnd.nextInt(companiesDB.size());
@@ -121,7 +111,6 @@ public class TestCompanyService {
       fail("CompanyService isn't initialized");
     }
 
-    try {
       doAnswer(new Answer<Long>() {
 
         @Override
@@ -135,9 +124,6 @@ public class TestCompanyService {
         }
 
       }).when(companyDao).create(Matchers.any(Company.class));
-    } catch (DaoException e) {
-      fail("testCreate(): Failed to setup Mockito: " + e.getMessage());
-    }
 
     Company c4 = new Company.Builder().id(4).name("Compaq").build();
 

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +21,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.SQLCompanyDao;
-import fr.heffebaycay.cdb.dao.impl.util.MySQLUtils;
-import fr.heffebaycay.cdb.dao.manager.DaoManager;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.util.CompanySortCriteria;
@@ -31,15 +31,12 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 @ContextConfiguration(locations = { "classpath:applicationContext.xml" })
 public class TestCompanyDaoMySQLImpl {
 
-  @Autowired
-  MySQLUtils    sqlUtils;
-
   //Passing a reference to the test SQL utils class to the DAO
   @Autowired
   SQLCompanyDao companyDao;
-
+  
   @Autowired
-  DaoManager    daoManager;
+  MySQLUtils sqlUtils;
 
   List<Company> localCompanies;
 
@@ -81,7 +78,7 @@ public class TestCompanyDaoMySQLImpl {
     localCompanies.add(c9);
     localCompanies.add(c10);
 
-    Connection conn = daoManager.getConnection();
+    Connection conn = sqlUtils.getConnection();
     final String insertSQL = "INSERT INTO company(id, name) VALUES(?,?)";
     final PreparedStatement ps = conn.prepareStatement(insertSQL);
 
@@ -91,8 +88,10 @@ public class TestCompanyDaoMySQLImpl {
 
       ps.executeUpdate();
     }
-
-    daoManager.closeStatement(ps);
+    
+    
+    sqlUtils.closeStatement(ps);
+    sqlUtils.closeConnection(conn);
 
   }
 
@@ -101,32 +100,25 @@ public class TestCompanyDaoMySQLImpl {
 
     sqlUtils.truncateTables();
 
-    daoManager.closeConnection();
-
   }
 
   @Test
+  @Transactional
   public void testFindAll() {
 
     List<Company> companies = null;
-    try {
-      companies = companyDao.findAll();
-    } catch (DaoException e) {
-      fail("ICompanyDao::findAll() threw a DaoException: " + e.getMessage());
-    }
+    companies = companyDao.findAll();
 
     assertEquals(localCompanies, companies);
   }
 
   @Test
+  @Transactional
   public void testFindById() {
 
     Company company = null;
-    try {
-      company = companyDao.findById(2);
-    } catch (DaoException e) {
-      fail("ICompanyDao::findById() threw a DaoException: " + e.getMessage());
-    }
+
+    company = companyDao.findById(2);
 
     assertEquals(2, company.getId());
 
@@ -147,19 +139,18 @@ public class TestCompanyDaoMySQLImpl {
   }
 
   @Test
+  @Transactional
   public void testFindByIdNegativeId() {
     Company company = null;
-    
-    try {
-      company = companyDao.findById(-1);
-    } catch (DaoException e) {
-      return;
-    }
-    
-    fail("A DaoException was expected but was not thrown");
+
+    company = companyDao.findById(-1);
+
+    //fail("A DaoException was expected but was not thrown");
+    assertEquals(null, company);
   }
 
   @Test
+  @Transactional
   public void testFindAllWithOffset() {
 
     CompanyPageRequest request = new CompanyPageRequest.Builder()
@@ -231,6 +222,7 @@ public class TestCompanyDaoMySQLImpl {
   }
 
   @Test
+  @Transactional
   public void testFindByName() {
     CompanyPageRequest request = new CompanyPageRequest.Builder()
         .offset(0L)
@@ -295,5 +287,15 @@ public class TestCompanyDaoMySQLImpl {
 
     assertEquals(0, wrapper.getResults().size());
   }
+
+  public void setCompanyDao(SQLCompanyDao companyDao) {
+    this.companyDao = companyDao;
+  }
+
+  public void setSqlUtils(MySQLUtils sqlUtils) {
+    this.sqlUtils = sqlUtils;
+  }
+  
+  
 
 }
