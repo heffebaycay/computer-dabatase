@@ -17,6 +17,9 @@ bin/
 /target/
 
 # Application config files
-src/main/resources/config.properties
-#src/test/resources/config.properties
+computer-database-core/src/main/resources/config.properties
+computer-database-persistence/src/main/resources/persistence.properties
+computer-database-webapp/src/main/resources/persistence.properties
+
+
 /target/

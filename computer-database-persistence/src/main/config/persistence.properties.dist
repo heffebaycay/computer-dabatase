@@ -1,0 +1,13 @@
+######################################################
+#             CDB - Persistence Settings             #
+######################################################
+
+# Credentials
+db.username = username-goes-here
+db.password = password-goes-here
+
+# Database name
+db.name     = db-name-goes-here
+
+# Connection URL to the DBMS
+db.url      = jdbc:mysql://127.0.0.1:3306
