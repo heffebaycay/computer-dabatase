@@ -30,7 +30,7 @@ import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:applicationContext.xml" })
+@ContextConfiguration(locations = { "classpath:applicationContextPersistence.xml" })
 public class TestComputerDaoMySQLImpl {
 
   @Autowired
