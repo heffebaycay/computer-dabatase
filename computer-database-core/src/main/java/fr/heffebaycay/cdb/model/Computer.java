@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import fr.heffebaycay.cdb.dao.converter.LocalDateTimePersistenceConverter;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "computer")
@@ -25,11 +24,11 @@ public class Computer {
   @Column(name = "name")
   protected String        name;
 
-  @Convert(converter = LocalDateTimePersistenceConverter.class)
+  @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
   @Column(name = "introduced")
   protected LocalDateTime introduced;
 
-  @Convert(converter = LocalDateTimePersistenceConverter.class)
+  @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
   @Column(name = "discontinued")
   protected LocalDateTime discontinued;
 

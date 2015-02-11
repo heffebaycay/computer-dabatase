@@ -107,17 +107,6 @@
 		<version>${spring.version}</version>
 		<scope>test</scope>
 	</dependency>
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-jdbc</artifactId>
-		<version>${spring.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-tx</artifactId>
-		<version>${spring.version}</version>
-	</dependency>
-	
     
   	
   	<!-- Logging dependencies: Common -->
@@ -144,12 +133,6 @@
   		<groupId>junit</groupId>
   		<artifactId>junit</artifactId>
   		<version>${junit.version}</version>
-  		<scope>test</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.seleniumhq.selenium</groupId>
-  		<artifactId>selenium-firefox-driver</artifactId>
-  		<version>${selenium.version}</version>
   		<scope>test</scope>
   	</dependency>
   </dependencies>
