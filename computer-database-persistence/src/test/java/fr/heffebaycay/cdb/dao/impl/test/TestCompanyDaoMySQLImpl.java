@@ -29,6 +29,7 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:applicationContextPersistence.xml" })
+@Transactional
 public class TestCompanyDaoMySQLImpl {
 
   //Passing a reference to the test SQL utils class to the DAO
@@ -95,15 +96,7 @@ public class TestCompanyDaoMySQLImpl {
 
   }
 
-  @After
-  public void tearDown() throws Exception {
-
-    sqlUtils.truncateTables();
-
-  }
-
   @Test
-  @Transactional
   public void testFindAll() {
 
     List<Company> companies = null;
@@ -113,7 +106,6 @@ public class TestCompanyDaoMySQLImpl {
   }
 
   @Test
-  @Transactional
   public void testFindById() {
 
     Company company = null;
@@ -139,7 +131,6 @@ public class TestCompanyDaoMySQLImpl {
   }
 
   @Test
-  @Transactional
   public void testFindByIdNegativeId() {
     Company company = null;
 
@@ -150,7 +141,6 @@ public class TestCompanyDaoMySQLImpl {
   }
 
   @Test
-  @Transactional
   public void testFindAllWithOffset() {
 
     CompanyPageRequest request = new CompanyPageRequest.Builder()
@@ -222,7 +212,6 @@ public class TestCompanyDaoMySQLImpl {
   }
 
   @Test
-  @Transactional
   public void testFindByName() {
     CompanyPageRequest request = new CompanyPageRequest.Builder()
         .offset(0L)

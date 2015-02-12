@@ -31,6 +31,7 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:applicationContextPersistence.xml" })
+@Transactional
 public class TestComputerDaoMySQLImpl {
 
   @Autowired
@@ -165,15 +166,7 @@ public class TestComputerDaoMySQLImpl {
 
   }
 
-  @After
-  public void tearDown() throws Exception {
-
-    sqlUtils.truncateTables();
-
-  }
-
   @Test
-  @Transactional
   public void testFindAll() {
 
     List<Computer> computers = null;
@@ -189,7 +182,6 @@ public class TestComputerDaoMySQLImpl {
   }
 
   @Test
-  @Transactional
   public void testFindAllWithOffset() {
 
     ComputerPageRequest request = new ComputerPageRequest.Builder()
@@ -217,7 +209,6 @@ public class TestComputerDaoMySQLImpl {
   }
 
   @Test
-  @Transactional
   public void testFindById() {
 
     Computer computer = null;
@@ -244,7 +235,6 @@ public class TestComputerDaoMySQLImpl {
   }
 
   @Test
-  @Transactional
   public void testCreate() {
 
     Company company = new Company.Builder().id(4).name("Compaq").build();
@@ -295,7 +285,6 @@ public class TestComputerDaoMySQLImpl {
   }
 
   @Test
-  @Transactional
   public void testUpdate() {
 
     Computer computer = null;
