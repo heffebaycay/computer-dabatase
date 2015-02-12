@@ -280,7 +280,7 @@ public class TestComputerDaoMySQLImpl {
   public void testCreateWithNullComputer() {
 
     try {
-      long computerId = computerDao.create(null);
+      computerDao.create(null);
 
       fail("Expected an IllegalArgumentException to be thrown");
 

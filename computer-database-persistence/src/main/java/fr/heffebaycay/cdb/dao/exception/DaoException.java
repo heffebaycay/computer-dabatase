@@ -2,6 +2,11 @@ package fr.heffebaycay.cdb.dao.exception;
 
 public class DaoException extends Exception {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 256754852798053793L;
+
   public DaoException() {
     super();
   }

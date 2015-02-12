@@ -63,12 +63,6 @@ public class TestComputerService {
     Computer c6 = new Computer.Builder().id(6).name("MacBook Pro").company(apple)
         .introduced(LocalDateTime.parse("2006-01-10T00:00:00")).build();
 
-    // This one isn't going to be added to the data source
-    Computer c7 = new Computer.Builder().id(42).name("My Awesome Computer").company(apple).build();
-
-    // Updated version of c1
-    Computer c8 = new Computer.Builder().id(1).company(apple).name("Ipad 27").build();
-
     computersDB.add(c1);
     computersDB.add(c2);
     computersDB.add(c3);

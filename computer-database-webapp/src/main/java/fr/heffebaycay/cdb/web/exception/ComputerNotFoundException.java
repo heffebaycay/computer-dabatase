@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Requested Computer does not exist")
 public class ComputerNotFoundException extends RuntimeException {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 6420059200537476540L;
+
   public ComputerNotFoundException() {
     super();
   }

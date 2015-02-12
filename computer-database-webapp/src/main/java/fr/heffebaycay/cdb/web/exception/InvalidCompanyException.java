@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Requested Company is not valid")
 public class InvalidCompanyException extends RuntimeException {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -8786256240993814922L;
+
   public InvalidCompanyException() {
     super();
   }

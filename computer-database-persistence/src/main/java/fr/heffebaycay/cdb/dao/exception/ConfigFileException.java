@@ -2,6 +2,11 @@ package fr.heffebaycay.cdb.dao.exception;
 
 public class ConfigFileException extends RuntimeException {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -8961261865455989611L;
+
   public ConfigFileException() {
     super();
   }

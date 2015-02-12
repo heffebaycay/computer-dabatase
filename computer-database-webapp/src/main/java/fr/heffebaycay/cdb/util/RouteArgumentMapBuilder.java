@@ -5,6 +5,10 @@ import java.util.Map;
 
 public class RouteArgumentMapBuilder extends HashMap<String, String> {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 3514327207578076443L;
   protected Map<String, String> args;
   
   public RouteArgumentMapBuilder() {

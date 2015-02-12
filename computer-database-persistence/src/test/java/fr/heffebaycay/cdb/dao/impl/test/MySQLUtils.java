@@ -1,11 +1,8 @@
 package fr.heffebaycay.cdb.dao.impl.test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,33 +18,7 @@ public class MySQLUtils {
   @Autowired
   private DriverManagerDataSource dataSource;
 
-  private static String           DB_USERNAME, DB_PASSWORD, DB_URL, DB_NAME;
-
-  public MySQLUtils() {
-    init();
-  }
-
-  private void init() {
-
-    Properties prop = new Properties();
-
-    InputStream inputStream = MySQLUtils.class.getClassLoader().getResourceAsStream(
-        "config.properties");
-    if (inputStream != null) {
-      try {
-        prop.load(inputStream);
-      } catch (IOException e) {
-        LOGGER.warn("Failed to load config file");
-        return;
-      }
-
-      DB_USERNAME = prop.getProperty("db.username");
-      DB_PASSWORD = prop.getProperty("db.password");
-      DB_URL = prop.getProperty("db.url");
-      DB_NAME = prop.getProperty("db.name");
-    }
-
-  }
+  public MySQLUtils() {}
 
   public Connection getConnection() {
 

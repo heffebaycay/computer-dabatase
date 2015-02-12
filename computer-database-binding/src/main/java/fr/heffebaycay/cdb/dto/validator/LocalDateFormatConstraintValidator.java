@@ -1,6 +1,5 @@
 package fr.heffebaycay.cdb.dto.validator;
 
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import javax.validation.ConstraintValidator;

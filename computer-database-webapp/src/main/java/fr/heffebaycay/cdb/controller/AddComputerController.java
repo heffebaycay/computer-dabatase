@@ -1,8 +1,5 @@
 package fr.heffebaycay.cdb.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -19,7 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import fr.heffebaycay.cdb.dto.ComputerDTO;
 import fr.heffebaycay.cdb.dto.mapper.CompanyMapper;
 import fr.heffebaycay.cdb.dto.mapper.ComputerMapper;
-import fr.heffebaycay.cdb.dto.validator.ComputerDTOValidator;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.ICompanyService;
@@ -57,23 +53,15 @@ public class AddComputerController {
       RedirectAttributes redirectAttrs) {
 
     LOGGER.debug("Call to AddComputerController::doPost()");
-
-    List<String> errors = new ArrayList<>();
-
     Computer computer = new Computer();
-
-    ComputerDTOValidator computerValidator = new ComputerDTOValidator();
-    computerValidator.validate(computerDTO, errors);
 
     // Validating company is special as we need to check that the company selected
     // by the user does exist in the data source.
-
     Company company = null;
     Long companyId = computerDTO.getCompanyId();
     if (companyId > 0) {
       company = mCompanyService.findById(companyId);
       if (company == null) {
-        errors.add("Selected company does not exist.");
         result.addError(new ObjectError("companyId", "Selected company does not exist"));
       }
     }

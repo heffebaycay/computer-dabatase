@@ -17,23 +17,15 @@ import fr.heffebaycay.cdb.model.Route;
 public class AppSettings {
 
   private static final String CONFIG_FILE     = "config.properties";
-  private static final String KEY_DB_USER     = "db.username";
-  private static final String KEY_DB_PASSWORD = "db.password";
-  private static final String KEY_DB_NAME     = "db.name";  
-  
-  public static String        DB_USER;
-  public static String        DB_PASSWORD;
-  public static String        DB_NAME;
 
   public static List<Route>   APP_ROUTES;
 
-  public static final long    NB_RESULTS_PAGE;
+  public static final long    NB_RESULTS_PAGE = 10;
 
   private static final Logger LOGGER          = LoggerFactory.getLogger(AppSettings.class
                                                   .getSimpleName());
 
   static {
-    NB_RESULTS_PAGE = 10;
 
     readProperties();
     populateRoutes();
@@ -65,10 +57,6 @@ public class AppSettings {
       throw new ConfigFileException();
     }
 
-    DB_USER = prop.getProperty(KEY_DB_USER);
-    DB_PASSWORD = prop.getProperty(KEY_DB_PASSWORD);
-    DB_NAME = prop.getProperty(KEY_DB_NAME);
-
   }
 
   /**
@@ -79,7 +67,7 @@ public class AppSettings {
 
     APP_ROUTES = new ArrayList<>();
 
-    Set<String> params = new HashSet();
+    Set<String> params = new HashSet<>();
     params.add("p");
     params.add("search");
     params.add("order");

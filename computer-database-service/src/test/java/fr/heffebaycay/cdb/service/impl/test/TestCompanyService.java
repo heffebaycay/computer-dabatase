@@ -51,7 +51,6 @@ public class TestCompanyService {
 
     Company c3 = new Company.Builder().id(3).name("IBM").build();
 
-    Company c4 = new Company.Builder().id(2).name("Compaq").build();
 
     companiesDB = new ArrayList<Company>();
     companiesDB.add(c1);
