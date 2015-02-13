@@ -16,7 +16,13 @@ import java.time.ZoneId;
 import java.util.Date;
 
 /**
+ * Mapping class for Hibernate
  * 
+ * Hibernate currently does not support Java 8 JSR 310 time classes, so having this mapper is required.
+ * 
+ * This mapper only handles the "java.time.LocalDateTime" class.
+ * 
+ * Credit goes to:
  * http://blog.progs.be/550/java-time-hibernate
  *
  */

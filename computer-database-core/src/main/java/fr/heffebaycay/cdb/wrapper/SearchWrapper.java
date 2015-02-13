@@ -9,18 +9,40 @@ import java.util.List;
  */
 public class SearchWrapper<T> {
 
+  /**
+   * The actual data result
+   */
   private List<T> results;
   
+  /**
+   * Total number of elements matching the query
+   * This is always greater of equal than the number of elements in the <strong>results</strong> object.
+   */
   private long totalCount;
   
+  /**
+   * Number of the current page. Page numbers are 1-indexed.
+   */
   private long currentPage;
   
+  /**
+   * Total number of pages of elements matching the query
+   */
   private long totalPage;
   
+  /**
+   * Attribute indicating in what order the elements should be sorted
+   */
   private String sortOrder;
   
+  /**
+   * Attribute indicating the criterion that should be used for sorting elements
+   */
   private String sortCriterion;
   
+  /**
+   * An optional search keyword to filter elements
+   */
   private String searchQuery;
   
   
