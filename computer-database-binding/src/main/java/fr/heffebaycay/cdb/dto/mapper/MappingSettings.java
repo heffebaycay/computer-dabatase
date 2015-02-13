@@ -20,7 +20,7 @@ public class MappingSettings {
   public String getDatePattern() {
     Locale userLocale = LocaleContextHolder.getLocale();
     
-    return messageSource.getMessage("date.format", null, userLocale);
+    return messageSource.getMessage("binding.date.format", null, userLocale);
 
   }
   

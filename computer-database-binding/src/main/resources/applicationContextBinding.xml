@@ -12,4 +12,10 @@
                 
         <context:component-scan base-package="fr.heffebaycay.cdb.dto.mapper" />
         
+        <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+            <property name="basename" value="classpath:binding-messages" />
+            <property name="defaultEncoding" value="UTF-8" />
+            
+        </bean>
+        
 </beans>
