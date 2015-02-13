@@ -1,20 +1,9 @@
 package fr.heffebaycay.cdb.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table( name = "company" )
 public class Company {
 
-  @Id
-  @GeneratedValue
   protected long   id;
 
-  @Column(name = "name")
   protected String name;
 
   public Company() {

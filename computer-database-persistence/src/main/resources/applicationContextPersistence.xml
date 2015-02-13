@@ -41,7 +41,12 @@
                     <prop key="hibernate.show_sql">false</prop>
                 </props>
             </property>
-            <property name="packagesToScan" value="fr.heffebaycay.cdb.model" />
+            <property name="mappingLocations">
+                <list>
+                    <value>classpath:fr/heffebaycay/cdb/model/Company.hbm.xml</value>
+                    <value>classpath:fr/heffebaycay/cdb/model/Computer.hbm.xml</value>
+                </list>
+            </property> 
         </bean>
         
 </beans>
