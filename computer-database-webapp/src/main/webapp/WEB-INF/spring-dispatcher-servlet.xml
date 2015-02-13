@@ -13,6 +13,9 @@
         
         <mvc:annotation-driven validator="validator" />
         
+        <import resource="classpath:/applicationContextService.xml"/>
+        <import resource="classpath:/applicationContextBinding.xml" />
+        
         <context:component-scan base-package="fr.heffebaycay.cdb.controller" />
         
         <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">

@@ -3,34 +3,34 @@ package fr.heffebaycay.cdb.dto.mapper;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.format.FormatStyle;
-import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class LocalDateMapper {
 
-  private static final Logger LOGGER       = LoggerFactory.getLogger(LocalDateMapper.class
-                                               .getSimpleName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LocalDateMapper.class
+                                         .getSimpleName());
 
+  @Autowired
+  private MappingSettings mappingSettings;
+  
   private LocalDateMapper() {
     super();
   }
 
-  public static String toDTO(LocalDate ld) {
+  public String toDTO(LocalDate ld) {
 
     if (ld == null) {
       return null;
     }
 
     try {
-      Locale userLocale = LocaleContextHolder.getLocale();
-
       DateTimeFormatter localeFormatter = DateTimeFormatter
-          .ofLocalizedDate(FormatStyle.SHORT)
-          .withLocale(userLocale);
+          .ofPattern(mappingSettings.getDatePattern());
       String strDate = ld.format(localeFormatter);
       return strDate;
     } catch (IllegalArgumentException e) {
@@ -40,15 +40,15 @@ public class LocalDateMapper {
 
   }
 
-  public static LocalDate fromDTO(String strDate) {
+  public LocalDate fromDTO(String strDate) {
 
     if (strDate == null || strDate.trim().isEmpty()) {
       return null;
     }
 
     try {
-      Locale userLocale = LocaleContextHolder.getLocale();
-      DateTimeFormatter localeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(userLocale);
+      DateTimeFormatter localeFormatter = DateTimeFormatter
+          .ofPattern(mappingSettings.getDatePattern());
       LocalDate ld = LocalDate.parse(strDate, localeFormatter);
       return ld;
     } catch (DateTimeParseException e) {

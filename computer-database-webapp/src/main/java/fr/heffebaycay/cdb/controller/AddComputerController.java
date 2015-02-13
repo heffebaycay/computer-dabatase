@@ -33,6 +33,8 @@ public class AddComputerController {
   private IComputerService    mComputerService;
   @Autowired
   private ICompanyService     mCompanyService;
+  @Autowired
+  private ComputerMapper computerMapper;
 
   public AddComputerController() {
 
@@ -80,7 +82,7 @@ public class AddComputerController {
       //return "addComputer";
       return doGet(computerDTO, map);
     } else {
-      computer = ComputerMapper.fromDTO(computerDTO);
+      computer = computerMapper.fromDTO(computerDTO);
 
       computer.setCompany(company);
       long computerId = mComputerService.create(computer);

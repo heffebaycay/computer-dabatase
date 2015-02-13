@@ -5,12 +5,15 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import fr.heffebaycay.cdb.dto.ComputerDTO;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+@Component
 public class ComputerMapper {
 
   public static final Logger LOGGER = LoggerFactory.getLogger(ComputerMapper.class.getSimpleName());
@@ -18,6 +21,12 @@ public class ComputerMapper {
   private ComputerMapper() {
     super();
   }
+  
+  @Autowired
+  private LocalDateTimeMapper localDateTimeMapper;
+  
+  @Autowired
+  private LocalDateMapper localDateMapper;
 
   /**
    * Converts a Computer DO object to is DTO version 
@@ -25,7 +34,7 @@ public class ComputerMapper {
    * @param computerDAO     The DAO object to be converted
    * @return                An instance of <i>ComputerDTO</i>, or <strong>null</strong> if <strong>computerDAO</strong> is null.
    */
-  public static ComputerDTO toDTO(Computer computerDAO) {
+  public ComputerDTO toDTO(Computer computerDAO) {
 
     if (computerDAO == null) {
       return null;
@@ -41,8 +50,8 @@ public class ComputerMapper {
     ComputerDTO computerDTO = builder
         .id(computerDAO.getId())
         .name(computerDAO.getName())
-        .introduced(LocalDateTimeMapper.toDTO(computerDAO.getIntroduced()))
-        .discontinued(LocalDateTimeMapper.toDTO(computerDAO.getDiscontinued()))
+        .introduced(localDateTimeMapper.toDTO(computerDAO.getIntroduced()))
+        .discontinued(localDateTimeMapper.toDTO(computerDAO.getDiscontinued()))
         .companyId(companyId)
         .build();
 
@@ -60,7 +69,7 @@ public class ComputerMapper {
    * @param computers       The list of Computer DAO objects to be converted
    * @return                A List of ComputerDTO objects, or <strong>null</strong> if <strong>computers</strong> is null.
    */
-  public static List<ComputerDTO> toDTO(List<Computer> computers) {
+  public List<ComputerDTO> toDTO(List<Computer> computers) {
 
     if (computers == null) {
       return null;
@@ -76,7 +85,7 @@ public class ComputerMapper {
    * @param computerDTO     The DTO object to be converted
    * @return                An instance of <i>Computer</i>, or <strong>null</strong> if <strong>computerDTO</strong> is null.
    */
-  public static Computer fromDTO(ComputerDTO computerDTO) {
+  public Computer fromDTO(ComputerDTO computerDTO) {
 
     if (computerDTO == null) {
       return null;
@@ -86,9 +95,9 @@ public class ComputerMapper {
         .id(computerDTO.getId())
         .name(computerDTO.getName())
         .introduced(
-            LocalDateTimeMapper.fromLocalDate(LocalDateMapper.fromDTO(computerDTO.getIntroduced())))
+            localDateTimeMapper.fromLocalDate(localDateMapper.fromDTO(computerDTO.getIntroduced())))
         .discontinued(
-            LocalDateTimeMapper.fromLocalDate(LocalDateMapper.fromDTO(computerDTO.getDiscontinued())))
+            localDateTimeMapper.fromLocalDate(localDateMapper.fromDTO(computerDTO.getDiscontinued())))
         .company(new Company.Builder().id(computerDTO.getCompanyId()).build())
         .build();
 
@@ -101,7 +110,7 @@ public class ComputerMapper {
    * @param computer
    * @param computerDTO
    */
-  public static void updateDAO(Computer computer, ComputerDTO computerDTO) {
+  public void updateDAO(Computer computer, ComputerDTO computerDTO) {
 
     if (computer == null || computerDTO == null) {
       return;
@@ -116,7 +125,7 @@ public class ComputerMapper {
 
   }
 
-  public static SearchWrapper<ComputerDTO> convertWrappertoDTO(SearchWrapper<Computer> wrapper) {
+  public SearchWrapper<ComputerDTO> convertWrappertoDTO(SearchWrapper<Computer> wrapper) {
 
     SearchWrapper<ComputerDTO> dtoWrapper = new SearchWrapper<>();
 

@@ -37,6 +37,9 @@ public class EditComputerController {
   private IComputerService    mComputerService;
   @Autowired
   private ICompanyService     mCompanyService;
+  
+  @Autowired
+  private ComputerMapper computerMapper;
 
   public EditComputerController() {
     super();
@@ -63,7 +66,7 @@ public class EditComputerController {
       map.addAttribute("msgSuccess", true);
     }
 
-    ComputerDTO computerDTO = ComputerMapper.toDTO(mComputerService.findById(id));
+    ComputerDTO computerDTO = computerMapper.toDTO(mComputerService.findById(id));
     if (computerDTO == null) {
       // Unable to find any computer based on the given Id
       LOGGER.warn("doGet() : Inexisting computer requested by user");
@@ -128,7 +131,7 @@ public class EditComputerController {
 
     } else {
       // Validation succeeded
-      ComputerMapper.updateDAO(computer, computerDTO);
+      computerMapper.updateDAO(computer, computerDTO);
 
       computer.setCompany(company);
       mComputerService.update(computer);

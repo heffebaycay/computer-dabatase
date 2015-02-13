@@ -26,6 +26,9 @@ public class ComputerController {
 
   @Autowired
   private IComputerService    mComputerService;
+  
+  @Autowired
+  private ComputerMapper computerMapper;
 
   public ComputerController() {
 
@@ -72,7 +75,7 @@ public class ComputerController {
       searchWrapper = mComputerService.findAll(pageRequest);
     }
 
-    SearchWrapper<ComputerDTO> dtoSearchWrapper = ComputerMapper.convertWrappertoDTO(searchWrapper);
+    SearchWrapper<ComputerDTO> dtoSearchWrapper = computerMapper.convertWrappertoDTO(searchWrapper);
     
     map.addAttribute("searchWrapper", dtoSearchWrapper);
 

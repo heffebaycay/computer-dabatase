@@ -4,31 +4,35 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.format.FormatStyle;
-import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class LocalDateTimeMapper {
 
-  private static final Logger LOGGER       = LoggerFactory.getLogger(LocalDateTimeMapper.class
-                                               .getSimpleName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(LocalDateTimeMapper.class
+                                         .getSimpleName());
 
+  @Autowired
+  private MappingSettings mappingSettings;
+  
   private LocalDateTimeMapper() {
     super();
   }
 
-  public static String toDTO(LocalDateTime ldt) {
+  public String toDTO(LocalDateTime ldt) {
 
     if (ldt == null) {
       return null;
     }
-
+    
     try {
-      Locale userLocale = LocaleContextHolder.getLocale();
-      DateTimeFormatter localeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(userLocale);
+      DateTimeFormatter localeFormatter = DateTimeFormatter
+          .ofPattern(mappingSettings.getDatePattern());
+
       String strDate = ldt.format(localeFormatter);
       return strDate;
     } catch (IllegalArgumentException e) {
@@ -38,12 +42,10 @@ public class LocalDateTimeMapper {
 
   }
 
-  public static LocalDateTime fromDTO(String strDate) {
+  public LocalDateTime fromDTO(String strDate) {
 
     try {
-      Locale userLocale = LocaleContextHolder.getLocale();
-      
-      DateTimeFormatter localeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(userLocale);
+      DateTimeFormatter localeFormatter = DateTimeFormatter.ofPattern(mappingSettings.getDatePattern());
       LocalDateTime ldt = LocalDateTime.parse(strDate, localeFormatter);
       return ldt;
     } catch (DateTimeParseException e) {
@@ -52,7 +54,7 @@ public class LocalDateTimeMapper {
     }
   }
 
-  public static LocalDateTime fromLocalDate(LocalDate ld) {
+  public LocalDateTime fromLocalDate(LocalDate ld) {
 
     if (ld == null) {
       return null;
