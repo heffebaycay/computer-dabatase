@@ -12,7 +12,11 @@
         
         <import resource="classpath:/applicationContextPersistence.xml"/>
         
-        <context:component-scan base-package="fr.heffebaycay.cdb.service">
-        </context:component-scan>
+        <context:component-scan base-package="fr.heffebaycay.cdb.service" />
         
+        <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+            <property name="sessionFactory" ref="sessionFactory" />
+        </bean>
+        
+        <tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>

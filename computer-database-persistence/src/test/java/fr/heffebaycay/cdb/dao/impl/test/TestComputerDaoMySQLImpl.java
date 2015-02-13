@@ -12,7 +12,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +29,7 @@ import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:applicationContextPersistence.xml" })
+@ContextConfiguration(locations = { "classpath:applicationContextPersistenceTest.xml" })
 @Transactional
 public class TestComputerDaoMySQLImpl {
 
