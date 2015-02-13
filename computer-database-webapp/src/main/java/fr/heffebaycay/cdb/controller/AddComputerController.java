@@ -34,7 +34,9 @@ public class AddComputerController {
   @Autowired
   private ICompanyService     mCompanyService;
   @Autowired
-  private ComputerMapper computerMapper;
+  private ComputerMapper      computerMapper;
+  @Autowired
+  private CompanyMapper       companyMapper;
 
   public AddComputerController() {
 
@@ -45,7 +47,7 @@ public class AddComputerController {
     LOGGER.debug("Call to AddComputerController::doGet()");
 
     // The view requires the list of all companies
-    map.addAttribute("companies", CompanyMapper.toDTO(mCompanyService.findAll()));
+    map.addAttribute("companies", companyMapper.toDTO(mCompanyService.findAll()));
 
     return "addComputer";
   }

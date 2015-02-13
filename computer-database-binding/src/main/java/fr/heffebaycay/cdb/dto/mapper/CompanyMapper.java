@@ -3,9 +3,12 @@ package fr.heffebaycay.cdb.dto.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+
 import fr.heffebaycay.cdb.dto.CompanyDTO;
 import fr.heffebaycay.cdb.model.Company;
 
+@Component
 public class CompanyMapper {
 
   private CompanyMapper() {
@@ -18,7 +21,7 @@ public class CompanyMapper {
    * @param companyDAO      The DAO object to be converted
    * @return                An instance of <i>CompanyDTO</i>, or <strong>null</strong> if <strong>companyDAO</strong> is null.
    */
-  public static CompanyDTO toDTO(Company companyDAO) {
+  public CompanyDTO toDTO(Company companyDAO) {
 
     if (companyDAO == null) {
       return null;
@@ -36,7 +39,7 @@ public class CompanyMapper {
    * @param companies   The List of Company DAO objects to be converted
    * @return            A List of CompanyDTO objects, or <strong>null</strong> if <strong>companies</strong> is null.
    */
-  public static List<CompanyDTO> toDTO(List<Company> companies) {
+  public List<CompanyDTO> toDTO(List<Company> companies) {
 
     if (companies == null) {
       return null;
@@ -52,7 +55,7 @@ public class CompanyMapper {
    * @param companyDTO      The DTO object to be converted
    * @return                An instance of <i>Company</i>, or <strong>null</strong> if <strong>companyDTO</strong> is null.
    */
-  public static Company fromDTO(CompanyDTO companyDTO) {
+  public Company fromDTO(CompanyDTO companyDTO) {
 
     if (companyDTO == null) {
       return null;

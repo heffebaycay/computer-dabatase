@@ -21,12 +21,15 @@ public class ComputerMapper {
   private ComputerMapper() {
     super();
   }
-  
+
   @Autowired
   private LocalDateTimeMapper localDateTimeMapper;
-  
+
   @Autowired
-  private LocalDateMapper localDateMapper;
+  private LocalDateMapper     localDateMapper;
+
+  @Autowired
+  private CompanyMapper       companyMapper;
 
   /**
    * Converts a Computer DO object to is DTO version 
@@ -55,10 +58,10 @@ public class ComputerMapper {
         .companyId(companyId)
         .build();
 
-    if(computerDAO.getCompany() != null) {
-      computerDTO.setCompany( CompanyMapper.toDTO(computerDAO.getCompany()) );
+    if (computerDAO.getCompany() != null) {
+      computerDTO.setCompany(companyMapper.toDTO(computerDAO.getCompany()));
     }
-    
+
     return computerDTO;
 
   }

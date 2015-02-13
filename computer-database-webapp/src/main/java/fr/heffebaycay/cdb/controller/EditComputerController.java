@@ -37,9 +37,11 @@ public class EditComputerController {
   private IComputerService    mComputerService;
   @Autowired
   private ICompanyService     mCompanyService;
-  
+
   @Autowired
-  private ComputerMapper computerMapper;
+  private ComputerMapper      computerMapper;
+  @Autowired
+  private CompanyMapper       companyMapper;
 
   public EditComputerController() {
     super();
@@ -72,14 +74,12 @@ public class EditComputerController {
       LOGGER.warn("doGet() : Inexisting computer requested by user");
       throw new ComputerNotFoundException();
     }
-    
-    map.addAttribute("computerDTO", computerDTO);
-    
 
-    List<CompanyDTO> companies = CompanyMapper.toDTO(mCompanyService.findAll());
+    map.addAttribute("computerDTO", computerDTO);
+
+    List<CompanyDTO> companies = companyMapper.toDTO(mCompanyService.findAll());
 
     map.addAttribute("companies", companies);
-    
 
     return "editComputer";
   }
@@ -120,11 +120,11 @@ public class EditComputerController {
         }
         map.addAttribute("msgValidationFailed", true);
       }
-      
+
       // The edit page needs the list of companies
-      List<CompanyDTO> companies = CompanyMapper.toDTO(mCompanyService.findAll());
+      List<CompanyDTO> companies = companyMapper.toDTO(mCompanyService.findAll());
       map.addAttribute("companies", companies);
-      
+
       map.addAttribute("computerDTO", computerDTO);
       // Returning the editComputer view
       return "editComputer";
@@ -135,7 +135,7 @@ public class EditComputerController {
 
       computer.setCompany(company);
       mComputerService.update(computer);
-      
+
       redirectAttrs.addAttribute("id", computerDTO.getId());
       return "redirect:/computers/edit?id={id}&msg=editSuccess";
     }
