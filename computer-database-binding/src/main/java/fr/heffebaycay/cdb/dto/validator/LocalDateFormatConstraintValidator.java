@@ -21,11 +21,12 @@ public class LocalDateFormatConstraintValidator implements
   private MappingSettings mappingSettings;
 
   @Override
-  public void initialize(LocalDateFormat ldf) {}
+  public void initialize(LocalDateFormat ldf) {
+  }
 
   @Override
   public boolean isValid(String str, ConstraintValidatorContext arg1) {
-
+    
     if (!StringUtils.isBlank(str)) {
       String datePattern = mappingSettings.getDatePattern();
 

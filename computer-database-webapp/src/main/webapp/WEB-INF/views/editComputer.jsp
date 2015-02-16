@@ -38,29 +38,29 @@
                    
                    <spring:url value="/computers/edit?id=${ computerDTO.id }" htmlEscape="true" var="formAction" />
                    
-                   <form:form action="${ formAction }" method="POST" modelAttribute="computerDTO">
+                   <form:form action="${ formAction }" method="POST" modelAttribute="computerDTO" id="computerForm">
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName"><spring:message code="computer_form.name_label" /></label>
                                 <spring:message code="computer_form.name_placeholder" var="name_placeholder" />
-                                <form:input type="text" class="form-control" id="computerName" name="computerName" placeholder="${ name_placeholder }" path="name" />
+                                <form:input type="text" class="form-control" id="computerName" placeholder="${ name_placeholder }" path="name" />
                                 <form:errors path="name" cssClass="error"></form:errors>
                             </div>
                             <div class="form-group">
                                 <label for="introduced"><spring:message code="computer_form.introduced_label" /></label>
                                 <spring:message code="computer_form.introduced_placeholder" var="introduced_placeholder"/>
-                                <form:input type="text" class="form-control" id="introduced" name="introduced" placeholder="${ introduced_placeholder }" path="introduced" />
+                                <form:input type="text" class="form-control" id="introduced" placeholder="${ introduced_placeholder }" path="introduced" />
                                 <form:errors path="introduced" cssClass="error"></form:errors>
                             </div>
                             <div class="form-group">
                                 <label for="discontinued"><spring:message code="computer_form.discontinued_label" /></label>
                                 <spring:message code="computer_form.discontinued_placeholder" var="discontinued_placeholder"/>
-                                <form:input type="text" class="form-control" id="discontinued" name="discontinued" placeholder="${ discontinued_placeholder }" path="discontinued" />
+                                <form:input type="text" class="form-control" id="discontinued" placeholder="${ discontinued_placeholder }" path="discontinued" />
                                 <form:errors path="discontinued" cssClass="error"></form:errors>
                             </div>
                             <div class="form-group">
                                 <label for="companyId"><spring:message code="computer_form.company_label" /></label>
-                                <form:select class="form-control" id="companyId" name="companyId" path="companyId">
+                                <form:select class="form-control" id="companyId" path="companyId">
                                     <form:option value="-1">--</form:option>
                                     <c:forEach items="${ companies }" var="company">
                                         <c:choose>
@@ -101,5 +101,39 @@
             </div>
         </div>
     </section>
+    <spring:message code='binding.date.format' var="dateFormat"/>
+    <script src="<c:url value="/js/jquery.validate.min.js"/>"></script>
+    <script type="text/javascript">
+    
+    
+    	$(document).ready(function(){
+    		
+    		$.validator.addMethod("dateLocale", function(value, element) {
+    			var regex = /<spring:message code='binding.date.regex'/>/;
+    			return this.optional(element) || regex.test(value);
+    		}, "<spring:message code='front.validation.dateLocale.message' />");
+    		
+    		var validator = $("#computerForm").validate({
+        		rules: {
+        			name: {
+        				required: true,
+        			},
+        			introduced: {
+        				dateLocale: true
+        			},
+        			discontinued: {
+        				dateLocale: true
+        			}
+        		},
+        		messages: {
+        			name: "<spring:message code='front.validation.computer.name.required' javaScriptEscape='true' />",
+        			introduced: "<spring:message code='front.validation.computer.introduced.format' arguments='${ dateFormat }' javaScriptEscape='true' />",
+        			discontinued: "<spring:message code='front.validation.computer.introduced.format' arguments='${ dateFormat }' javaScriptEscape='true' />"
+        		}
+        	});
+    	});
+    
+    	
+    </script>
 
 <jsp:include page="include/footer.jsp" />

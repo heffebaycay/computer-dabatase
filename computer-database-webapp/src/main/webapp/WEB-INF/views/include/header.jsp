@@ -12,6 +12,9 @@
 		<link href="<c:url value="/css/bootstrap.min.css" />" rel="stylesheet" media="screen">
 		<link href="<c:url value="/css/font-awesome.css" />" rel="stylesheet" media="screen">
 		<link href="<c:url value="/css/main.css" />" rel="stylesheet" media="screen">
+        <script src="<c:url value="/js/jquery.min.js"/>"></script>
+        <script src="<c:url value="/js/bootstrap.min.js"/>"></script>
+        <script src="<c:url value="/js/dashboard.js"/>"></script>
 	</head>
 	<body>
 		<header class="navbar navbar-inverse navbar-fixed-top">
