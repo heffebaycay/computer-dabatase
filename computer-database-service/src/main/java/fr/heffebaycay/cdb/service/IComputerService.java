@@ -30,6 +30,13 @@ public interface IComputerService {
    * @return boolean indicating success (true) or failure (false) of the removal operation
    */
   boolean remove(long id);
+  
+  /**
+   * This method removes a list of computers from the data source using their unique identifiers
+   * 
+   * @param ids A list of the identifiers of the computers that should be removed
+   */
+  void remove(List<Long> ids);
 
   /**
    * Create a Computer in the data source based on an instance of Computer

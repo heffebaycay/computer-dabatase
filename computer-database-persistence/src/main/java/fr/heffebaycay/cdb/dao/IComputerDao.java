@@ -33,6 +33,14 @@ public interface IComputerDao {
   boolean remove(long id) throws DaoException;
 
   /**
+   * This methods removes a list of computers from the data source based on their
+   * identifiers
+   * 
+   * @param ids
+   */
+  void remove(List<Long> ids);
+  
+  /**
    * Create a Computer in the data source based on an instance of Computer
    * 
    * @param computer The computer object that should be persisted

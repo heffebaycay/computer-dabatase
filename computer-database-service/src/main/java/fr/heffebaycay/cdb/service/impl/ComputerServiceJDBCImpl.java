@@ -155,4 +155,16 @@ public class ComputerServiceJDBCImpl implements IComputerService {
     return wrapper;
   }
 
+  /**
+   * {@inheritDoc}}
+   */
+  @Override
+  @Transactional
+  public void remove(List<Long> ids) {
+    LOGGER.debug("Call to remove(List<long>)");
+    
+    computerDao.remove(ids);
+    
+  }
+
 }

@@ -295,4 +295,18 @@ public class SQLComputerDao implements IComputerDao {
 
   }
 
+  @Override
+  public void remove(List<Long> ids) {
+    
+    Session session = sessionFactory.getCurrentSession();
+
+    
+    Query query = session.createQuery("DELETE FROM Computer c WHERE c.id IN (:ids)");
+    query.setParameterList("ids", ids);
+    
+    int nbRemoved = query.executeUpdate();
+    LOGGER.debug("remove(): removed {} computers", nbRemoved);
+    
+  }
+
 }

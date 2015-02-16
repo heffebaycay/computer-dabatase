@@ -49,10 +49,8 @@ public class DeleteComputerController {
 
     }
 
-    for (Long id : computerIds) {
-      mComputerService.remove(id);
-    }
-
+    mComputerService.remove(computerIds);
+    
     return "redirect:/computers/list?msg=removeSuccess";
 
   }
