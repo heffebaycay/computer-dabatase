@@ -15,6 +15,7 @@ import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.service.IComputerService;
 import fr.heffebaycay.cdb.util.AppSettings;
+import fr.heffebaycay.cdb.util.Constants;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 @Controller
@@ -24,6 +25,9 @@ public class ComputerController {
   private static final Logger LOGGER = LoggerFactory.getLogger(ComputerController.class
                                          .getSimpleName());
 
+  private static final String ATTR_SEARCH_WRAPPER = "searchWrapper";
+  private static final String ATTR_REMOVE_SUCCESS = "bRemoveSuccess";
+  
   @Autowired
   private IComputerService    mComputerService;
   
@@ -40,7 +44,7 @@ public class ComputerController {
     LOGGER.debug("Call to ComputerController::doGet()");
 
     if ("removeSuccess".equals(requestModel.getMsg())) {
-      map.addAttribute("bRemoveSuccess", true);
+      map.addAttribute(ATTR_REMOVE_SUCCESS, true);
     }
 
     SearchWrapper<Computer> searchWrapper;
@@ -77,9 +81,9 @@ public class ComputerController {
 
     SearchWrapper<ComputerDTO> dtoSearchWrapper = computerMapper.convertWrappertoDTO(searchWrapper);
     
-    map.addAttribute("searchWrapper", dtoSearchWrapper);
+    map.addAttribute(ATTR_SEARCH_WRAPPER, dtoSearchWrapper);
 
-    return "dashboard";
+    return Constants.JSP_DASHBOARD;
 
   }
 

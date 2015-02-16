@@ -20,6 +20,7 @@ import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.IComputerService;
+import fr.heffebaycay.cdb.util.Constants;
 
 @Controller
 @RequestMapping("/computers/add")
@@ -29,6 +30,10 @@ public class AddComputerController {
                                          .getLogger(AddComputerController.class
                                              .getSimpleName());
 
+  private static final String ATTR_COMPANIES = "companies";
+  private static final String ATTR_VALIDATION_FAILED = "msgValidationFailed";
+  
+  
   @Autowired
   private IComputerService    mComputerService;
   @Autowired
@@ -47,9 +52,9 @@ public class AddComputerController {
     LOGGER.debug("Call to AddComputerController::doGet()");
 
     // The view requires the list of all companies
-    map.addAttribute("companies", companyMapper.toDTO(mCompanyService.findAll()));
+    map.addAttribute(ATTR_COMPANIES, companyMapper.toDTO(mCompanyService.findAll()));
 
-    return "addComputer";
+    return Constants.JSP_ADD_COMPUTER;
   }
 
   @RequestMapping(method = RequestMethod.POST)
@@ -79,7 +84,7 @@ public class AddComputerController {
         }
       }
 
-      map.addAttribute("msgValidationFailed", true);
+      map.addAttribute(ATTR_VALIDATION_FAILED, true);
 
       //return "addComputer";
       return doGet(computerDTO, map);

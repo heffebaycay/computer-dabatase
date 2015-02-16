@@ -24,6 +24,7 @@ import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.IComputerService;
+import fr.heffebaycay.cdb.util.Constants;
 import fr.heffebaycay.cdb.web.exception.ComputerNotFoundException;
 import fr.heffebaycay.cdb.web.exception.ServiceInitializationException;
 
@@ -33,6 +34,9 @@ public class EditComputerController {
   private static final Logger LOGGER = LoggerFactory.getLogger(EditComputerController.class
                                          .getSimpleName());
 
+  private static final String ATTR_COMPANIES = "companies";
+  private static final String ATTR_COMPUTER_DTO = "computerDTO";
+  
   @Autowired
   private IComputerService    mComputerService;
   @Autowired
@@ -75,13 +79,13 @@ public class EditComputerController {
       throw new ComputerNotFoundException();
     }
 
-    map.addAttribute("computerDTO", computerDTO);
+    map.addAttribute(ATTR_COMPUTER_DTO, computerDTO);
 
     List<CompanyDTO> companies = companyMapper.toDTO(mCompanyService.findAll());
 
-    map.addAttribute("companies", companies);
+    map.addAttribute(ATTR_COMPANIES, companies);
 
-    return "editComputer";
+    return Constants.JSP_EDIT_COMPUTER;
   }
 
   @RequestMapping(method = RequestMethod.POST)
@@ -89,14 +93,12 @@ public class EditComputerController {
       RedirectAttributes redirectAttrs) {
 
     LOGGER.debug("Received call to EditComputerController:doPost()");
-
     LOGGER.debug("doPost() :: ComputerId: " + computerDTO.getId());
 
     Computer computer = mComputerService.findById(computerDTO.getId());
     if (computer == null) {
       LOGGER.warn("doPost() :: User supplied an Id for a non-existing computer.");
       // 40X ?
-
     }
 
     // Creating the Company object
@@ -113,21 +115,16 @@ public class EditComputerController {
     if (result.hasErrors()) {
       // Validation failed
       LOGGER.debug("doPost(): ComputerDTO has errors [JSR 303 Validation]");
-
-      if (LOGGER.isDebugEnabled()) {
-        for (ObjectError error : result.getAllErrors()) {
-          LOGGER.debug("doPost(): JSR 303 Validation error: {}", error.getDefaultMessage());
-        }
-        map.addAttribute("msgValidationFailed", true);
-      }
-
+      
+      map.addAttribute("msgValidationFailed", true);
+      
       // The edit page needs the list of companies
       List<CompanyDTO> companies = companyMapper.toDTO(mCompanyService.findAll());
-      map.addAttribute("companies", companies);
+      map.addAttribute(ATTR_COMPANIES, companies);
 
-      map.addAttribute("computerDTO", computerDTO);
+      map.addAttribute(ATTR_COMPUTER_DTO, computerDTO);
       // Returning the editComputer view
-      return "editComputer";
+      return Constants.JSP_EDIT_COMPUTER;
 
     } else {
       // Validation succeeded
