@@ -4,7 +4,8 @@
 <%@ taglib prefix="u" uri="/WEB-INF/utils.tld" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-.
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <jsp:include page="include/header.jsp" />
 
 <section id="main">
@@ -29,10 +30,12 @@
                         <input type="submit" id="searchsubmit" value="${ search_filter_button }" class="btn btn-primary" />
                     </form>
                 </div>
-                <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="<c:url value="/computers/add" />"><spring:message code="dashboard.add_computer_button" /></a> 
-                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message code="dashboard.edit_button" /></a>
-                </div>
+                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                    <div class="pull-right">
+                        <a class="btn btn-success" id="addComputer" href="<c:url value="/computers/add" />"><spring:message code="dashboard.add_computer_button" /></a>
+                        <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message code="dashboard.edit_button" /></a>
+                    </div>
+                </sec:authorize>
             </div>
         </div>
 

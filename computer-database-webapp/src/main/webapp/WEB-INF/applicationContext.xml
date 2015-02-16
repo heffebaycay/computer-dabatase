@@ -10,6 +10,14 @@
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx.xsd">
         
-        
+        <import resource="classpath:/applicationContextService.xml"/>
+        <import resource="classpath:/applicationContextBinding.xml" />
+
+        <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+            <property name="basenames" value="classpath:messages, classpath:binding-messages" />
+            <property name="defaultEncoding" value="UTF-8" />
+            <!-- alwaysUseMessageFormat : set to true to force formatting with java.text.Format.MessageFormat -->
+            <property name="alwaysUseMessageFormat" value="true" /> 
+        </bean>
         
 </beans>
