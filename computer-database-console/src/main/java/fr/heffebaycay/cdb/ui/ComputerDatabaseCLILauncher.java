@@ -3,6 +3,8 @@ package fr.heffebaycay.cdb.ui;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import fr.heffebaycay.cdb.webservice.IComputerRESTService;
+
 public class ComputerDatabaseCLILauncher {
 
   public static void main(String[] args) {
@@ -11,6 +13,10 @@ public class ComputerDatabaseCLILauncher {
         "/applicationContextCLI.xml");
 
     ComputerDatabaseCLI cli = ctx.getBean(ComputerDatabaseCLI.class);
+    
+    IComputerRESTService service = ctx.getBean(IComputerRESTService.class);
+    
+    
     cli.start(null);
 
     ctx.close();

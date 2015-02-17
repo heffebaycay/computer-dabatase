@@ -30,6 +30,7 @@ import fr.heffebaycay.cdb.service.IComputerService;
 import fr.heffebaycay.cdb.webservice.IComputerRESTService;
 
 @Service
+@Path("/computers")
 public class ComputerRESTService implements IComputerRESTService {
 
 	private static final Logger LOGGER = LoggerFactory

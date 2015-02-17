@@ -12,8 +12,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.springframework.stereotype.Service;
+
 import fr.heffebaycay.cdb.dto.ComputerDTO;
 
+@Service
+@Path("/computers")
 public interface IComputerRESTService {
 
 	@POST

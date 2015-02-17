@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.heffebaycay.cdb.dto.ComputerDTO;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
@@ -16,6 +17,7 @@ import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.IComputerService;
 import fr.heffebaycay.cdb.util.ComputerSortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
+import fr.heffebaycay.cdb.webservice.IComputerRESTService;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 @Service
@@ -25,6 +27,8 @@ public class ComputerCLIUI {
   IComputerService            computerService;
   @Autowired
   ICompanyService             companyService;
+  
+  IComputerRESTService	      computerWebService;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ComputerCLIUI.class.getSimpleName());
 
@@ -36,9 +40,10 @@ public class ComputerCLIUI {
    * Prints the list of all computers
    */
   public void printComputers() {
-    List<Computer> computers = computerService.findAll();
+    //List<Computer> computers = computerService.findAll();
+    List<ComputerDTO> computers = computerWebService.findAll();
 
-    for (Computer c : computers) {
+    for (ComputerDTO c : computers) {
       System.out.println(c);
     }
   }
