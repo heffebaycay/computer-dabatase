@@ -3,17 +3,35 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:tx="http://www.springframework.org/schema/tx"
     xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jaxrs="http://cxf.apache.org/jaxrs"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx.xsd">
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://cxf.apache.org/jaxrs
+		http://cxf.apache.org/schemas/jaxrs.xsd">
+        
+        <import resource="classpath:META-INF/cxf/cxf.xml" />
         
         <import resource="classpath:/applicationContextService.xml"/>
         <import resource="classpath:/applicationContextBinding.xml" />
         
         <context:component-scan base-package="fr.heffebaycay.cdb.webservice" />
+
+		<jaxrs:server id="computerService" address="/computers">
+			<jaxrs:serviceBeans>
+				<ref bean="computerServiceBean" />
+			</jaxrs:serviceBeans>
+			<jaxrs:providers>
+				<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
+				<bean class="fr.heffebaycay.cdb.webservice.filter.LocaleDetectorFilter" />
+			</jaxrs:providers>
+		</jaxrs:server>
+		
+		<bean id="computerServiceBean" class="fr.heffebaycay.cdb.webservice.impl.ComputerRESTService" />
+
 
         <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
             <property name="basenames" value="classpath:messages, classpath:binding-messages" />
