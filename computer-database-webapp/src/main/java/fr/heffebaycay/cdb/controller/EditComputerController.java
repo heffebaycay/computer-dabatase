@@ -128,7 +128,7 @@ public class EditComputerController {
 
     } else {
       // Validation succeeded
-      computerMapper.updateDAO(computer, computerDTO);
+      computerMapper.updateDO(computer, computerDTO);
 
       computer.setCompany(company);
       mComputerService.update(computer);

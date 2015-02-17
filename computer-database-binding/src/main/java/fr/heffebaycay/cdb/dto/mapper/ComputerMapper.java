@@ -113,7 +113,7 @@ public class ComputerMapper {
    * @param computer
    * @param computerDTO
    */
-  public void updateDAO(Computer computer, ComputerDTO computerDTO) {
+  public void updateDO(Computer computer, ComputerDTO computerDTO) {
 
     if (computer == null || computerDTO == null) {
       return;
