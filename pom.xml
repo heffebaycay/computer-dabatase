@@ -44,6 +44,19 @@
     <hibernate-orm.version>4.3.8.Final</hibernate-orm.version>
   </properties>
   
+  
+
+	<dependencyManagement>
+	  <dependencies>
+	    <dependency>
+	      <groupId>commons-logging</groupId>
+	      <artifactId>commons-logging</artifactId>
+	      <version>99-empty</version>
+	    </dependency>
+	  </dependencies>
+	</dependencyManagement>
+
+
   <profiles>
   	<profile>
   		<activation>
@@ -59,9 +72,6 @@
       				<artifactId>maven-surefire-plugin</artifactId>
      				<version>${surefire-plugin.version}</version>
       				<configuration>
-      					<excludes>
-      						<exclude>**/UITest*.java</exclude>
-      					</excludes>
       				</configuration>
   				</plugin>
   			</plugins>
@@ -163,4 +173,12 @@
       	</plugin>
   	</plugins>
   </reporting>
+
+  <repositories>
+      <repository>
+          <id>version99</id>
+          <!-- highly available repository serving empty artifacts -->
+          <url>http://version99.qos.ch/</url>
+      </repository>
+  </repositories>
 </project>

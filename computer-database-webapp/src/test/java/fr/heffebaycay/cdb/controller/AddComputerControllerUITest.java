@@ -8,12 +8,15 @@ import java.util.Random;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-public class UITestAddComputerController {
+@RunWith(MockitoJUnitRunner.class)
+public class AddComputerControllerUITest {
 
   WebDriver driver;
   
@@ -33,8 +36,8 @@ public class UITestAddComputerController {
     String computerName = "SeleniumTestingComputer";
     String dateIntroduced = "1985-12-14";
     String dateDiscontinued = "2000-05-03";
-
-    driver.get("http://localhost:8080/computer-database/computers/add");
+    
+    driver.get("http://localhost:8080/computer-database-webapp/computers/add");
 
     // Fill in the computer name
     WebElement computerNameElement = driver.findElement(By.id("computerName"));
@@ -71,7 +74,7 @@ public class UITestAddComputerController {
   
   @Test
   public void testAddEmptyComputer() {
-    driver.get("http://localhost:8080/computer-database/computers/add");
+    driver.get("http://localhost:8080/computer-database-webapp/computers/add");
 
     // Click on "Add"
     driver.findElement(By.id("submit")).click();

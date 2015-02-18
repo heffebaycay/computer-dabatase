@@ -1,16 +1,19 @@
 package fr.heffebaycay.cdb.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-public class UITestComputerController {
+@RunWith(MockitoJUnitRunner.class)
+public class ComputerControllerUITest {
 
   WebDriver driver;
   
@@ -27,7 +30,7 @@ public class UITestComputerController {
   @Test
   public void test() {
 
-    driver.get("http://localhost:8080/computer-database/");
+    driver.get("http://localhost:8080/computer-database-webapp/");
 
     WebElement element = driver.findElement(By.id("homeTitle"));
 

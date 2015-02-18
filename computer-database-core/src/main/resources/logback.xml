@@ -21,7 +21,7 @@
 		<file>${logs.directory}/logs-${byDay}.html</file>
 	</appender>
 	
-	<root level="debug">
+	<root level="warn">
 		<appender-ref ref="STDOUT"/>
 		<appender-ref ref="FILE" />
 	</root>
