@@ -21,6 +21,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 import fr.heffebaycay.cdb.dto.ComputerDTO;
 import fr.heffebaycay.cdb.dto.mapper.ComputerMapper;
 import fr.heffebaycay.cdb.model.Company;
@@ -35,6 +41,7 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 @Service
 @Path("/computers")
+@Api(value = "/computers", description = "Computer related operations")
 public class ComputerRESTService implements IComputerRESTService {
 
   private static final Logger LOGGER          = LoggerFactory
@@ -54,7 +61,12 @@ public class ComputerRESTService implements IComputerRESTService {
   @Override
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response create(ComputerDTO computerDTO) {
+  @ApiOperation(value = "Create a Computer")
+  @ApiResponses(value = {
+      @ApiResponse(code = 400, message = "The company does not exist"),
+      @ApiResponse(code = 201, message = "Success")
+  })
+  public Response create(@ApiParam(value = "Computer object", required = true) ComputerDTO computerDTO) {
 
     Company company = null;
     if (computerDTO.getCompanyId() > 0) {
@@ -88,6 +100,7 @@ public class ComputerRESTService implements IComputerRESTService {
   @Override
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Get all computers")
   public List<ComputerDTO> findAll() {
 
     List<Computer> computers = computerService.findAll();
@@ -99,7 +112,8 @@ public class ComputerRESTService implements IComputerRESTService {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{id: [0-9]+}")
-  public ComputerDTO findById(@PathParam("id") long id) {
+  @ApiOperation(value = "Find computer by id")
+  public ComputerDTO findById(@ApiParam(value = "ID of Company to fetch", required = true) @PathParam("id") long id) {
 
     Computer computer = computerService.findById(id);
 
@@ -109,7 +123,12 @@ public class ComputerRESTService implements IComputerRESTService {
   @Override
   @DELETE
   @Path("/{id: [0-9]+}")
-  public Response remove(@PathParam("id") long id) {
+  @ApiOperation(value = "Remove a computer")
+  @ApiResponses(value = {
+      @ApiResponse(code = 204, message = "Success" ),
+      @ApiResponse(code = 400, message = "Failed to remove the computer")
+  })
+  public Response remove(@ApiParam(value = "ID of the Computer to remove", required = true) @PathParam("id") long id) {
 
     boolean result = computerService.remove(id);
 
@@ -122,7 +141,12 @@ public class ComputerRESTService implements IComputerRESTService {
   @PUT
   @Path("/{id: [0-9]+}")
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response update(ComputerDTO computer) {
+  @ApiOperation(value = "Update an existing Computer")
+  @ApiResponses(value = {
+      @ApiResponse(code = 404, message = "Requested computer does not exist"),
+      @ApiResponse(code = 200, message = "Success")
+  })
+  public Response update(@ApiParam(value = "Computer object with the updated details. The ID property must be set.", required = true) ComputerDTO computer) {
     Status responseStatus;
     String message = "";
 
@@ -144,7 +168,8 @@ public class ComputerRESTService implements IComputerRESTService {
   @GET
   @Path("/page/{page: [0-9]+}")
   @Produces(MediaType.APPLICATION_JSON)
-  public SearchWrapper<ComputerDTO> findAllPaged(@PathParam("page") long pageNumber) {
+  @ApiOperation(value = "Fetches a single Computer page")
+  public SearchWrapper<ComputerDTO> findAllPaged(@ApiParam(value = "Number of the page to fetch", required = true) @PathParam("page") long pageNumber) {
 
     long offset = (pageNumber - 1) * NB_RESULTS_PAGE;
 

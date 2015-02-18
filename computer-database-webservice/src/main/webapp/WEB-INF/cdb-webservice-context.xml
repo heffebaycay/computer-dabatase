@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
     xmlns:context="http://www.springframework.org/schema/context"
     xmlns:jaxrs="http://cxf.apache.org/jaxrs"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -12,26 +11,61 @@
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://cxf.apache.org/jaxrs
 		http://cxf.apache.org/schemas/jaxrs.xsd">
-        
-        <import resource="classpath:META-INF/cxf/cxf.xml" />
-        
-        <import resource="classpath:/applicationContextService.xml"/>
-        <import resource="classpath:/applicationContextBinding.xml" />
-        
-        <context:component-scan base-package="fr.heffebaycay.cdb.webservice.impl" />
 
-		<jaxrs:server id="computerService" basePackages="fr.heffebaycay.cdb.webservice.impl">
-			<jaxrs:providers>
-				<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
-				<bean class="fr.heffebaycay.cdb.webservice.filter.LocaleDetectorFilter" />
-			</jaxrs:providers>
-		</jaxrs:server>
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
 
-        <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-            <property name="basenames" value="classpath:messages, classpath:binding-messages" />
-            <property name="defaultEncoding" value="UTF-8" />
-            <!-- alwaysUseMessageFormat : set to true to force formatting with java.text.Format.MessageFormat -->
-            <property name="alwaysUseMessageFormat" value="true" /> 
-        </bean>
-        
+    <import resource="classpath:/applicationContextService.xml" />
+    <import resource="classpath:/applicationContextBinding.xml" />
+
+    <context:component-scan base-package="fr.heffebaycay.cdb.webservice.impl" />
+
+    <!-- Swagger API listing resource -->
+    <bean id="swaggerResourceJSON"
+        class="com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON" />
+
+    <!-- Swagger writers -->
+    <bean id="resourceWriter"
+        class="com.wordnik.swagger.jaxrs.listing.ResourceListingProvider" />
+    <bean id="apiWriter"
+        class="com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider" />
+
+    <jaxrs:server id="computerService" basePackages="fr.heffebaycay.cdb.webservice.impl">
+        <jaxrs:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
+            <bean
+                class="fr.heffebaycay.cdb.webservice.filter.LocaleDetectorFilter" />
+            <!-- required for writing swagger classes -->
+            <ref bean="resourceWriter" />
+            <ref bean="apiWriter" />
+        </jaxrs:providers>
+        <jaxrs:serviceBeans>
+            <!-- Swagger API Listing resource -->
+            <ref bean="swaggerResourceJSON" />
+        </jaxrs:serviceBeans>
+    </jaxrs:server>
+
+    <!-- this scans the classes for resources -->
+    <bean id="swaggerConfig" class="com.wordnik.swagger.jaxrs.config.BeanConfig">
+        <property name="resourcePackage" value="fr.heffebaycay.cdb.webservice.impl" />
+        <property name="version" value="3.0.1" />
+        <property name="basePath" value="http://localhost:8080/computer-database-webservice/api" />
+        <property name="title" value="Computer Database Web Service" />
+        <property name="description" value="API Documentation" />
+        <property name="contact" value="apiteam@wordnik.com" />
+        <property name="license" value="Apache 2.0 License" />
+        <property name="licenseUrl"
+            value="http://www.apache.org/licenses/LICENSE-2.0.html" />
+        <property name="scan" value="true" />
+    </bean>
+
+    <bean id="messageSource"
+        class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames"
+            value="classpath:messages, classpath:binding-messages" />
+        <property name="defaultEncoding" value="UTF-8" />
+        <!-- alwaysUseMessageFormat : set to true to force formatting with 
+            java.text.Format.MessageFormat -->
+        <property name="alwaysUseMessageFormat" value="true" />
+    </bean>
+
 </beans>

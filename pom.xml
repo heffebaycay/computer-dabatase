@@ -37,6 +37,7 @@
 	<javax-rs-api.version>2.0.1</javax-rs-api.version>
 	<apache-cxf-jaxrs.version>3.0.3</apache-cxf-jaxrs.version>
 	<jackson-jaxrs-json-provider.version>2.5.1</jackson-jaxrs-json-provider.version>
+        <swagger-jaxrs.version>1.3.12</swagger-jaxrs.version>
     <spring-security.version>3.2.5.RELEASE</spring-security.version>
     <apache-commons-lang.version>3.3.2</apache-commons-lang.version>
     <apache-commons-validator>1.4.1</apache-commons-validator>

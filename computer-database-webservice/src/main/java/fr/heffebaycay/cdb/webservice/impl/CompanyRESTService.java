@@ -18,6 +18,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
 import fr.heffebaycay.cdb.dto.CompanyDTO;
 import fr.heffebaycay.cdb.dto.mapper.CompanyMapper;
 import fr.heffebaycay.cdb.model.Company;
@@ -30,6 +36,7 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 @Service
 @Path("/companies")
+@Api(value = "/companies", description = "Company related operations")
 public class CompanyRESTService implements ICompanyRESTService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CompanyRESTService.class);
@@ -46,7 +53,8 @@ public class CompanyRESTService implements ICompanyRESTService {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public CompanyDTO create(CompanyDTO companyDTO) {
+  @ApiOperation(value = "Create a Company")
+  public CompanyDTO create(@ApiParam(value = "Company object", required = true) CompanyDTO companyDTO) {
     
     Company company = companyMapper.fromDTO(companyDTO);
     long companyId = companyService.create(company);
@@ -59,6 +67,7 @@ public class CompanyRESTService implements ICompanyRESTService {
   @Override
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Get all companies")
   public List<CompanyDTO> findAll() {
     
     List<Company> companies = companyService.findAll();
@@ -70,7 +79,8 @@ public class CompanyRESTService implements ICompanyRESTService {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{id: [0-9]+}")
-  public CompanyDTO findById(@PathParam("id") long id) {
+  @ApiOperation(value = "Find company by ID")
+  public CompanyDTO findById(@ApiParam(value = "ID of Company to fetch", required = true) @PathParam("id") long id) {
     
     Company company = companyService.findById(id);
     
@@ -80,7 +90,11 @@ public class CompanyRESTService implements ICompanyRESTService {
   @Override
   @DELETE
   @Path("/{id: [0-9]+}")
-  public Response remove(@PathParam("id") long id) {
+  @ApiOperation(value = "Remove a company and all associated computers")
+  @ApiResponses(value = {
+      @ApiResponse(code = 204, message = "Company removed successfully" )
+  })
+  public Response remove(@ApiParam(value = "ID of Company to remove", required = true) @PathParam("id") long id) {
     
     companyService.remove(id);
     
@@ -91,7 +105,8 @@ public class CompanyRESTService implements ICompanyRESTService {
   @GET
   @Path("/page/{page: [0-9]+}")
   @Produces(MediaType.APPLICATION_JSON)
-  public SearchWrapper<CompanyDTO> findAllPaged(@PathParam("page") long pageNumber) {
+  @ApiOperation(value = "Fetches a single Company page")
+  public SearchWrapper<CompanyDTO> findAllPaged(@ApiParam(value = "Number of the page to fetch", required = true) @PathParam("page") long pageNumber) {
     
     Long offset = (pageNumber - 1) * NB_RESULTS_PAGE;
 

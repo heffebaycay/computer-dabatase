@@ -13,6 +13,10 @@
   <servlet>
     <servlet-name>cdbWebService</servlet-name>
     <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+    <init-param>
+        <param-name>swagger.api.basepath</param-name>
+        <param-value>http://localhost:8080/computer-database-webservice/api</param-value>
+    </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
