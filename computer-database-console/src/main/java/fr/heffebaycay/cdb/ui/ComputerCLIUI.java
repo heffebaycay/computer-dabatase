@@ -1,53 +1,46 @@
 package fr.heffebaycay.cdb.ui;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.heffebaycay.cdb.dto.CompanyDTO;
 import fr.heffebaycay.cdb.dto.ComputerDTO;
-import fr.heffebaycay.cdb.model.Company;
-import fr.heffebaycay.cdb.model.Computer;
-import fr.heffebaycay.cdb.model.ComputerPageRequest;
-import fr.heffebaycay.cdb.service.ICompanyService;
-import fr.heffebaycay.cdb.service.IComputerService;
-import fr.heffebaycay.cdb.util.ComputerSortCriteria;
-import fr.heffebaycay.cdb.util.SortOrder;
+import fr.heffebaycay.cdb.webservice.ICompanyRESTService;
 import fr.heffebaycay.cdb.webservice.IComputerRESTService;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 @Service
 public class ComputerCLIUI {
 
-  @Autowired
-  IComputerService            computerService;
-  @Autowired
-  ICompanyService             companyService;
-  
-  IComputerRESTService	      computerWebService;
+  IComputerRESTService        computerWebService;
+
+  ICompanyRESTService         companyWebService;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ComputerCLIUI.class.getSimpleName());
 
   public ComputerCLIUI() {
 
   }
-  
 
   public void setComputerWebService(IComputerRESTService computerWebService) {
     this.computerWebService = computerWebService;
   }
 
-
+  public void setCompanyWebService(ICompanyRESTService companyWebService) {
+    this.companyWebService = companyWebService;
+  }
 
   /**
    * Prints the list of all computers
    */
   public void printComputers() {
-    //List<Computer> computers = computerService.findAll();
     List<ComputerDTO> computers = computerWebService.findAll();
 
     for (ComputerDTO c : computers) {
@@ -62,12 +55,12 @@ public class ComputerCLIUI {
    */
   public void printComputerDetails(long id) {
 
-    Computer computer = computerService.findById(id);
+    ComputerDTO computerDTO = computerWebService.findById(id);
 
-    if (computer == null) {
+    if (computerDTO == null) {
       System.out.printf("[Error] Failed to find a computer for id '%d'%n", id);
     } else {
-      System.out.printf("Here is the details of computer with id '%d'%n:\t%s%n", id, computer);
+      System.out.printf("Here is the details of computer with id '%d'%n:\t%s%n", id, computerDTO);
     }
 
   }
@@ -79,12 +72,15 @@ public class ComputerCLIUI {
    */
   public void printRemoveComputer(long id) {
 
-    boolean result = computerService.remove(id);
+    Response response = computerWebService.remove(id);
 
-    if (result) {
+    if (response.getStatus() == Status.NO_CONTENT.getStatusCode()) {
+      // NO_CONTENT means the removal operation succeeded
       System.out.printf("Computer with id '%d' was successfully removed%n", id);
     } else {
-      System.out.printf("[Error] Failed to remove computer with id '%d'%n", id);
+      System.out.printf(
+          "[Error] Failed to remove computer with id '%d'. Remote server returned HTTP code %d.%n",
+          id, response.getStatus());
     }
 
   }
@@ -107,7 +103,7 @@ public class ComputerCLIUI {
     System.out.println("%n\t** Welcome to the Computer creation wizard ** ");
     System.out.println("Please answer the following questions in order to create a new computer:");
 
-    Computer computer = new Computer();
+    ComputerDTO computer = new ComputerDTO();
 
     System.out.println("What is the name of the computer ?");
     String name = sc.nextLine();
@@ -149,7 +145,7 @@ public class ComputerCLIUI {
 
     if (companyId == -1) {
       // Creating new company
-      Company company = new Company();
+      CompanyDTO company = new CompanyDTO();
 
       System.out.println("What is the name of the Company that created this computer?");
       String companyName = sc.nextLine();
@@ -162,13 +158,13 @@ public class ComputerCLIUI {
         return;
       }
 
-      companyService.create(company);
+      company = companyWebService.create(company);
 
       computer.setCompany(company);
 
     } else if (companyId > 0) {
       // Need to fetch company with requested Id
-      Company company = companyService.findById(companyId);
+      CompanyDTO company = companyWebService.findById(companyId);
       if (company == null) {
         System.out
             .printf("[Error] No company matches the id '%d'. Canceling creation%n", companyId);
@@ -178,7 +174,7 @@ public class ComputerCLIUI {
       }
     }
 
-    computerService.create(computer);
+    computerWebService.create(computer);
 
   }
 
@@ -193,7 +189,7 @@ public class ComputerCLIUI {
     System.out.println("%n\t** Welcome to the Computer update wizard ** ");
     System.out.println("Please answer the following questions in order to update an existing:");
 
-    Computer computer = computerService.findById(id);
+    ComputerDTO computer = computerWebService.findById(id);
     if (computer == null) {
       System.out.printf("[Error] No computer matches the id '%d'%n. Canceling update%n", id);
       return;
@@ -225,7 +221,7 @@ public class ComputerCLIUI {
     if (introduced != null && introduced.length() > 0) {
       // User typed something
       if ("null".equals(introduced)) {
-        computer.setIntroduced((LocalDateTime) null);
+        computer.setIntroduced(null);
       } else {
         try {
           computer.setIntroduced(introduced);
@@ -249,7 +245,7 @@ public class ComputerCLIUI {
     if (discontinued != null && discontinued.length() > 0) {
       // User typed something
       if ("null".equals(discontinued)) {
-        computer.setDiscontinued((LocalDateTime) null);
+        computer.setDiscontinued(null);
       } else {
         try {
           computer.setDiscontinued(discontinued);
@@ -268,7 +264,7 @@ public class ComputerCLIUI {
     long companyId = sc.nextLong();
     sc.nextLine(); // clearing Scanner buffer
     if (companyId > 0) {
-      Company company = companyService.findById(companyId);
+      CompanyDTO company = companyWebService.findById(companyId);
       if (company == null) {
         System.out
             .printf("[Error] No company matches the id '%d'. Canceling creation%n", companyId);
@@ -280,7 +276,7 @@ public class ComputerCLIUI {
       computer.setCompany(null);
     }
 
-    computerService.update(computer);
+    computerWebService.update(computer);
 
   }
 
@@ -291,20 +287,12 @@ public class ComputerCLIUI {
    */
   public void printComputersWithPage(long pageNumber) {
 
-    long offset = (pageNumber - 1) * ComputerDatabaseCLI.NB_RESULTS_PAGE;
+    SearchWrapper<ComputerDTO> dtoWrapper = computerWebService.findAllPaged(pageNumber);
 
-    ComputerPageRequest request = new ComputerPageRequest.Builder()
-        .offset(offset)
-        .nbRequested(ComputerDatabaseCLI.NB_RESULTS_PAGE)
-        .sortCriterion(ComputerSortCriteria.ID)
-        .sortOrder(SortOrder.ASC)
-        .build();
+    System.out.printf("Displaying page %d of %d:%n", dtoWrapper.getCurrentPage(),
+        dtoWrapper.getTotalPage());
 
-    SearchWrapper<Computer> sw = computerService.findAll(request);
-
-    System.out.printf("Displaying page %d of %d:%n", sw.getCurrentPage(), sw.getTotalPage());
-
-    for (Computer c : sw.getResults()) {
+    for (ComputerDTO c : dtoWrapper.getResults()) {
       System.out.println(c);
     }
 

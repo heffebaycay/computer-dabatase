@@ -6,7 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import fr.heffebaycay.cdb.dto.CompanyDTO;
+import fr.heffebaycay.cdb.dto.ComputerDTO;
 import fr.heffebaycay.cdb.model.Company;
+import fr.heffebaycay.cdb.model.Computer;
+import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 @Component
 public class CompanyMapper {
@@ -66,6 +69,39 @@ public class CompanyMapper {
 
     return company;
 
+  }
+  
+  /**
+   * Maps a CompanyDTO object to an existing Company DO object
+   * 
+   * @param company The existing DO object that should be updated
+   * @param companyDTO The DTO from which the attributes should be taken
+   */
+  public void updateDO(Company company, CompanyDTO companyDTO) {
+    if(company == null || companyDTO == null) {
+      return;
+    }
+    
+    Company localCompany = fromDTO(companyDTO);
+    
+    company.setName(localCompany.getName());
+    
+  }
+  
+  public SearchWrapper<CompanyDTO> convertWrappertoDTO(SearchWrapper<Company> wrapper) {
+
+    SearchWrapper<CompanyDTO> dtoWrapper = new SearchWrapper<>();
+
+    dtoWrapper.setTotalCount(wrapper.getTotalCount());
+    dtoWrapper.setCurrentPage(wrapper.getCurrentPage());
+    dtoWrapper.setTotalPage(wrapper.getTotalPage());
+    dtoWrapper.setSortOrder(wrapper.getSortOrder());
+    dtoWrapper.setSortCriterion(wrapper.getSortCriterion());
+    dtoWrapper.setSearchQuery(wrapper.getSearchQuery());
+
+    dtoWrapper.setResults(toDTO(wrapper.getResults()));
+
+    return dtoWrapper;
   }
 
 }

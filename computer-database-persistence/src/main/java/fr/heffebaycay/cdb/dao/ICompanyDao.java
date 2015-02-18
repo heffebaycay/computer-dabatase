@@ -28,7 +28,7 @@ public interface ICompanyDao {
    * 
    * @param company The company object that should be created
    */
-  void create(Company company);
+  long create(Company company);
   
   /**
    * Removes a Company from the data source along with all the Computers tied to it

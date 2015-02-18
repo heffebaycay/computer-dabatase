@@ -117,10 +117,12 @@ public class SQLCompanyDao implements ICompanyDao {
   }
 
   @Override
-  public void create(Company company) {
+  public long create(Company company) {
     Session session = sessionFactory.getCurrentSession();
 
-    session.save(company);
+    long companyId = (long) session.save(company);
+    
+    return companyId;
   }
 
   /**

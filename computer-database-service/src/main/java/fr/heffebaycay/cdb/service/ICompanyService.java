@@ -27,7 +27,7 @@ public interface ICompanyService {
    * 
    * @param company The company object that should be created
    */
-  void create(Company company);
+  long create(Company company);
 
   /**
      * Queries the data source for nbRequested elements starting at the offset defined by the parameter with the same name

@@ -16,7 +16,7 @@
 
     <import resource="classpath:META-INF/cxf/cxf.xml" />
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
-    <import resource="classpath:/applicationContextService.xml" />
+    <import resource="classpath:/applicationContextBinding.xml" />
 
     <context:annotation-config />
 
@@ -27,6 +27,14 @@
     <jaxrs-client:client id="computerRESTClient"
         address="http://localhost:8080/computer-database-webservice/api"
         serviceClass="fr.heffebaycay.cdb.webservice.IComputerRESTService"
+        inheritHeaders="true">
+        <jaxrs-client:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
+        </jaxrs-client:providers>
+    </jaxrs-client:client>
+    <jaxrs-client:client id="companyRESTClient"
+        address="http://localhost:8080/computer-database-webservice/api"
+        serviceClass="fr.heffebaycay.cdb.webservice.ICompanyRESTService"
         inheritHeaders="true">
         <jaxrs-client:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />

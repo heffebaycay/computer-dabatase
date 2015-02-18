@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import fr.heffebaycay.cdb.webservice.ICompanyRESTService;
 import fr.heffebaycay.cdb.webservice.IComputerRESTService;
 
 
@@ -44,9 +45,11 @@ public class ComputerDatabaseCLI {
   protected ComputerCLIUI computerUI;
 
   
-  public void start(IComputerRESTService computerWebService) {
+  public void start(IComputerRESTService computerWebService, ICompanyRESTService companyWebService) {
     
     computerUI.setComputerWebService(computerWebService);
+    computerUI.setCompanyWebService(companyWebService);
+    companyUI.setCompanyWebService(companyWebService);
     
     printWelcome();
     menuLogic();

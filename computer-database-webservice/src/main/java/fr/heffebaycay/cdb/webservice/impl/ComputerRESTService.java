@@ -25,114 +25,140 @@ import fr.heffebaycay.cdb.dto.ComputerDTO;
 import fr.heffebaycay.cdb.dto.mapper.ComputerMapper;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
+import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.IComputerService;
+import fr.heffebaycay.cdb.util.ComputerSortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.webservice.IComputerRESTService;
+import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 @Service
 @Path("/computers")
 public class ComputerRESTService implements IComputerRESTService {
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ComputerRESTService.class);
+  private static final Logger LOGGER          = LoggerFactory
+                                                  .getLogger(ComputerRESTService.class);
 
-	@Autowired
-	private IComputerService computerService;
+  private static final Long   NB_RESULTS_PAGE = 10L;
 
-	@Autowired
-	private ICompanyService companyService;
+  @Autowired
+  private IComputerService    computerService;
 
-	@Autowired
-	private ComputerMapper computerMapper;
+  @Autowired
+  private ICompanyService     companyService;
 
-	@Override
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(ComputerDTO computerDTO) {
+  @Autowired
+  private ComputerMapper      computerMapper;
 
-		Company company = null;
-		if (computerDTO.getCompanyId() > 0) {
-			// A valid companyId was supplied
-			company = companyService.findById(computerDTO.getCompanyId());
-			if (company == null) {
-				// Requested company does not exist
-				LOGGER.warn("create(): Attempted to create a computer linked an invalid company");
-				return Response.status(Status.BAD_REQUEST).build();
-			}
-		}
+  @Override
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response create(ComputerDTO computerDTO) {
 
-		Computer computer = computerMapper.fromDTO(computerDTO);
-		computer.setCompany(company);
+    Company company = null;
+    if (computerDTO.getCompanyId() > 0) {
+      // A valid companyId was supplied
+      company = companyService.findById(computerDTO.getCompanyId());
+      if (company == null) {
+        // Requested company does not exist
+        LOGGER.warn("create(): Attempted to create a computer linked an invalid company");
+        return Response.status(Status.BAD_REQUEST).build();
+      }
+    }
 
-		long computerId = computerService.create(computer);
+    Computer computer = computerMapper.fromDTO(computerDTO);
+    computer.setCompany(company);
 
-		URI location = null;
-		try {
-			location = new URI(String.format("/computers/%d", computerId));
-			LOGGER.debug("create(): location is set to {}", location);
-		} catch (URISyntaxException e) {
-			LOGGER.warn("create(): Failed to generate location URI: {}", e);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-		}
+    long computerId = computerService.create(computer);
 
-		return Response.created(location).status(Status.CREATED).build();
+    URI location = null;
+    try {
+      location = new URI(String.format("/computers/%d", computerId));
+      LOGGER.debug("create(): location is set to {}", location);
+    } catch (URISyntaxException e) {
+      LOGGER.warn("create(): Failed to generate location URI: {}", e);
+      return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+    }
 
-	}
+    return Response.created(location).status(Status.CREATED).build();
 
-	@Override
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<ComputerDTO> findAll() {
+  }
 
-		List<Computer> computers = computerService.findAll();
+  @Override
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public List<ComputerDTO> findAll() {
 
-		return computerMapper.toDTO(computers);
-	}
+    List<Computer> computers = computerService.findAll();
 
-	@Override
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/{id: [0-9]+}")
-	public ComputerDTO findById(@PathParam("id") long id) {
+    return computerMapper.toDTO(computers);
+  }
 
-		Computer computer = computerService.findById(id);
+  @Override
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/{id: [0-9]+}")
+  public ComputerDTO findById(@PathParam("id") long id) {
 
-		return computerMapper.toDTO(computer);
-	}
+    Computer computer = computerService.findById(id);
 
-	@Override
-	@DELETE
-	@Path("/{id: [0-9]+}")
-	public Response remove(@PathParam("id") long id) {
+    return computerMapper.toDTO(computer);
+  }
 
-		boolean result = computerService.remove(id);
+  @Override
+  @DELETE
+  @Path("/{id: [0-9]+}")
+  public Response remove(@PathParam("id") long id) {
 
-		Status status = result ? Status.NO_CONTENT : Status.BAD_REQUEST;
+    boolean result = computerService.remove(id);
 
-		return Response.status(status).build();
-	}
+    Status status = result ? Status.NO_CONTENT : Status.BAD_REQUEST;
 
-	@Override
-	@PUT
-	@Path("/{id: [0-9]+}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(ComputerDTO computer) {
-		Status responseStatus;
-		String message = "";
+    return Response.status(status).build();
+  }
 
-		Computer computerDO = computerService.findById(computer.getId());
-		if (computerDO == null) {
-			// Computer not found
-			responseStatus = Status.NOT_FOUND;
-			message = "Requested computer does not exist";
-		} else {
-			computerMapper.updateDO(computerDO, computer);
-			computerService.update(computerDO);
-			responseStatus = Status.OK;
-		}
+  @Override
+  @PUT
+  @Path("/{id: [0-9]+}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response update(ComputerDTO computer) {
+    Status responseStatus;
+    String message = "";
 
-		return Response.status(responseStatus).entity(message).build();
+    Computer computerDO = computerService.findById(computer.getId());
+    if (computerDO == null) {
+      // Computer not found
+      responseStatus = Status.NOT_FOUND;
+      message = "Requested computer does not exist";
+    } else {
+      computerMapper.updateDO(computerDO, computer);
+      computerService.update(computerDO);
+      responseStatus = Status.OK;
+    }
 
-	}
+    return Response.status(responseStatus).entity(message).build();
+
+  }
+
+  @GET
+  @Path("/page/{page: [0-9]+}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public SearchWrapper<ComputerDTO> findAllPaged(@PathParam("page") long pageNumber) {
+
+    long offset = (pageNumber - 1) * NB_RESULTS_PAGE;
+
+    ComputerPageRequest request = new ComputerPageRequest.Builder()
+        .offset(offset)
+        .nbRequested(NB_RESULTS_PAGE)
+        .sortCriterion(ComputerSortCriteria.ID)
+        .sortOrder(SortOrder.ASC)
+        .build();
+
+    SearchWrapper<Computer> sw = computerService.findAll(request);
+    
+    return computerMapper.convertWrappertoDTO(sw);
+    
+  }
 
 }

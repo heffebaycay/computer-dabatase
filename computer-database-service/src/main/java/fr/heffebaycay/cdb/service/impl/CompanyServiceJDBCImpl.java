@@ -68,10 +68,10 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
    */
   @Override
   @Transactional
-  public void create(Company company) {
+  public long create(Company company) {
     LOGGER.debug("Call to create()");
 
-    companyDao.create(company);
+    return companyDao.create(company);
 
   }
 
