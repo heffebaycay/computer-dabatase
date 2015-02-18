@@ -1,7 +1,6 @@
 package fr.heffebaycay.cdb.model;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 
 public class Computer {
 
@@ -43,44 +42,12 @@ public class Computer {
     this.introduced = introduced;
   }
 
-  public void setIntroduced(String strIntroduced) {
-    if (strIntroduced == null || strIntroduced.length() == 0) {
-      this.introduced = null;
-      return;
-    }
-
-    strIntroduced += "T00:00:00";
-
-    try {
-      LocalDateTime ldt = LocalDateTime.parse(strIntroduced);
-      setIntroduced(ldt);
-    } catch (DateTimeParseException dtpe) {
-      throw new IllegalArgumentException("Invalid introduced string", dtpe);
-    }
-  }
-
   public LocalDateTime getDiscontinued() {
     return discontinued;
   }
 
   public void setDiscontinued(LocalDateTime discontinued) {
     this.discontinued = discontinued;
-  }
-
-  public void setDiscontinued(String strDiscontinued) {
-    if (strDiscontinued == null || strDiscontinued.length() == 0) {
-      this.discontinued = null;
-      return;
-    }
-
-    strDiscontinued += "T00:00:00";
-
-    try {
-      LocalDateTime ldt = LocalDateTime.parse(strDiscontinued);
-      setDiscontinued(ldt);
-    } catch (DateTimeParseException dtpe) {
-      throw new IllegalArgumentException("Invalid discontinued string", dtpe);
-    }
   }
 
   public Company getCompany() {
