@@ -20,12 +20,19 @@
 
     <context:annotation-config />
 
+    <bean
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>classpath:/console-config.properties</value>
+        </property>
+    </bean>
+
     <context:component-scan
         base-package="fr.heffebaycay.cdb.webservice, fr.heffebaycay.cdb.ui">
     </context:component-scan>
 
     <jaxrs-client:client id="computerRESTClient"
-        address="http://localhost:8080/computer-database-webservice/api"
+        address="${console.webservice.baseURL}/api"
         serviceClass="fr.heffebaycay.cdb.webservice.IComputerRESTService"
         inheritHeaders="true">
         <jaxrs-client:providers>
@@ -33,7 +40,7 @@
         </jaxrs-client:providers>
     </jaxrs-client:client>
     <jaxrs-client:client id="companyRESTClient"
-        address="http://localhost:8080/computer-database-webservice/api"
+        address="${console.webservice.baseURL}/api"
         serviceClass="fr.heffebaycay.cdb.webservice.ICompanyRESTService"
         inheritHeaders="true">
         <jaxrs-client:providers>

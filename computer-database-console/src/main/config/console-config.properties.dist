@@ -1,0 +1,6 @@
+#
+#  Console Application configuration file
+#
+
+# Web Service URL
+console.webservice.baseURL = http://localhost:8080/computer-database-webservice
