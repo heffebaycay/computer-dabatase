@@ -86,6 +86,17 @@ public class ComputerDTO implements Serializable {
   public void setCompany(CompanyDTO company) {
     this.company = company;
   }
+  
+  
+
+  @Override
+  public String toString() {
+    return String.format(
+        "Computer: id[%1$d], name[%2$s], introduced[%4$s], discontinued[%5$s], companyId[%6$s], company[%3$s]",
+        getId(), getName(), getCompany(), getIntroduced(), getDiscontinued(), getCompanyId());
+  }
+
+
 
   public static class Builder {
 

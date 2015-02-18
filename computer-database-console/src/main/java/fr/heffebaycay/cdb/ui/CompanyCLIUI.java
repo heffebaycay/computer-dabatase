@@ -2,24 +2,23 @@ package fr.heffebaycay.cdb.ui;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import fr.heffebaycay.cdb.model.Company;
-import fr.heffebaycay.cdb.model.CompanyPageRequest;
-import fr.heffebaycay.cdb.service.ICompanyService;
-import fr.heffebaycay.cdb.util.CompanySortCriteria;
-import fr.heffebaycay.cdb.util.SortOrder;
+import fr.heffebaycay.cdb.dto.CompanyDTO;
+import fr.heffebaycay.cdb.webservice.ICompanyRESTService;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
 @Service
 public class CompanyCLIUI {
 
-  @Autowired
-  ICompanyService companyService;
+  private ICompanyRESTService companyWebService;
 
   public CompanyCLIUI() {
     super();
+  }
+
+  public void setCompanyWebService(ICompanyRESTService companyWebService) {
+    this.companyWebService = companyWebService;
   }
 
   /**
@@ -27,9 +26,9 @@ public class CompanyCLIUI {
    */
   public void printCompanies() {
 
-    List<Company> companies = companyService.findAll();
+    List<CompanyDTO> companies = companyWebService.findAll();
 
-    for (Company c : companies) {
+    for (CompanyDTO c : companies) {
       System.out.println(c);
     }
 
@@ -42,20 +41,11 @@ public class CompanyCLIUI {
    */
   public void printCompaniesWithPage(long pageNumber) {
 
-    long offset = (pageNumber - 1) * ComputerDatabaseCLI.NB_RESULTS_PAGE;
+    SearchWrapper<CompanyDTO> dtoWrapper = companyWebService.findAllPaged(pageNumber);
+    
+    System.out.printf("Displaying page %d of %d:%n", dtoWrapper.getCurrentPage(), dtoWrapper.getTotalPage());
 
-    CompanyPageRequest pageRequest = new CompanyPageRequest.Builder()
-        .offset(offset)
-        .nbRequested(ComputerDatabaseCLI.NB_RESULTS_PAGE)
-        .sortCriterion(CompanySortCriteria.ID)
-        .sortOrder(SortOrder.ASC)
-        .build();
-
-    SearchWrapper<Company> sw = companyService.findAll(pageRequest);
-
-    System.out.printf("Displaying page %d of %d:%n", sw.getCurrentPage(), sw.getTotalPage());
-
-    for (Company c : sw.getResults()) {
+    for (CompanyDTO c : dtoWrapper.getResults()) {
       System.out.println(c);
     }
 
@@ -68,7 +58,7 @@ public class CompanyCLIUI {
    */
   public void removeCompany(long companyId) {
 
-    companyService.remove(companyId);
+    companyWebService.remove(companyId);
 
     System.out.println("Company removal operation completed.");
 

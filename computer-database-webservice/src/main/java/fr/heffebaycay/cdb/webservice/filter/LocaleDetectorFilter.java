@@ -6,14 +6,12 @@ import java.util.Locale;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.ext.Provider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 
-@Provider
 public class LocaleDetectorFilter implements ContainerRequestFilter {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LocaleDetectorFilter.class);

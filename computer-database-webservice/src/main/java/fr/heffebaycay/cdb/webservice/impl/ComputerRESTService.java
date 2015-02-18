@@ -1,4 +1,4 @@
-package fr.heffebaycay.cdb.webservice;
+package fr.heffebaycay.cdb.webservice.impl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,14 +25,22 @@ import fr.heffebaycay.cdb.dto.ComputerDTO;
 import fr.heffebaycay.cdb.dto.mapper.ComputerMapper;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
+import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.service.IComputerService;
+import fr.heffebaycay.cdb.util.ComputerSortCriteria;
+import fr.heffebaycay.cdb.util.SortOrder;
+import fr.heffebaycay.cdb.webservice.IComputerRESTService;
+import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
-@Path("computers")
 @Service
-public class ComputerRESTService {
+@Path("/computers")
+public class ComputerRESTService implements IComputerRESTService {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ComputerRESTService.class);
+  private static final Logger LOGGER          = LoggerFactory
+                                                  .getLogger(ComputerRESTService.class);
+
+  private static final Long   NB_RESULTS_PAGE = 10L;
 
   @Autowired
   private IComputerService    computerService;
@@ -43,6 +51,7 @@ public class ComputerRESTService {
   @Autowired
   private ComputerMapper      computerMapper;
 
+  @Override
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   public Response create(ComputerDTO computerDTO) {
@@ -76,6 +85,7 @@ public class ComputerRESTService {
 
   }
 
+  @Override
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public List<ComputerDTO> findAll() {
@@ -85,6 +95,7 @@ public class ComputerRESTService {
     return computerMapper.toDTO(computers);
   }
 
+  @Override
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{id: [0-9]+}")
@@ -95,6 +106,7 @@ public class ComputerRESTService {
     return computerMapper.toDTO(computer);
   }
 
+  @Override
   @DELETE
   @Path("/{id: [0-9]+}")
   public Response remove(@PathParam("id") long id) {
@@ -106,6 +118,7 @@ public class ComputerRESTService {
     return Response.status(status).build();
   }
 
+  @Override
   @PUT
   @Path("/{id: [0-9]+}")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -126,6 +139,26 @@ public class ComputerRESTService {
 
     return Response.status(responseStatus).entity(message).build();
 
+  }
+
+  @GET
+  @Path("/page/{page: [0-9]+}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public SearchWrapper<ComputerDTO> findAllPaged(@PathParam("page") long pageNumber) {
+
+    long offset = (pageNumber - 1) * NB_RESULTS_PAGE;
+
+    ComputerPageRequest request = new ComputerPageRequest.Builder()
+        .offset(offset)
+        .nbRequested(NB_RESULTS_PAGE)
+        .sortCriterion(ComputerSortCriteria.ID)
+        .sortOrder(SortOrder.ASC)
+        .build();
+
+    SearchWrapper<Computer> sw = computerService.findAll(request);
+    
+    return computerMapper.convertWrappertoDTO(sw);
+    
   }
 
 }
