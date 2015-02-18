@@ -35,6 +35,13 @@ public class ComputerCLIUI {
   public ComputerCLIUI() {
 
   }
+  
+
+  public void setComputerWebService(IComputerRESTService computerWebService) {
+    this.computerWebService = computerWebService;
+  }
+
+
 
   /**
    * Prints the list of all computers

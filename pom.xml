@@ -12,9 +12,9 @@
     <module>computer-database-service</module>
     <module>computer-database-binding</module>
     <module>computer-database-webapp</module>
-	<module>computer-database-webservice-sdk</module>
+    <module>computer-database-webservice-sdk</module>
     <module>computer-database-webservice</module>
-	<module>computer-database-console</module>
+    <module>computer-database-console</module>
   </modules>
 
   <properties>

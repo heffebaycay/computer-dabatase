@@ -17,7 +17,7 @@ public class ComputerDatabaseCLILauncher {
     IComputerRESTService service = ctx.getBean(IComputerRESTService.class);
     
     
-    cli.start(null);
+    cli.start(service);
 
     ctx.close();
 
