@@ -14,12 +14,14 @@
         <context:component-scan base-package="fr.heffebaycay.cdb.dao">
         </context:component-scan>
         
+        <!-- Properties loader for the persistence specific properties -->
         <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         	<property name="location">
         		<value>classpath:/persistence.properties</value>
         	</property>
         </bean>
         
+        <!-- Core data source object -->
         <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
         	<property name="url" value="${db.url}/${db.name}?zeroDateTimeBehavior=convertToNull" />
@@ -27,8 +29,7 @@
         	<property name="password" value="${db.password}" />
         </bean>
         
-        
-        
+        <!-- Hibernate SessionFactory -->
         <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
             <property name="dataSource" ref="dataSource" />
             <property name="hibernateProperties">
@@ -37,6 +38,7 @@
                     <prop key="hibernate.show_sql">false</prop>
                 </props>
             </property>
+            <!-- External mapping configuration files -->
             <property name="mappingLocations">
                 <list>
                     <value>classpath:fr/heffebaycay/cdb/model/Company.hbm.xml</value>

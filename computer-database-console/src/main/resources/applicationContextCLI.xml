@@ -20,6 +20,7 @@
 
     <context:annotation-config />
 
+    <!-- Console project .properties bean -->
     <bean
         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location">
@@ -27,28 +28,35 @@
         </property>
     </bean>
 
+    <!-- Validator for DTOs -->
     <bean id="validator"
         class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
         <property name="validationMessageSource">
             <ref bean="messageSource" />
         </property>
     </bean>
-    
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-            <property name="basenames" value="classpath:messages, classpath:binding-messages" />
-            <property name="defaultEncoding" value="UTF-8" />
-            <!-- alwaysUseMessageFormat : set to true to force formatting with java.text.Format.MessageFormat -->
-            <property name="alwaysUseMessageFormat" value="true" /> 
-        </bean>
+
+    <bean id="messageSource"
+        class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames"
+            value="classpath:messages, classpath:binding-messages" />
+        <property name="defaultEncoding" value="UTF-8" />
+        <!-- alwaysUseMessageFormat : set to true to force formatting with 
+            java.text.Format.MessageFormat -->
+        <property name="alwaysUseMessageFormat" value="true" />
+    </bean>
 
     <context:component-scan
         base-package="fr.heffebaycay.cdb.webservice, fr.heffebaycay.cdb.ui">
     </context:component-scan>
 
+    <!-- Configuration of both JAX-RS WebServices : computer and company -->
     <jaxrs-client:client id="computerRESTClient"
         address="${console.webservice.baseURL}/api" serviceClass="fr.heffebaycay.cdb.webservice.IComputerRESTService"
         inheritHeaders="true">
         <jaxrs-client:providers>
+            <!-- Required, to get the client to know how to serialize/deserialize 
+                JSON -->
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
         </jaxrs-client:providers>
     </jaxrs-client:client>
@@ -56,6 +64,8 @@
         address="${console.webservice.baseURL}/api" serviceClass="fr.heffebaycay.cdb.webservice.ICompanyRESTService"
         inheritHeaders="true">
         <jaxrs-client:providers>
+            <!-- Required, to get the client to know how to serialize/deserialize 
+                JSON -->
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
         </jaxrs-client:providers>
     </jaxrs-client:client>
