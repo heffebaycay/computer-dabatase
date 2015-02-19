@@ -8,17 +8,15 @@
     </parent>
     <artifactId>computer-database-webservice-sdk</artifactId>
     <dependencies>
+    
+        <!-- JAX-RS Specification -->
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
             <version>${javax-rs-api.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.jaxrs</groupId>
-            <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <version>${jackson-jaxrs-json-provider.version}</version>
-        </dependency>
+        
 
         <!-- Internal Dependencies -->
         <dependency>

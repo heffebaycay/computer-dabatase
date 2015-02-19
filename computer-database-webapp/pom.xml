@@ -1,82 +1,107 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
- <modelVersion>4.0.0</modelVersion>
- <parent>
-  <groupId>computer-database</groupId>
-  <artifactId>computer-database</artifactId>
-  <version>0.3.1</version>
- </parent>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>computer-database</groupId>
+        <artifactId>computer-database</artifactId>
+        <version>0.3.1</version>
+    </parent>
 
- <artifactId>computer-database-webapp</artifactId>
- <packaging>war</packaging>
+    <artifactId>computer-database-webapp</artifactId>
+    <packaging>war</packaging>
 
- <dependencies>
-  <!-- Servlet dependencies -->
-  <dependency>
-   <groupId>javax.servlet</groupId>
-   <artifactId>jstl</artifactId>
-   <version>${jstl.version}</version>
-  </dependency>
-  <dependency>
-   <groupId>javax.servlet</groupId>
-   <artifactId>javax.servlet-api</artifactId>
-   <version>${servlet-api.version}</version>
-   <scope>provided</scope>
-  </dependency>
+    <dependencies>
+        <!-- Servlet dependencies -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${jstl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-  <dependency>
-   <groupId>org.springframework</groupId>
-   <artifactId>spring-web</artifactId>
-   <version>${spring.version}</version>
-  </dependency>
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
-  <dependency>
-   <groupId>org.springframework</groupId>
-   <artifactId>spring-webmvc</artifactId>
-   <version>${spring.version}</version>
-  </dependency>
-  
-  <!-- Spring security -->
-  <dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-web</artifactId>
-    <version>${spring-security.version}</version>
-  </dependency>
-  <dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-config</artifactId>
-    <version>${spring-security.version}</version>
-  </dependency>
-  <dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-taglibs</artifactId>
-    <version>${spring-security.version}</version>
-  </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
-  <!-- Internal Dependencies -->
-  <dependency>
-   <groupId>${project.groupId}</groupId>
-   <artifactId>computer-database-core</artifactId>
-   <version>${project.version}</version>
-  </dependency>
-  <dependency>
-   <groupId>${project.groupId}</groupId>
-   <artifactId>computer-database-service</artifactId>
-   <version>${project.version}</version>
-  </dependency>
-  <dependency>
-   <groupId>${project.groupId}</groupId>
-   <artifactId>computer-database-binding</artifactId>
-   <version>${project.version}</version>
-  </dependency>
+        <!-- Spring security -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
 
-  <!-- Testing dependencies -->
-  <dependency>
-   <groupId>org.seleniumhq.selenium</groupId>
-   <artifactId>selenium-firefox-driver</artifactId>
-   <version>${selenium.version}</version>
-   <scope>test</scope>
-  </dependency>
+        <!-- Internal Dependencies -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>computer-database-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>computer-database-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>computer-database-binding</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
- </dependencies>
+        <!-- Testing dependencies -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-firefox-driver</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory>
+                    <failOnMissingWebXml>true</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <path>/cdb</path>
+                    <url>http://localhost:8080/manager/text</url>
+                    <server>TomcatServer</server>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
