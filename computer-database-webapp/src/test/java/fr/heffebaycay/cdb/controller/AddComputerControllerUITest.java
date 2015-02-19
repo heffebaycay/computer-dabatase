@@ -34,8 +34,8 @@ public class AddComputerControllerUITest {
   public void testAddLegitComputer() {
 
     String computerName = "SeleniumTestingComputer";
-    String dateIntroduced = "1985-12-14";
-    String dateDiscontinued = "2000-05-03";
+    String dateIntroduced = "12-14-1985";
+    String dateDiscontinued = "05-03-2000";
     
     driver.get("http://localhost:8080/computer-database-webapp/computers/add");
 
@@ -79,7 +79,7 @@ public class AddComputerControllerUITest {
     // Click on "Add"
     driver.findElement(By.id("submit")).click();
 
-    List<WebElement> errorElement = driver.findElements(By.id("msgErrors"));
+    List<WebElement> errorElement = driver.findElements(By.id("computerName-error"));
 
     assertEquals(1, errorElement.size());
   }

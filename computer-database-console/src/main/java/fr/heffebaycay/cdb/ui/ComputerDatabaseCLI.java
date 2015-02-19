@@ -14,7 +14,7 @@ import fr.heffebaycay.cdb.webservice.IComputerRESTService;
 @Component
 public class ComputerDatabaseCLI {
 
-  public static final String  CLI_VERSION = "1.0";
+  public static final String  CLI_VERSION = "0.4.0";
 
   public static final long NB_RESULTS_PAGE = 10;
 
