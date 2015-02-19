@@ -20,6 +20,10 @@ import fr.heffebaycay.cdb.webservice.ICompanyRESTService;
 import fr.heffebaycay.cdb.webservice.IComputerRESTService;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+/**
+ * The <code>ComputerCLIUI</code> class handles all Computer-related requests made by the CLI
+ *
+ */
 @Service
 public class ComputerCLIUI {
 

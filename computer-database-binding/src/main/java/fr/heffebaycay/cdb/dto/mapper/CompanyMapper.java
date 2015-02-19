@@ -6,11 +6,13 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import fr.heffebaycay.cdb.dto.CompanyDTO;
-import fr.heffebaycay.cdb.dto.ComputerDTO;
 import fr.heffebaycay.cdb.model.Company;
-import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+/**
+ * <code>CompanyMapper</code> is a class for converting DO Company objects from/to DTO Company objects
+ *
+ */
 @Component
 public class CompanyMapper {
 
@@ -19,28 +21,28 @@ public class CompanyMapper {
   }
 
   /**
-   * Converts a Company DAO object to its DTO version
+   * Converts a Company DO object to its DTO version
    * 
-   * @param companyDAO      The DAO object to be converted
-   * @return                An instance of <i>CompanyDTO</i>, or <strong>null</strong> if <strong>companyDAO</strong> is null.
+   * @param companyDO       The DO object to be converted
+   * @return                An instance of <code>CompanyDTO</code>, or <strong>null</strong> if <strong>companyDAO</strong> is null.
    */
-  public CompanyDTO toDTO(Company companyDAO) {
+  public CompanyDTO toDTO(Company companyDO) {
 
-    if (companyDAO == null) {
+    if (companyDO == null) {
       return null;
     }
 
-    CompanyDTO companyDTO = new CompanyDTO.Builder().id(companyDAO.getId())
-        .name(companyDAO.getName()).build();
+    CompanyDTO companyDTO = new CompanyDTO.Builder().id(companyDO.getId())
+        .name(companyDO.getName()).build();
 
     return companyDTO;
   }
 
   /**
-   * Converts a List of Company to a List of CompanyDTO
+   * Converts a List of <code>Company</code> to a List of <code>CompanyDTO</code>
    * 
-   * @param companies   The List of Company DAO objects to be converted
-   * @return            A List of CompanyDTO objects, or <strong>null</strong> if <strong>companies</strong> is null.
+   * @param companies   The List of Company DO objects to be converted
+   * @return            A List of <code>CompanyDTO</code> objects, or <strong>null</strong> if <strong>companies</strong> is null.
    */
   public List<CompanyDTO> toDTO(List<Company> companies) {
 
@@ -53,10 +55,10 @@ public class CompanyMapper {
   }
 
   /**
-   * Converts a <i>CompanyDTO</i> object to its DAO version
+   * Converts a <code>CompanyDTO</code> object to its DO version
    * 
    * @param companyDTO      The DTO object to be converted
-   * @return                An instance of <i>Company</i>, or <strong>null</strong> if <strong>companyDTO</strong> is null.
+   * @return                An instance of <code>Company</code>, or <strong>null</strong> if <strong>companyDTO</strong> is null.
    */
   public Company fromDTO(CompanyDTO companyDTO) {
 
@@ -88,6 +90,12 @@ public class CompanyMapper {
     
   }
   
+  /**
+   * Maps a SearchWrapper&lt;Company&gt; object to a SearchWrapper&lt;CompanyDTO&gt; object
+   * 
+   * @param wrapper     The wrapper that should be mapped
+   * @return            A wrapper of <code>CompanyDTO</code>
+   */
   public SearchWrapper<CompanyDTO> convertWrappertoDTO(SearchWrapper<Company> wrapper) {
 
     SearchWrapper<CompanyDTO> dtoWrapper = new SearchWrapper<>();

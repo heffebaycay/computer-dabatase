@@ -11,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import fr.heffebaycay.cdb.dto.mapper.MappingSettings;
 
+/**
+ * Class containing the actuel logic for the LocalDate String validation
+ *
+ */
 public class LocalDateFormatConstraintValidator implements
     ConstraintValidator<LocalDateFormat, String> {
 
@@ -24,6 +28,9 @@ public class LocalDateFormatConstraintValidator implements
   public void initialize(LocalDateFormat ldf) {
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean isValid(String str, ConstraintValidatorContext arg1) {
     

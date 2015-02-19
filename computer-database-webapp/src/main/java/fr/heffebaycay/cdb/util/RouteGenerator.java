@@ -18,9 +18,11 @@ public class RouteGenerator {
   /**
    * Generates the path to the Dashboard route.
    * 
-   * @param pageNumber      Page number
-   * @param search          Search Query
-   * @return                Path to the Dashboard route
+   * @param pageNumber          Page number
+   * @param search              Search keyword
+   * @param sortCriterion       Sort criterion
+   * @param sortOrder           Sort order
+   * @return                    Path to the Dashboard route
    */
   public static String generateDashboardRoute(String pageNumber, String search, String sortCriterion, String sortOrder) {
     
@@ -28,6 +30,15 @@ public class RouteGenerator {
     
   }
   
+  /**
+   * Generates the path to the Company list route.
+   * 
+   * @param pageNumber          Page number
+   * @param search              Search keyword
+   * @param sortCriterion       Sort criterion
+   * @param sortOrder           Sort order
+   * @return                    Path to the Company list page
+   */
   public static String generateCompanyRoute(String pageNumber, String search, String sortCriterion, String sortOrder) {
 	  return generateRoute("company-list", new RouteArgumentMapBuilder().addArgument("p", pageNumber).addArgument("search", search).addArgument("sortBy", sortCriterion).addArgument("order", sortOrder).build());
   }
@@ -37,7 +48,7 @@ public class RouteGenerator {
    * parameters to the path.
    * 
    * @param routeName       Unique name of the route, as defined by the application. 
-   * @param parameters      Key-value map of the route parameters (e.g.: page => 3, query => "Intel") 
+   * @param parameters      Key-value map of the route parameters (e.g.: page =&gt; 3, query =&gt; "Intel") 
    * @return                The path to the Route.
    */
   protected static String generateRoute(String routeName, Map<String, String> parameters) {

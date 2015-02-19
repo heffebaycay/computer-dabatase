@@ -18,6 +18,10 @@ import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+/**
+ * Base implementation of the {@link fr.heffebaycay.cdb.service.ICompanyService} interface.
+ *
+ */
 @Service
 public class CompanyServiceJDBCImpl implements ICompanyService {
 
@@ -84,14 +88,12 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
     LOGGER.debug("Call to findAll()");
 
     SearchWrapper<Company> companies = null;
-    
+
     try {
-       companies = companyDao.findAll(request);
-    } catch(DaoException e) {
+      companies = companyDao.findAll(request);
+    } catch (DaoException e) {
       LOGGER.warn("findAll(): DaoException", e);
     }
-    
-    
 
     return companies;
   }
@@ -104,16 +106,11 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
     LOGGER.debug("Are we in a transactionnal context?: {}",
         TransactionSynchronizationManager.isActualTransactionActive());
 
-    try {
-      // Remove computers linked to company X
-      computerDao.removeForCompany(id);
+    // Remove computers linked to company X
+    computerDao.removeForCompany(id);
 
-      // Remove company X
-      companyDao.remove(id);
-    } catch (DaoException e) {
-      throw new RuntimeException("CompanyServiceJDBCImpl::remove() failed", e);
-    }
-
+    // Remove company X
+    companyDao.remove(id);
   }
 
   @Override

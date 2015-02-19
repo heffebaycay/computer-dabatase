@@ -18,7 +18,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import fr.heffebaycay.cdb.dao.IComputerDao;
-import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
@@ -78,11 +77,8 @@ public class TestComputerService {
       fail("Computer Service not initialized");
     }
 
-    try {
-      when(computerDao.findAll()).thenReturn(computersDB);
-    } catch (DaoException e) {
-      fail("testFindAll(): Failed to setup Mockito: " + e.getMessage());
-    }
+    when(computerDao.findAll()).thenReturn(computersDB);
+    
 
     List<Computer> computers = computerService.findAll();
 
@@ -102,11 +98,8 @@ public class TestComputerService {
     Computer computerExpected = computersDB.stream().filter(c -> c.getId() == COMPUTER_ID)
         .findFirst().get();
 
-    try {
-      when(computerDao.findById(Matchers.eq(COMPUTER_ID))).thenReturn(computerExpected);
-    } catch (DaoException e) {
-      fail("testFindById(): Failed to setup Mockito: " + e.getMessage());
-    }
+    when(computerDao.findById(Matchers.eq(COMPUTER_ID))).thenReturn(computerExpected);
+    
 
     Computer computer = computerService.findById(COMPUTER_ID);
 
@@ -120,20 +113,16 @@ public class TestComputerService {
     if (computerService == null) {
       fail("Computer Service not initialized");
     }
+    
+    doAnswer(new Answer<Object>() {
+      public Object answer(InvocationOnMock invocation) {
 
-    try {
-      doAnswer(new Answer<Object>() {
-        public Object answer(InvocationOnMock invocation) {
+        long idToRemove = invocation.getArgumentAt(0, Long.class);
 
-          long idToRemove = invocation.getArgumentAt(0, Long.class);
+        return computersDB.removeIf(c -> c.getId() == idToRemove);
 
-          return computersDB.removeIf(c -> c.getId() == idToRemove);
-
-        }
-      }).when(computerDao).remove(Matchers.anyLong());
-    } catch (DaoException e) {
-      fail("testRemove(): Failed to setup Mockito: " + e.getMessage());
-    }
+      }
+    }).when(computerDao).remove(Matchers.anyLong());
 
     Random rand = new Random();
     int randomIndex = rand.nextInt(computersDB.size());
@@ -156,20 +145,17 @@ public class TestComputerService {
       fail("Computer Service not initialized");
     }
 
-    try {
-      doAnswer(new Answer<Long>() {
-        public Long answer(InvocationOnMock invocation) {
+    doAnswer(new Answer<Long>() {
+      public Long answer(InvocationOnMock invocation) {
 
-          Computer computerToCreate = invocation.getArgumentAt(0, Computer.class);
+        Computer computerToCreate = invocation.getArgumentAt(0, Computer.class);
 
-          computersDB.add(computerToCreate);
+        computersDB.add(computerToCreate);
 
-          return computerToCreate.getId();
-        }
-      }).when(computerDao).create(Matchers.any(Computer.class));
-    } catch (DaoException e) {
-      fail("testCreate(): Failed to setup Mockito: " + e.getMessage());
-    }
+        return computerToCreate.getId();
+      }
+    }).when(computerDao).create(Matchers.any(Computer.class));
+    
 
     Company apple = new Company.Builder().id(1).name("Apple Inc.").build();
     Computer computer = new Computer.Builder().id(42).name("My Awesome Computer").company(apple)
@@ -189,22 +175,19 @@ public class TestComputerService {
       fail("Computer Service not initialized");
     }
 
-    try {
-      doAnswer(new Answer<Object>() {
-        public Object answer(InvocationOnMock invocation) {
+    doAnswer(new Answer<Object>() {
+      public Object answer(InvocationOnMock invocation) {
 
-          Computer computerToUpdate = invocation.getArgumentAt(0, Computer.class);
+        Computer computerToUpdate = invocation.getArgumentAt(0, Computer.class);
 
-          computersDB.removeIf(c -> c.getId() == computerToUpdate.getId());
-          computersDB.add(computerToUpdate);
+        computersDB.removeIf(c -> c.getId() == computerToUpdate.getId());
+        computersDB.add(computerToUpdate);
 
-          return null;
+        return null;
 
-        }
-      }).when(computerDao).update(Matchers.any(Computer.class));
-    } catch (DaoException e) {
-      fail("testUpdate(): Failed to setup Mockito: " + e.getMessage());
-    }
+      }
+    }).when(computerDao).update(Matchers.any(Computer.class));
+    
 
     Random rnd = new Random();
     int randomIndex = rnd.nextInt(computersDB.size());
@@ -242,11 +225,7 @@ public class TestComputerService {
         .build();
 
     SearchWrapper<Computer> wrapper = new SearchWrapper<Computer>();
-    try {
-      when(computerDao.findAll(Matchers.any(ComputerPageRequest.class))).thenReturn(wrapper);
-    } catch (DaoException e) {
-      fail("testFindAllWithOffset(): Failed to setup Mockito: " + e.getMessage());
-    }
+    when(computerDao.findAll(Matchers.any(ComputerPageRequest.class))).thenReturn(wrapper);
 
     SearchWrapper<Computer> returnedWrapper = computerService.findAll(request);
 

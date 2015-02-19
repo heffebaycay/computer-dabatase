@@ -6,6 +6,10 @@ import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+/**
+ * Company Service contract
+ *
+ */
 public interface ICompanyService {
 
   /**
@@ -17,8 +21,8 @@ public interface ICompanyService {
 
   /**
    * Find a Company from the data source
-   * @param id
-   * @return
+   * @param id      The unique identifier of the Company to fetch
+   * @return        The company matching the id or <strong>null</strong> if no company was found.
    */
   Company findById(long id);
 
@@ -26,25 +30,33 @@ public interface ICompanyService {
    * Create a Company in the data source based on an instance of Company
    * 
    * @param company The company object that should be created
+   * @return        Identifier of the newly created Company.
    */
   long create(Company company);
 
   /**
-     * Queries the data source for nbRequested elements starting at the offset defined by the parameter with the same name
-     * 
-     * @param offset           The offset of the first Company element that should be returned
-     * @param nbRequested      The total number of elements requested
-     * @return                 A SearchWrapper element containing both the results as a List and the total number of elements matched by the query
-     */
+   * Queries the data source for a given number of elements starting at the offset defined within the <strong>request</strong> parameter.
+   * 
+   * @param request         Object containing the details of the findAll() request (offset, number of elements)
+   * @return                A {@link fr.heffebaycay.cdb.wrapper.SearchWrapper} object containing the collection of Company object, as well as information about the page
+   */
   SearchWrapper<Company> findAll(CompanyPageRequest request);
 
   /**
-   * Removes a Company from the data source
+   * Removes a Company from the data source along with all the Computers tied to it
    * 
    * @param id      Identifier of the company that should be removed.
    */
   void remove(long id);
 
+  /**
+   * Queries the data source for a given number of elements starting at the offset defined within the <strong>request</strong> parameter.
+   * 
+   * The method will attempt to find Computer objects whose name or company name (if applicable) matches the searchQuery attribute of <strong>request</strong>.
+   * 
+   * @param request         Object containing the details of the findByName() request, including the search keyword
+   * @return                A {@link fr.heffebaycay.cdb.wrapper.SearchWrapper} object containing the collection of Company object, as well as information about the page
+   */
   SearchWrapper<Company> findByName(CompanyPageRequest request);
 
 }

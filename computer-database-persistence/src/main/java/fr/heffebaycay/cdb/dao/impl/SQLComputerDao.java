@@ -12,13 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import fr.heffebaycay.cdb.dao.IComputerDao;
-import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.util.ComputerSortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+/**
+ * Hibernate implementation of the {@link fr.heffebaycay.cdb.dao.IComputerDao} interface
+ *
+ */
 @Repository
 public class SQLComputerDao implements IComputerDao {
 
@@ -40,7 +43,7 @@ public class SQLComputerDao implements IComputerDao {
    */
   @SuppressWarnings("unchecked")
   @Override
-  public List<Computer> findAll() throws DaoException {
+  public List<Computer> findAll() {
 
     Session session = sessionFactory.getCurrentSession();
 
@@ -53,7 +56,7 @@ public class SQLComputerDao implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public Computer findById(long id) throws DaoException {
+  public Computer findById(long id) {
     Session session = sessionFactory.getCurrentSession();
 
     Query query = session.createQuery("from Computer as comp where comp.id = :id");
@@ -68,7 +71,7 @@ public class SQLComputerDao implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public boolean remove(long id) throws DaoException {
+  public boolean remove(long id) {
 
     Session session = sessionFactory.getCurrentSession();
 
@@ -86,7 +89,7 @@ public class SQLComputerDao implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public long create(Computer computer) throws DaoException {
+  public long create(Computer computer) {
 
     if (computer == null) {
       throw new IllegalArgumentException("'computer' argument cannot be null");
@@ -102,7 +105,7 @@ public class SQLComputerDao implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public void update(Computer computer) throws DaoException {
+  public void update(Computer computer) {
     if (computer == null) {
       throw new IllegalArgumentException("'computer' argument cannot be null");
     }
@@ -116,7 +119,7 @@ public class SQLComputerDao implements IComputerDao {
    * {@inheritDoc}
    */
   @Override
-  public int removeForCompany(long companyId) throws DaoException {
+  public int removeForCompany(long companyId) {
     Session session = sessionFactory.getCurrentSession();
 
     int computersAffected;
@@ -135,9 +138,9 @@ public class SQLComputerDao implements IComputerDao {
    */
   @SuppressWarnings("unchecked")
   @Override
-  public SearchWrapper<Computer> findByName(ComputerPageRequest request) throws DaoException {
+  public SearchWrapper<Computer> findByName(ComputerPageRequest request) {
     if (request == null) {
-      throw new DaoException("PageRequest object cannot be null");
+      throw new IllegalArgumentException("PageRequest object cannot be null");
     }
 
     SearchWrapper<Computer> searchWrapper = new SearchWrapper<Computer>();
@@ -202,10 +205,10 @@ public class SQLComputerDao implements IComputerDao {
 
   @SuppressWarnings("unchecked")
   @Override
-  public SearchWrapper<Computer> findAll(ComputerPageRequest request) throws DaoException {
+  public SearchWrapper<Computer> findAll(ComputerPageRequest request) {
 
     if (request == null) {
-      throw new DaoException("PageRequest object cannot be null");
+      throw new IllegalArgumentException("PageRequest object cannot be null");
     }
 
     SearchWrapper<Computer> searchWrapper = new SearchWrapper<Computer>();

@@ -69,7 +69,7 @@ public class ComputerRESTService implements IComputerRESTService {
   public Response create(@ApiParam(value = "Computer object", required = true) ComputerDTO computerDTO) {
 
     Company company = null;
-    if (computerDTO.getCompanyId() > 0) {
+    if (computerDTO.getCompanyId() != null && computerDTO.getCompanyId() > 0) {
       // A valid companyId was supplied
       company = companyService.findById(computerDTO.getCompanyId());
       if (company == null) {

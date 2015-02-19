@@ -168,13 +168,8 @@ public class TestComputerDaoMySQLImpl {
   @Test
   public void testFindAll() {
 
-    List<Computer> computers = null;
+    List<Computer> computers = computerDao.findAll();
 
-    try {
-      computers = computerDao.findAll();
-    } catch (DaoException e) {
-      fail("DaoException thrown by findAll()");
-    }
 
     assertEquals(localComputers, computers);
 
@@ -190,12 +185,7 @@ public class TestComputerDaoMySQLImpl {
         .sortOrder(SortOrder.ASC)
         .build();
 
-    SearchWrapper<Computer> wrapper = null;
-    try {
-      wrapper = computerDao.findAll(request);
-    } catch (DaoException e) {
-      fail("IComputerDao::findAll() threw a DaoException: " + e.getMessage());
-    }
+    SearchWrapper<Computer> wrapper = computerDao.findAll(request);;
 
     assertEquals(1, wrapper.getCurrentPage());
     assertEquals(7, wrapper.getTotalCount());
@@ -210,12 +200,7 @@ public class TestComputerDaoMySQLImpl {
   @Test
   public void testFindById() {
 
-    Computer computer = null;
-    try {
-      computer = computerDao.findById(4);
-    } catch (DaoException e) {
-      fail("IComputerDao::findById() threw a DaoException: " + e.getMessage());
-    }
+    Computer computer = computerDao.findById(4);
 
     boolean checked = false;
 
@@ -242,12 +227,7 @@ public class TestComputerDaoMySQLImpl {
         .introduced(LocalDateTime.parse("2014-06-26T00:00:00"))
         .discontinued(LocalDateTime.parse("2015-01-01T00:00:00")).company(company).build();
 
-    long computerId = -1;
-    try {
-      computerId = computerDao.create(computer);
-    } catch (DaoException e) {
-      fail("IComputerDao::create() threw a DaoException: " + e.getMessage());
-    }
+    long computerId = computerDao.create(computer);
 
     if (computerId == -1) {
       fail("Computer was not created, as no valid id was returned");
@@ -255,12 +235,7 @@ public class TestComputerDaoMySQLImpl {
 
     computer.setId(computerId);
 
-    Computer fetchedComputer = null;
-    try {
-      fetchedComputer = computerDao.findById(computerId);
-    } catch (DaoException e) {
-      fail("IComputerDao::findById() threw a DaoException: " + e.getMessage());
-    }
+    Computer fetchedComputer = computerDao.findById(computerId);
 
     assertEquals(computer, fetchedComputer);
   }
@@ -277,8 +252,6 @@ public class TestComputerDaoMySQLImpl {
 
       assertEquals("'computer' argument cannot be null", e.getMessage());
 
-    } catch (DaoException e) {
-      fail("IComputerDao::create() threw a DaoException: " + e.getMessage());
     }
 
   }
@@ -286,12 +259,7 @@ public class TestComputerDaoMySQLImpl {
   @Test
   public void testUpdate() {
 
-    Computer computer = null;
-    try {
-      computer = computerDao.findById(7);
-    } catch (DaoException e) {
-      fail("IComputerDao::findById() threw a DaoException: " + e.getMessage());
-    }
+    Computer computer = computerDao.findById(7);
 
     Company company = new Company.Builder().id(8).name("Sanyo").build();
 
@@ -300,18 +268,9 @@ public class TestComputerDaoMySQLImpl {
     computer.setIntroduced(LocalDateTime.parse("2011-09-02T00:00:00"));
     computer.setDiscontinued(LocalDateTime.parse("2013-03-27T00:00:00"));
 
-    try {
-      computerDao.update(computer);
-    } catch (DaoException e) {
-      fail("IComputerDao::update() threw a DaoException: " + e.getMessage());
-    }
+    computerDao.update(computer);
 
-    Computer updatedComputer = null;
-    try {
-      updatedComputer = computerDao.findById(7);
-    } catch (DaoException e) {
-      fail("IComputerDao::findById() threw a DaoException: " + e.getMessage());
-    }
+    Computer updatedComputer = computerDao.findById(7);
 
     assertEquals(computer, updatedComputer);
   }
@@ -329,8 +288,6 @@ public class TestComputerDaoMySQLImpl {
 
       assertEquals("'computer' argument cannot be null", e.getMessage());
 
-    } catch (DaoException e) {
-      fail("IComputerDao::update() threw a DaoException: " + e.getMessage());
     }
 
   }

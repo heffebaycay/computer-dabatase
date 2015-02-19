@@ -20,7 +20,7 @@ public class ComputerDatabaseCLI {
 
   private static final Logger LOGGER      = LoggerFactory.getLogger(ComputerDatabaseCLI.class);
 
-  public final class MenuOption {
+  public interface MenuOption {
     /**
      * Here are the list of options available in the application
      * Each option value must be unique!
@@ -36,7 +36,6 @@ public class ComputerDatabaseCLI {
     public static final int COMPANY_REMOVE       = 9;
     public static final int EXIT                 = 10;
 
-    private MenuOption() { }
   }
 
   @Autowired

@@ -13,10 +13,14 @@ import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+/**
+ * <code>ComputerMapper</code> is a class for converting DO Computer objects from/to DTO Computer objects
+ *
+ */
 @Component
 public class ComputerMapper {
 
-  public static final Logger LOGGER = LoggerFactory.getLogger(ComputerMapper.class.getSimpleName());
+  public static final Logger LOGGER = LoggerFactory.getLogger(ComputerMapper.class);
 
   private ComputerMapper() {
     super();
@@ -35,7 +39,7 @@ public class ComputerMapper {
    * Converts a Computer DO object to is DTO version 
    * 
    * @param computerDAO     The DAO object to be converted
-   * @return                An instance of <i>ComputerDTO</i>, or <strong>null</strong> if <strong>computerDAO</strong> is null.
+   * @return                An instance of <code>ComputerDTO</code>, or <strong>null</strong> if <strong>computerDAO</strong> is null.
    */
   public ComputerDTO toDTO(Computer computerDAO) {
 
@@ -67,10 +71,10 @@ public class ComputerMapper {
   }
 
   /**
-   * Converts a List of Computer to a List of ComputerDTO objects.
+   * Converts a List of <code>Computer</code> to a List of <code>ComputerDTO</code> objects.
    * 
    * @param computers       The list of Computer DAO objects to be converted
-   * @return                A List of ComputerDTO objects, or <strong>null</strong> if <strong>computers</strong> is null.
+   * @return                A List of <code>ComputerDTO</code> objects, or <strong>null</strong> if <strong>computers</strong> is null.
    */
   public List<ComputerDTO> toDTO(List<Computer> computers) {
 
@@ -101,8 +105,12 @@ public class ComputerMapper {
             localDateTimeMapper.fromLocalDate(localDateMapper.fromDTO(computerDTO.getIntroduced())))
         .discontinued(
             localDateTimeMapper.fromLocalDate(localDateMapper.fromDTO(computerDTO.getDiscontinued())))
-        .company(new Company.Builder().id(computerDTO.getCompanyId()).build())
         .build();
+
+    if (computerDTO.getCompany() != null) {
+      computer.setCompany(new Company.Builder().id(computerDTO.getCompany().getId())
+          .name(computerDTO.getCompany().getName()).build());
+    }
 
     return computer;
   }
@@ -110,8 +118,8 @@ public class ComputerMapper {
   /**
    * Maps a computerDTO object to an existing computer object 
    * 
-   * @param computer
-   * @param computerDTO
+   * @param computer        The DO object that should be updated
+   * @param computerDTO     The DTO object that contains the updated properties
    */
   public void updateDO(Computer computer, ComputerDTO computerDTO) {
 
@@ -128,6 +136,12 @@ public class ComputerMapper {
 
   }
 
+  /**
+   * Maps a SearchWrapper&lt;Computer&gt; object to a SearchWrapper&lt;ComputerDTO&gt; object
+   * 
+   * @param wrapper     The wrapper that should be mapped
+   * @return            A wrapper of <code>ComputerDTO</code>
+   */
   public SearchWrapper<ComputerDTO> convertWrappertoDTO(SearchWrapper<Computer> wrapper) {
 
     SearchWrapper<ComputerDTO> dtoWrapper = new SearchWrapper<>();

@@ -8,6 +8,10 @@ import fr.heffebaycay.cdb.dto.CompanyDTO;
 import fr.heffebaycay.cdb.webservice.ICompanyRESTService;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+/**
+ * The <code>CompanyCLIUI</code> class handles all Company-related requests made by the CLI
+ *
+ */
 @Service
 public class CompanyCLIUI {
 

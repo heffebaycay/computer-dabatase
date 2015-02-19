@@ -18,6 +18,10 @@ import fr.heffebaycay.cdb.util.CompanySortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+/**
+ * Hibernate implementation of the {@link fr.heffebaycay.cdb.dao.ICompanyDao} interface
+ *
+ */
 @Repository
 public class SQLCompanyDao implements ICompanyDao {
 

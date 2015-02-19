@@ -10,12 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.heffebaycay.cdb.dao.IComputerDao;
-import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.model.Computer;
 import fr.heffebaycay.cdb.model.ComputerPageRequest;
 import fr.heffebaycay.cdb.service.IComputerService;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 
+/**
+ * 
+ * Base implementation of the {@link fr.heffebaycay.cdb.service.IComputerService} inteface.
+ *
+ */
 @Service
 public class ComputerServiceJDBCImpl implements IComputerService {
 
@@ -36,12 +40,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   public List<Computer> findAll() {
     LOGGER.debug("Call to findAll()");
 
-    List<Computer> computers = null;
-    try {
-      computers = computerDao.findAll();
-    } catch (DaoException e) {
-      LOGGER.warn("findAll(): DaoException", e);
-    }
+    List<Computer> computers = computerDao.findAll();
 
     return computers;
   }
@@ -54,12 +53,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   public Computer findById(long id) {
     LOGGER.debug("Call to findById()");
 
-    Computer computer = null;
-    try {
-      computer = computerDao.findById(id);
-    } catch (DaoException e) {
-      LOGGER.warn("findById(): DaoException: ", e);
-    }
+    Computer computer = computerDao.findById(id);
 
     return computer;
   }
@@ -72,12 +66,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   public boolean remove(long id) {
     LOGGER.debug("Call to remove()");
 
-    boolean result = false;
-    try {
-      result = computerDao.remove(id);
-    } catch (DaoException e) {
-      LOGGER.warn("remove(): DaoException: ", e);
-    }
+    boolean result = computerDao.remove(id);
 
     return result;
 
@@ -91,12 +80,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   public long create(Computer computer) {
     LOGGER.debug("Call to create()");
 
-    long computerId = -1;
-    try {
-      computerId = computerDao.create(computer);
-    } catch (DaoException e) {
-      LOGGER.warn("create(): DaoException: ", e);
-    }
+    long computerId = computerDao.create(computer);
 
     return computerId;
   }
@@ -109,11 +93,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   public void update(Computer computer) {
     LOGGER.debug("Call to update()");
 
-    try {
-      computerDao.update(computer);
-    } catch (DaoException e) {
-      LOGGER.warn("update(): ", e);
-    }
+    computerDao.update(computer);
 
   }
 
@@ -125,14 +105,8 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   public SearchWrapper<Computer> findAll(ComputerPageRequest request) {
     LOGGER.debug("Call to findAll(long, long)");
 
-    SearchWrapper<Computer> wrapper = null;
+    SearchWrapper<Computer> wrapper = computerDao.findAll(request);
 
-    try {
-      wrapper = computerDao.findAll(request);
-    } catch (DaoException e) {
-      LOGGER.warn("findAll(): DaoException: ", e);
-    }
-    
     return wrapper;
   }
 
@@ -144,13 +118,7 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   public SearchWrapper<Computer> findByName(ComputerPageRequest request) {
     LOGGER.debug("Call to findByName()");
 
-    SearchWrapper<Computer> wrapper = null;
-
-    try {
-      wrapper = computerDao.findByName(request);
-    } catch (DaoException e) {
-      LOGGER.warn("findByName(): DaoException: ", e);
-    }
+    SearchWrapper<Computer> wrapper = computerDao.findByName(request);
 
     return wrapper;
   }
@@ -162,9 +130,9 @@ public class ComputerServiceJDBCImpl implements IComputerService {
   @Transactional
   public void remove(List<Long> ids) {
     LOGGER.debug("Call to remove(List<long>)");
-    
+
     computerDao.remove(ids);
-    
+
   }
 
 }

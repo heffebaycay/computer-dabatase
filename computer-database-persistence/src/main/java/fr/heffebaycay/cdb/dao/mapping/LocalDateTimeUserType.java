@@ -28,6 +28,10 @@ import java.util.Date;
  */
 public class LocalDateTimeUserType implements EnhancedUserType, Serializable {
  
+    /**
+   * 
+   */
+  private static final long serialVersionUID = -493657952432522967L;
     private static final int[] SQL_TYPES = new int[]{Types.TIMESTAMP};
  
     @Override

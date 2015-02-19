@@ -13,8 +13,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,8 +36,6 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 @Path("/companies")
 @Api(value = "/companies", description = "Company related operations")
 public class CompanyRESTService implements ICompanyRESTService {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(CompanyRESTService.class);
   
   private static final Long NB_RESULTS_PAGE = 10L;
   
