@@ -96,6 +96,31 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire-plugin.version}</version>
             </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.1</version>
+                <executions>
+                    <execution>
+                        <id>javadoc-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                            <goal>jar</goal>
+                            <goal>aggregate</goal>
+                            <goal>aggregate-jar</goal>
+                        </goals>
+                        <configuration>
+                            <additionalDependencies>
+                                <additionalDependency>
+                                    <groupId>org.jboss.spec.javax.interceptor</groupId>
+                                    <artifactId>jboss-interceptors-api_1.2_spec</artifactId>
+                                    <version>1.0.0.Final</version>
+                                </additionalDependency>
+                            </additionalDependencies>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
@@ -166,35 +191,7 @@
                     </reportSet>
                 </reportSets>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                    <failOnError>false</failOnError>
-                    <additionalDependencies>
-                        <additionalDependency>
-                            <groupId>org.jboss.spec.javax.interceptor</groupId>
-                            <artifactId>jboss-interceptors-api_1.2_spec</artifactId>
-                            <version>1.0.0.Final</version>
-                        </additionalDependency>
-                    </additionalDependencies>
-                </configuration>
-               <reportSets>
-                   <reportSet>
-                       <id>aggregate</id>
-                       <reports>
-                           <report>aggregate</report>
-                       </reports>
-                   </reportSet>
-                   <reportSet>
-                       <id>aggregate-jar</id>
-                       <reports>
-                           <report>aggregate-jar</report>
-                       </reports>
-                   </reportSet>
-               </reportSets>
-            </plugin>
+            
         </plugins>
     </reporting>
 
