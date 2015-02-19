@@ -10,11 +10,12 @@ import fr.heffebaycay.cdb.dto.validator.LocalDateFormat;
 
 public class ComputerDTO implements Serializable {
 
-  /**
-   * 
-   */
   private static final long serialVersionUID = 163956444219807087L;
 
+  public static final String ATTR_NAME = "name";
+  public static final String ATTR_INTRODUCED = "introduced";
+  public static final String ATTR_DISCONTINUED = "discontinued";
+  
   private long              id;
 
   @NotBlank(message = "{computer_dto.name_not_blank}")

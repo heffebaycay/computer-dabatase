@@ -2,12 +2,16 @@ package fr.heffebaycay.cdb.ui;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.heffebaycay.cdb.dto.CompanyDTO;
@@ -24,6 +28,9 @@ public class ComputerCLIUI {
   ICompanyRESTService         companyWebService;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ComputerCLIUI.class.getSimpleName());
+
+  @Autowired
+  private Validator           validator;
 
   public ComputerCLIUI() {
 
@@ -103,39 +110,44 @@ public class ComputerCLIUI {
     System.out.println("%n\t** Welcome to the Computer creation wizard ** ");
     System.out.println("Please answer the following questions in order to create a new computer:");
 
+    Set<ConstraintViolation<ComputerDTO>> validationErrors;
+
     ComputerDTO computer = new ComputerDTO();
 
     System.out.println("What is the name of the computer ?");
     String name = sc.nextLine();
 
-    try {
-      computer.setName(name);
-    } catch (IllegalArgumentException iae) {
-      LOGGER.debug("createComputer(): Invalid name for computer. {}", iae);
-      System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
+    validationErrors = validator.validateValue(ComputerDTO.class, ComputerDTO.ATTR_NAME, name);
+    if (!validationErrors.isEmpty()) {
+      LOGGER.debug("createComputer(): Invalid name for computer.");
+      printValidationErrors(validationErrors);
       return;
+    } else {
+      computer.setName(name);
     }
 
     System.out.println("On what date was the computer introduced (format: year-month-day)?");
     String introduced = sc.nextLine();
 
-    try {
-      computer.setIntroduced(introduced);
-    } catch (IllegalArgumentException iae) {
-      LOGGER.debug("createComputer(): Invalid date introduced for computer. {}", iae);
-      System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
+    validationErrors = validator.validateValue(ComputerDTO.class, ComputerDTO.ATTR_INTRODUCED, introduced);
+    if (!validationErrors.isEmpty()) {
+      LOGGER.debug("createComputer(): Invalid date introduced for computer.");
+      printValidationErrors(validationErrors);
       return;
+    } else {
+      computer.setIntroduced(introduced);
     }
 
     System.out.println("On what date was the computer discontinued (format: year-month-day)?");
     String discontinued = sc.nextLine();
 
-    try {
-      computer.setDiscontinued(discontinued);
-    } catch (IllegalArgumentException iae) {
-      LOGGER.debug("createComputer(): Invalid date discontinued for computer. {}", iae);
-      System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
+    validationErrors = validator.validateValue(ComputerDTO.class, ComputerDTO.ATTR_DISCONTINUED, discontinued);
+    if (!validationErrors.isEmpty()) {
+      LOGGER.debug("createComputer(): Invalid date discontinued for computer.");
+      printValidationErrors(validationErrors);
       return;
+    } else {
+      computer.setDiscontinued(discontinued);
     }
 
     System.out
@@ -150,12 +162,16 @@ public class ComputerCLIUI {
       System.out.println("What is the name of the Company that created this computer?");
       String companyName = sc.nextLine();
 
-      try {
-        company.setName(companyName);
-      } catch (IllegalArgumentException iae) {
-        LOGGER.debug("createComputer(): Invalid name for company. {}", iae);
-        System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
+      Set<ConstraintViolation<CompanyDTO>> companyErrors = validator.validateValue(
+          CompanyDTO.class, CompanyDTO.ATTR_NAME, companyName);
+      if (!companyErrors.isEmpty()) {
+        LOGGER.debug("createComputer(): Invalid name for company.");
+        for (ConstraintViolation<CompanyDTO> error : companyErrors) {
+          System.out.printf("[Error] %s - Canceling creation%n", error.getMessage());
+        }
         return;
+      } else {
+        company.setName(companyName);
       }
 
       company = companyWebService.create(company);
@@ -189,6 +205,8 @@ public class ComputerCLIUI {
     System.out.println("%n\t** Welcome to the Computer update wizard ** ");
     System.out.println("Please answer the following questions in order to update an existing:");
 
+    Set<ConstraintViolation<ComputerDTO>> validationErrors;
+
     ComputerDTO computer = computerWebService.findById(id);
     if (computer == null) {
       System.out.printf("[Error] No computer matches the id '%d'%n. Canceling update%n", id);
@@ -200,12 +218,14 @@ public class ComputerCLIUI {
 
     if (name != null && name.length() > 0) {
       // User typed something
-      try {
-        computer.setName(name);
-      } catch (IllegalArgumentException iae) {
-        LOGGER.debug("updateComputer(): Invalid name for computer. {}", iae);
-        System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
+
+      validationErrors = validator.validateValue(ComputerDTO.class, ComputerDTO.ATTR_NAME, name);
+      if (!validationErrors.isEmpty()) {
+        LOGGER.debug("updateComputer(): Invalid name for computer.");
+        printValidationErrors(validationErrors);
         return;
+      } else {
+        computer.setName(name);
       }
     }
 
@@ -223,12 +243,15 @@ public class ComputerCLIUI {
       if ("null".equals(introduced)) {
         computer.setIntroduced(null);
       } else {
-        try {
-          computer.setIntroduced(introduced);
-        } catch (IllegalArgumentException iae) {
-          LOGGER.debug("updateComputer(): Invalid date introduced for computer. {}", iae);
-          System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
+
+        // Validating 'Introduced' attribute
+        validationErrors = validator.validateValue(ComputerDTO.class, ComputerDTO.ATTR_INTRODUCED, introduced);
+        if (!validationErrors.isEmpty()) {
+          LOGGER.debug("updateComputer(): Invalid date introduced for computer.");
+          printValidationErrors(validationErrors);
           return;
+        } else {
+          computer.setIntroduced(introduced);
         }
       }
     }
@@ -247,12 +270,14 @@ public class ComputerCLIUI {
       if ("null".equals(discontinued)) {
         computer.setDiscontinued(null);
       } else {
-        try {
-          computer.setDiscontinued(discontinued);
-        } catch (IllegalArgumentException iae) {
-          LOGGER.debug("updateComputer(): Invalid date discontinued for computer. {}", iae);
-          System.out.printf("[Error] %s - Canceling creation%n", iae.getMessage());
+        // Validating 'Discontinued' attribute
+        validationErrors = validator.validateValue(ComputerDTO.class, ComputerDTO.ATTR_DISCONTINUED, discontinued);
+        if (!validationErrors.isEmpty()) {
+          LOGGER.debug("updateComputer(): Invalid date discontinued for computer.");
+          printValidationErrors(validationErrors);
           return;
+        } else {
+          computer.setDiscontinued(discontinued);
         }
       }
     }
@@ -296,6 +321,17 @@ public class ComputerCLIUI {
       System.out.println(c);
     }
 
+  }
+
+  /**
+   * Print a set of ComputerDTO validation errors to the console
+   * 
+   * @param errors  The list of validation errors to be printed
+   */
+  private void printValidationErrors(Set<ConstraintViolation<ComputerDTO>> errors) {
+    for (ConstraintViolation<ComputerDTO> error : errors) {
+      System.out.printf("[Error] %s - Canceling creation%n", error.getMessage());
+    }
   }
 
 }

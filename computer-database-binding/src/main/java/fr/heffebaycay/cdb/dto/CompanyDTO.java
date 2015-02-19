@@ -8,10 +8,9 @@ import org.hibernate.validator.constraints.NotBlank;
 
 public class CompanyDTO implements Serializable {
 
-  /**
-   * 
-   */
   private static final long serialVersionUID = -3227468289968810021L;
+  
+  public static final String ATTR_NAME = "name";
 
   protected long            id;
 

@@ -27,21 +27,33 @@
         </property>
     </bean>
 
+    <bean id="validator"
+        class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="validationMessageSource">
+            <ref bean="messageSource" />
+        </property>
+    </bean>
+    
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+            <property name="basenames" value="classpath:messages, classpath:binding-messages" />
+            <property name="defaultEncoding" value="UTF-8" />
+            <!-- alwaysUseMessageFormat : set to true to force formatting with java.text.Format.MessageFormat -->
+            <property name="alwaysUseMessageFormat" value="true" /> 
+        </bean>
+
     <context:component-scan
         base-package="fr.heffebaycay.cdb.webservice, fr.heffebaycay.cdb.ui">
     </context:component-scan>
 
     <jaxrs-client:client id="computerRESTClient"
-        address="${console.webservice.baseURL}/api"
-        serviceClass="fr.heffebaycay.cdb.webservice.IComputerRESTService"
+        address="${console.webservice.baseURL}/api" serviceClass="fr.heffebaycay.cdb.webservice.IComputerRESTService"
         inheritHeaders="true">
         <jaxrs-client:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
         </jaxrs-client:providers>
     </jaxrs-client:client>
     <jaxrs-client:client id="companyRESTClient"
-        address="${console.webservice.baseURL}/api"
-        serviceClass="fr.heffebaycay.cdb.webservice.ICompanyRESTService"
+        address="${console.webservice.baseURL}/api" serviceClass="fr.heffebaycay.cdb.webservice.ICompanyRESTService"
         inheritHeaders="true">
         <jaxrs-client:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
