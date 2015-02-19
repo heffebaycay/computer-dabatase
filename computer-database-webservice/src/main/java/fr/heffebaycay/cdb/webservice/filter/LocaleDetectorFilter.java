@@ -22,7 +22,7 @@ public class LocaleDetectorFilter implements ContainerRequestFilter {
     
     // Fetch the list of acceptable languages
     List<Locale> locales = requestContext.getAcceptableLanguages();
-    if(locales.size() > 0) {
+    if(!locales. 0) {
       // Since locales are ordered by weight, the first one is
       // definitely the one we want to use
       Locale locale = locales.get(0);

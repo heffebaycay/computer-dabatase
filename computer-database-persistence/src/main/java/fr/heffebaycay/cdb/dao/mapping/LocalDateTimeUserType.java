@@ -81,7 +81,7 @@ public class LocalDateTimeUserType implements EnhancedUserType, Serializable {
         if (value == null) {
             StandardBasicTypes.TIMESTAMP.nullSafeSet(preparedStatement, null, index, session);
         } else {
-            LocalDateTime ldt = ((LocalDateTime) value);
+            LocalDateTime ldt = (LocalDateTime) value;
             Instant instant = ldt.atZone(ZoneId.systemDefault()).toInstant();
             Date timestamp = Date.from(instant);
             StandardBasicTypes.TIMESTAMP.nullSafeSet(preparedStatement, timestamp, index, session);

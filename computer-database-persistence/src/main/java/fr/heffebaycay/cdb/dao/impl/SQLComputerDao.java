@@ -168,10 +168,10 @@ public class SQLComputerDao implements IComputerDao {
       orderPart = generateOrderPart("computer", request.getSortCriterion(), request.getSortOrder());
     }
 
-    String query = "FROM Computer as computer LEFT JOIN computer.company as company WHERE computer.name LIKE :keyWord OR company.name LIKE :keyWord ORDER BY "
+    String query = "SELECT computer FROM Computer as computer LEFT JOIN computer.company as company WHERE computer.name LIKE :keyWord OR company.name LIKE :keyWord ORDER BY "
         + orderPart;
 
-    String countQuery = "SELECT COUNT(*) FROM Computer as computer LEFT JOIN computer.company as company WHERE computer.name LIKE :keyWord OR company.name LIKE :keyword";
+    String countQuery = "SELECT COUNT(*) FROM Computer as computer LEFT JOIN computer.company as company WHERE computer.name LIKE :keyWord OR company.name LIKE :keyWord";
 
     // Setting up Search keyword
     // Escaping '%' character
@@ -240,7 +240,7 @@ public class SQLComputerDao implements IComputerDao {
         + orderPart;
     String countQuery = "SELECT count(*) FROM Computer as computer LEFT JOIN computer.company as company";
 
-    Long count = ((Long) session.createQuery(countQuery).iterate().next());
+    Long count = (Long) session.createQuery(countQuery).iterate().next();
     searchWrapper.setTotalCount(count);
 
     // Current page
