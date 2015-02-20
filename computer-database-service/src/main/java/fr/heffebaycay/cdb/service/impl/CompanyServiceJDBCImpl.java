@@ -12,7 +12,6 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.IComputerDao;
-import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.service.ICompanyService;
@@ -87,13 +86,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   public SearchWrapper<Company> findAll(CompanyPageRequest request) {
     LOGGER.debug("Call to findAll()");
 
-    SearchWrapper<Company> companies = null;
-
-    try {
-      companies = companyDao.findAll(request);
-    } catch (DaoException e) {
-      LOGGER.warn("findAll(): DaoException", e);
-    }
+    SearchWrapper<Company> companies = companyDao.findAll(request);
 
     return companies;
   }
@@ -118,12 +111,7 @@ public class CompanyServiceJDBCImpl implements ICompanyService {
   public SearchWrapper<Company> findByName(CompanyPageRequest request) {
     LOGGER.debug("Call to findByName()");
 
-    SearchWrapper<Company> companies = null;
-    try {
-      companies = companyDao.findByName(request);
-    } catch (DaoException e) {
-      LOGGER.warn("findByName(): DaoException: ", e);
-    }
+    SearchWrapper<Company> companies = companyDao.findByName(request);
 
     return companies;
   }

@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.dao.impl.SQLComputerDao;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.Computer;
@@ -169,7 +168,6 @@ public class TestComputerDaoMySQLImpl {
   public void testFindAll() {
 
     List<Computer> computers = computerDao.findAll();
-
 
     assertEquals(localComputers, computers);
 

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
-import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.util.CompanySortCriteria;
@@ -68,10 +67,10 @@ public class SQLCompanyDao implements ICompanyDao {
    * {@inheritDoc}
    */
   @Override
-  public SearchWrapper<Company> findAll(CompanyPageRequest request) throws DaoException {
+  public SearchWrapper<Company> findAll(CompanyPageRequest request) {
 
     if (request == null) {
-      throw new DaoException("CompanyPageRequest parameter cannot be null");
+      throw new IllegalArgumentException("CompanyPageRequest parameter cannot be null");
     }
 
     SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();
@@ -125,7 +124,7 @@ public class SQLCompanyDao implements ICompanyDao {
     Session session = sessionFactory.getCurrentSession();
 
     long companyId = (long) session.save(company);
-    
+
     return companyId;
   }
 
@@ -173,10 +172,10 @@ public class SQLCompanyDao implements ICompanyDao {
   }
 
   @Override
-  public SearchWrapper<Company> findByName(CompanyPageRequest request) throws DaoException {
+  public SearchWrapper<Company> findByName(CompanyPageRequest request) {
 
     if (request == null) {
-      throw new DaoException("CompanyPageRequest parameter cannot be null");
+      throw new IllegalArgumentException("CompanyPageRequest parameter cannot be null");
     }
 
     SearchWrapper<Company> searchWrapper = new SearchWrapper<Company>();

@@ -18,7 +18,6 @@ import org.mockito.stubbing.Answer;
 
 import fr.heffebaycay.cdb.dao.ICompanyDao;
 import fr.heffebaycay.cdb.dao.IComputerDao;
-import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.service.impl.CompanyServiceJDBCImpl;
@@ -50,7 +49,6 @@ public class TestCompanyService {
     Company c2 = new Company.Builder().id(2).name("HP").build();
 
     Company c3 = new Company.Builder().id(3).name("IBM").build();
-
 
     companiesDB = new ArrayList<Company>();
     companiesDB.add(c1);
@@ -110,19 +108,19 @@ public class TestCompanyService {
       fail("CompanyService isn't initialized");
     }
 
-      doAnswer(new Answer<Long>() {
+    doAnswer(new Answer<Long>() {
 
-        @Override
-        public Long answer(InvocationOnMock invocation) {
+      @Override
+      public Long answer(InvocationOnMock invocation) {
 
-          Company companyToCreate = invocation.getArgumentAt(0, Company.class);
+        Company companyToCreate = invocation.getArgumentAt(0, Company.class);
 
-          companiesDB.add(companyToCreate);
+        companiesDB.add(companyToCreate);
 
-          return companyToCreate.getId();
-        }
+        return companyToCreate.getId();
+      }
 
-      }).when(companyDao).create(Matchers.any(Company.class));
+    }).when(companyDao).create(Matchers.any(Company.class));
 
     Company c4 = new Company.Builder().id(4).name("Compaq").build();
 
@@ -144,12 +142,8 @@ public class TestCompanyService {
 
     SearchWrapper<Company> wrapper = new SearchWrapper<Company>();
 
-    try {
-      when(
-          companyDao.findAll(Matchers.any(CompanyPageRequest.class))).thenReturn(wrapper);
-    } catch (DaoException e) {
-      fail("testFindAllWithOffset(): Failed to setup Mockito: " + e.getMessage());
-    }
+    when(
+        companyDao.findAll(Matchers.any(CompanyPageRequest.class))).thenReturn(wrapper);
 
     CompanyPageRequest request = new CompanyPageRequest.Builder()
         .offset(0L)

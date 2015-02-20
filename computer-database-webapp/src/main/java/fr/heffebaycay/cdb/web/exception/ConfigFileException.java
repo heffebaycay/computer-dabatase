@@ -1,4 +1,4 @@
-package fr.heffebaycay.cdb.dao.exception;
+package fr.heffebaycay.cdb.web.exception;
 
 public class ConfigFileException extends RuntimeException {
 

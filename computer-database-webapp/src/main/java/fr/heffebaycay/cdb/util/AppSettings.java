@@ -11,8 +11,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.heffebaycay.cdb.dao.exception.ConfigFileException;
 import fr.heffebaycay.cdb.model.Route;
+import fr.heffebaycay.cdb.web.exception.ConfigFileException;
 
 public class AppSettings {
 

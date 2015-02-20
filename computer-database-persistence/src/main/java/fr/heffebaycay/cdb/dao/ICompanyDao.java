@@ -2,7 +2,6 @@ package fr.heffebaycay.cdb.dao;
 
 import java.util.List;
 
-import fr.heffebaycay.cdb.dao.exception.DaoException;
 import fr.heffebaycay.cdb.model.Company;
 import fr.heffebaycay.cdb.model.CompanyPageRequest;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
@@ -46,21 +45,21 @@ public interface ICompanyDao {
   /**
    * Queries the data source for a given number of elements starting at the offset defined within the <strong>request</strong> parameter.
    * 
-   * @param request         Object containing the details of the findAll() request (offset, number of elements)
-   * @return                A {@link fr.heffebaycay.cdb.wrapper.SearchWrapper} object containing the collection of Company object, as well as information about the page
-   * @throws DaoException   If the <strong>request</strong> parameter is null
+   * @param request                     Object containing the details of the findAll() request (offset, number of elements)
+   * @return                            A {@link fr.heffebaycay.cdb.wrapper.SearchWrapper} object containing the collection of Company object, as well as information about the page
+   * @throws IllegalArgumentException   If the <strong>request</strong> parameter is null
    */
-  SearchWrapper<Company> findAll(CompanyPageRequest request) throws DaoException;
+  SearchWrapper<Company> findAll(CompanyPageRequest request);
 
   /**
    * Queries the data source for a given number of elements starting at the offset defined within the <strong>request</strong> parameter.
    * 
    * The method will attempt to find Computer objects whose name or company name (if applicable) matches the searchQuery attribute of <strong>request</strong>.
    * 
-   * @param request         Object containing the details of the findByName() request, including the search keyword
-   * @return                A {@link fr.heffebaycay.cdb.wrapper.SearchWrapper} object containing the collection of Company object, as well as information about the page
-   * @throws DaoException   If the <strong>request</strong> parameter is null
+   * @param request                     Object containing the details of the findByName() request, including the search keyword
+   * @return                            A {@link fr.heffebaycay.cdb.wrapper.SearchWrapper} object containing the collection of Company object, as well as information about the page
+   * @throws IllegalArgumentException   If the <strong>request</strong> parameter is null
    */
-  SearchWrapper<Company> findByName(CompanyPageRequest request) throws DaoException;
+  SearchWrapper<Company> findByName(CompanyPageRequest request);
 
 }
