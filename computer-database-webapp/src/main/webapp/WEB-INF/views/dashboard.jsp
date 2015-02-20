@@ -9,6 +9,7 @@
 <jsp:include page="include/header.jsp" />
 
 <section id="main">
+        <c:set var="searchQuery" value="${ u:escapeHtml( searchWrapper.searchQuery ) }" />
         <div class="container">
             <h1 id="homeTitle">
                 <spring:message code="dashboard.n_computers_msg" arguments="${searchWrapper.totalCount}" />
@@ -59,18 +60,18 @@
                             </span>
                         </th>
                         <th>
-                            <spring:message code="dashboard.name_label" /> <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'name', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'name', 'desc') }" />">D</a>
+                            <spring:message code="dashboard.name_label" /> <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'name', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'name', 'desc') }" />">D</a>
                         </th>
                         <th>
-                            <spring:message code="dashboard.introduced_label" /> <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'introduced', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'introduced', 'desc') }" />">D</a>
+                            <spring:message code="dashboard.introduced_label" /> <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'introduced', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'introduced', 'desc') }" />">D</a>
                         </th>
                         <!-- Table header for Discontinued Date -->
                         <th>
-                            <spring:message code="dashboard.discontinued_label" /> <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'discontinued', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'discontinued', 'desc') }" />">D</a>
+                            <spring:message code="dashboard.discontinued_label" /> <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'discontinued', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'discontinued', 'desc') }" />">D</a>
                         </th>
                         <!-- Table header for Company -->
                         <th>
-                            <spring:message code="dashboard.company_label" /> <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'company', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchWrapper.searchQuery, 'company', 'desc') }" />">D</a>
+                            <spring:message code="dashboard.company_label" /> <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'company', 'asc') }" />">A</a> / <a href="<c:url value="${ u:generateDashboardRoute(1, searchQuery, 'company', 'desc') }" />">D</a>
                         </th>
 
                     </tr>
@@ -112,8 +113,7 @@
 
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
-        
-        	<c:set var="urlPattern" value="${ u:generateDashboardRoute(\"%d\", searchWrapper.searchQuery, searchWrapper.sortCriterion, searchWrapper.sortOrder) }" />
+        	<c:set var="urlPattern" value="${ u:generateDashboardRoute(\"%d\", searchQuery, searchWrapper.sortCriterion, searchWrapper.sortOrder) }" />
         	<t:pagination urlPattern="${ urlPattern }" totalPage="${ searchWrapper.totalPage }" currentPage="${ searchWrapper.currentPage }" delta="${ 3 }"></t:pagination>
 
 	        <div class="btn-group btn-group-sm pull-right" role="group" >

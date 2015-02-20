@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 public class Utils {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class.getSimpleName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
 
   // No one should be able to create an instance of Utils.
   private Utils() {
