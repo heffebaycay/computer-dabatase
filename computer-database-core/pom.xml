@@ -4,7 +4,7 @@
     <parent>
         <groupId>computer-database</groupId>
         <artifactId>computer-database</artifactId>
-        <version>0.4.0</version>
+        <version>0.4.0-RELEASE</version>
     </parent>
 
     <artifactId>computer-database-core</artifactId>

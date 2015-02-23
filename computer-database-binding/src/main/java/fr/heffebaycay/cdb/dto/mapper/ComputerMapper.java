@@ -20,7 +20,7 @@ import fr.heffebaycay.cdb.wrapper.SearchWrapper;
 @Component
 public class ComputerMapper {
 
-  public static final Logger LOGGER = LoggerFactory.getLogger(ComputerMapper.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ComputerMapper.class);
 
   private ComputerMapper() {
     super();
