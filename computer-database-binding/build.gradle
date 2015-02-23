@@ -1,0 +1,16 @@
+apply plugin: 'java'
+
+sourceCompatibility = '1.8'
+
+dependencies {
+	compile project(':computer-database-core')
+	
+	// Validation dependencies
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: apacheCommonsLangVersion
+	compile group: 'commons-validator', name: 'commons-validator', version: commonsValidatorVersion
+	compile group: 'org.hibernate', name: 'hibernate-validator', version: hibernateValidatorVersion
+
+	// Testing dependencies
+	testCompile group: 'org.springframework', name: 'spring-tx', version: springVersion
+	testCompile group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
+}

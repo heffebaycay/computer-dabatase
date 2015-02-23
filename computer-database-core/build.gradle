@@ -1,0 +1,8 @@
+apply plugin: 'java'
+
+sourceCompatibility = '1.8'
+
+dependencies {
+	// Testing dependency
+	testCompile group: 'junit', name: 'junit', version: jUnitVersion
+}

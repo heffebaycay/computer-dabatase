@@ -1,0 +1,20 @@
+apply plugin: 'war'
+
+sourceCompatibility = '1.8'
+
+dependencies {
+	compile project(':computer-database-service')
+	compile project(':computer-database-binding')
+	compile project(':computer-database-webservice-sdk')
+
+	// Spring dependencies
+	compile group: 'org.springframework', name: 'spring-web', version: springVersion
+
+	// JAX-RS API
+	compile group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxrs', version: apacheCxfJaxRsVersion
+	compile group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: jacksonJaxRsJsonProviderVersion
+
+	// Swagger stuff
+	compile group: 'com.wordnik', name: 'swagger-jaxrs_2.10', version: swaggerJaxRsVersion	
+	
+}

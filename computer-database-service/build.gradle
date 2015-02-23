@@ -1,0 +1,14 @@
+apply plugin: 'java'
+
+sourceCompatibility = '1.8'
+
+dependencies {
+	compile project(':computer-database-core')
+	compile project(':computer-database-persistence')
+	
+	// Spring transactions
+	testCompile group: 'org.springframework', name: 'spring-tx', version: springVersion
+
+	// Testing dependency
+	testCompile group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
+}

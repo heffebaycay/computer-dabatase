@@ -1,0 +1,3 @@
+rootProject.name = 'computer-database'
+
+include 'computer-database-core', 'computer-database-persistence', 'computer-database-service', 'computer-database-binding', 'computer-database-webapp', 'computer-database-webservice-sdk', 'computer-database-webservice', 'computer-database-console'

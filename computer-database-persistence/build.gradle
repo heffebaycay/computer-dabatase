@@ -1,0 +1,17 @@
+apply plugin: 'java'
+
+sourceCompatibility = '1.8'
+
+dependencies {
+	compile project(':computer-database-core')
+
+	// DB Dependencies
+	runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.34'
+	compile group: 'org.springframework', name: 'spring-jdbc', version: springVersion
+
+	// Hibernate ORM
+	compile group: 'org.hibernate', name: 'hibernate-core', version: hibernateOrmVersion
+	compile group: 'org.springframework', name: 'spring-orm', version: springVersion
+	compile group: 'org.springframework', name: 'spring-tx', version: springVersion
+
+}

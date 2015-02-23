@@ -1,0 +1,15 @@
+apply plugin: 'java'
+
+sourceCompatibility = '1.8'
+
+dependencies {
+	compile project(':computer-database-binding')
+	compile project(':computer-database-webservice-sdk')
+
+	// JAX-RS Client Dependencies
+	compile group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxrs', version: apacheCxfJaxRsVersion
+	compile group: 'org.apache.cxf', name: 'cxf-rt-rs-client', version: apacheCxfJaxRsVersion
+
+	// JAX-RS JSON mappers
+	compile group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: jacksonJaxRsJsonProviderVersion
+}

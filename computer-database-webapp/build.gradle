@@ -1,0 +1,26 @@
+apply plugin: 'war'
+
+sourceCompatibility = '1.8'
+
+dependencies {
+	compile project(':computer-database-service')
+	compile project(':computer-database-binding')
+
+	// Servlet dependencies
+	compile group: 'javax.servlet', name: 'jstl', version: jstlVersion
+	providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: servletApiVersion
+
+	// Spring framework
+	compile group: 'org.springframework', name: 'spring-web', version: springVersion
+	compile group: 'org.springframework', name: 'spring-webmvc', version: springVersion
+
+	// Spring security
+	compile group: 'org.springframework.security', name: 'spring-security-web', version: springSecurityVersion
+	compile group: 'org.springframework.security', name: 'spring-security-config', version: springSecurityVersion
+	compile group: 'org.springframework.security', name: 'spring-security-taglibs', version: springSecurityVersion
+
+	// Testing dependencies
+	testCompile group: 'org.seleniumhq.selenium', name: 'selenium-firefox-driver', version: seleniumVersion
+	testCompile group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
+	
+}
