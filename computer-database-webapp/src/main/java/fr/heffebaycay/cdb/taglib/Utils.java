@@ -53,4 +53,8 @@ public class Utils {
 
   }
 
+    public static String formatString(String fmt, Object arg) {
+        return String.format(fmt, arg);
+    }
+
 }

@@ -15,6 +15,7 @@ hs_err_pid*
 .classpath
 bin/
 /target/
+.idea/
 
 # Application config files
 computer-database-core/src/main/resources/config.properties
