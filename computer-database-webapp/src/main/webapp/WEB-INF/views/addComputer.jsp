@@ -96,7 +96,7 @@
                 messages: {
                     name: "<spring:message code='front.validation.computer.name.required' javaScriptEscape='true' />",
                     introduced: "<spring:message code='front.validation.computer.introduced.format' arguments='${ dateFormat }' javaScriptEscape='true' />",
-                    discontinued: "<spring:message code='front.validation.computer.introduced.format' arguments='${ dateFormat }' javaScriptEscape='true' />"
+                    discontinued: "<spring:message code='front.validation.computer.discontinued.format' arguments='${ dateFormat }' javaScriptEscape='true' />"
                 }
             });
         });

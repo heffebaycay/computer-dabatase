@@ -17,7 +17,7 @@
             
             <c:if test="${ bRemoveSuccess == true }">
             	<div id="msgComputerAdded" class="alert alert-success">
-            		<strong>Success!</strong> The computers you selected were successfully deleted.
+                    <spring:message code="dashboard.delete_success_msg" arguments="<strong>,</strong>" />
             	</div>
             </c:if>
             
@@ -115,12 +115,6 @@
         <div class="container text-center">
         	<c:set var="urlPattern" value="${ u:generateDashboardRoute(\"%d\", searchQuery, searchWrapper.sortCriterion, searchWrapper.sortOrder) }" />
         	<t:pagination urlPattern="${ urlPattern }" totalPage="${ searchWrapper.totalPage }" currentPage="${ searchWrapper.currentPage }" delta="${ 3 }"></t:pagination>
-
-	        <div class="btn-group btn-group-sm pull-right" role="group" >
-	            <button type="button" class="btn btn-default">10</button>
-	            <button type="button" class="btn btn-default">50</button>
-	            <button type="button" class="btn btn-default">100</button>
-	        </div>
         
         </div>
 
