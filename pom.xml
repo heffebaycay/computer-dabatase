@@ -43,6 +43,7 @@
         <apache-commons-lang.version>3.3.2</apache-commons-lang.version>
         <apache-commons-validator>1.4.1</apache-commons-validator>
         <hibernate-orm.version>4.3.8.Final</hibernate-orm.version>
+        <javax-el-impl.version>2.2.4</javax-el-impl.version>
     </properties>
 
 

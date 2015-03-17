@@ -190,6 +190,7 @@ public class ComputerCLIUI {
             .printf("[Error] No company matches the id '%d'. Canceling creation%n", companyId);
         return;
       } else {
+        computer.setCompanyId(company.getId());
         computer.setCompany(company);
       }
     }
@@ -299,6 +300,7 @@ public class ComputerCLIUI {
             .printf("[Error] No company matches the id '%d'. Canceling creation%n", companyId);
         return;
       } else {
+        computer.setCompanyId(company.getId());
         computer.setCompany(company);
       }
     } else if (companyId == 0) {

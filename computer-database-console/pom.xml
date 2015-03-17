@@ -28,7 +28,14 @@
             <artifactId>jackson-jaxrs-json-provider</artifactId>
             <version>${jackson-jaxrs-json-provider.version}</version>
         </dependency>
-        
+
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>${javax-el-impl.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Internal dependencies -->
         <dependency>
             <groupId>${project.groupId}</groupId>
