@@ -27,8 +27,8 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><spring:message code="header.lang_dropdown" /><span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="?lang=fr"><img src="<c:url value="/png/fr.png" />" />  <spring:message code="header.lang_french" /></a></li>
-                                <li><a href="?lang=en"><img src="<c:url value="/png/gb.png" />" />  <spring:message code="header.lang_english" /></a></li>
+                                <li><a href="?lang=fr" onclick="changeLanguage('fr'); return;" ><img src="<c:url value="/png/fr.png" />" />  <spring:message code="header.lang_french" /></a></li>
+                                <li><a href="?lang=en" onclick="changeLanguage('en'); return;" ><img src="<c:url value="/png/gb.png" />" />  <spring:message code="header.lang_english" /></a></li>
                             </ul>
                         </li>
                     </ul>
