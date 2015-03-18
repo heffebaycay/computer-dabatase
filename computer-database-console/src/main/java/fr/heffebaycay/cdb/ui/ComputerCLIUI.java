@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -66,7 +67,16 @@ public class ComputerCLIUI {
    */
   public void printComputerDetails(long id) {
 
-    ComputerDTO computerDTO = computerWebService.findById(id);
+    ComputerDTO computerDTO;
+
+    try {
+      computerDTO = computerWebService.findById(id);
+    } catch(NotFoundException e) {
+      System.out.printf("[Error] Failed to find a computer for id '%d'%n", id);
+      return;
+    }
+
+
 
     if (computerDTO == null) {
       System.out.printf("[Error] Failed to find a computer for id '%d'%n", id);
