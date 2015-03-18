@@ -97,7 +97,7 @@ public class ComputerDatabaseCLI {
    * Prints the list of options offered by the CLI application
    */
   protected void printMenu() {
-    System.out.println("%nThe following actions are available to choose:");
+    System.out.println("The following actions are available to choose:");
 
     System.out.printf("\t#%d - List Companies%n", MenuOption.COMPANY_LIST);
     System.out.printf("\t#%d - List Computers%n", MenuOption.COMPUTER_LIST);

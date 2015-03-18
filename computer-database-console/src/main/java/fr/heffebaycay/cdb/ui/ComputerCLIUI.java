@@ -318,7 +318,17 @@ public class ComputerCLIUI {
    */
   public void printComputersWithPage(long pageNumber) {
 
+    if(pageNumber <= 0) {
+      System.out.println("[Error] Mate, just log off. Page numbers are positive integers.");
+      return;
+    }
+
     SearchWrapper<ComputerDTO> dtoWrapper = computerWebService.findAllPaged(pageNumber);
+
+    if (dtoWrapper.getCurrentPage() > dtoWrapper.getTotalPage()) {
+      System.out.printf("[Error] Oops. It seems you selected an invalid page, mate. Last page is %d.%n", dtoWrapper.getTotalPage());
+      return;
+    }
 
     System.out.printf("Displaying page %d of %d:%n", dtoWrapper.getCurrentPage(),
         dtoWrapper.getTotalPage());
