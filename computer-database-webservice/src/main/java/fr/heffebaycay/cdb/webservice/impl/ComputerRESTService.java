@@ -1,32 +1,6 @@
 package fr.heffebaycay.cdb.webservice.impl;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-
+import com.wordnik.swagger.annotations.*;
 import fr.heffebaycay.cdb.dto.ComputerDTO;
 import fr.heffebaycay.cdb.dto.mapper.ComputerMapper;
 import fr.heffebaycay.cdb.model.Company;
@@ -38,25 +12,37 @@ import fr.heffebaycay.cdb.util.ComputerSortCriteria;
 import fr.heffebaycay.cdb.util.SortOrder;
 import fr.heffebaycay.cdb.webservice.IComputerRESTService;
 import fr.heffebaycay.cdb.wrapper.SearchWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 @Service
 @Path("/computers")
 @Api(value = "/computers", description = "Computer related operations")
 public class ComputerRESTService implements IComputerRESTService {
 
-  private static final Logger LOGGER          = LoggerFactory
-                                                  .getLogger(ComputerRESTService.class);
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(ComputerRESTService.class);
 
-  private static final Long   NB_RESULTS_PAGE = 10L;
-
-  @Autowired
-  private IComputerService    computerService;
+  private static final Long NB_RESULTS_PAGE = 10L;
 
   @Autowired
-  private ICompanyService     companyService;
+  private IComputerService computerService;
 
   @Autowired
-  private ComputerMapper      computerMapper;
+  private ICompanyService companyService;
+
+  @Autowired
+  private ComputerMapper computerMapper;
 
   @Override
   @POST
@@ -117,7 +103,12 @@ public class ComputerRESTService implements IComputerRESTService {
 
     Computer computer = computerService.findById(id);
 
+    if (computer == null) {
+      throw new WebApplicationException("Computer does not exist", Status.NOT_FOUND);
+    }
+
     return computerMapper.toDTO(computer);
+
   }
 
   @Override
@@ -125,7 +116,7 @@ public class ComputerRESTService implements IComputerRESTService {
   @Path("/{id: [0-9]+}")
   @ApiOperation(value = "Remove a computer")
   @ApiResponses(value = {
-      @ApiResponse(code = 204, message = "Success" ),
+      @ApiResponse(code = 204, message = "Success"),
       @ApiResponse(code = 400, message = "Failed to remove the computer")
   })
   public Response remove(@ApiParam(value = "ID of the Computer to remove", required = true) @PathParam("id") long id) {
@@ -181,9 +172,9 @@ public class ComputerRESTService implements IComputerRESTService {
         .build();
 
     SearchWrapper<Computer> sw = computerService.findAll(request);
-    
+
     return computerMapper.convertWrappertoDTO(sw);
-    
+
   }
 
 }

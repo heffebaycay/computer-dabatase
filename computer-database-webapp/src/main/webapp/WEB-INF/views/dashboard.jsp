@@ -26,7 +26,7 @@
                     <form id="searchForm" action="#" method="GET" class="form-inline">
 
                         <spring:message code="dashboard.search_placeholder" var="search_placeholder" />
-                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="${ search_placeholder }" />
+                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="${ search_placeholder }" value="<c:out value="${searchQuery}"/>"/>
                         <spring:message code="dashboard.search_filter_button" var="search_filter_button" />
                         <input type="submit" id="searchsubmit" value="${ search_filter_button }" class="btn btn-primary" />
                     </form>

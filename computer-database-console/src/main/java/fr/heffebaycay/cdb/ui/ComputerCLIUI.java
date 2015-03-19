@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -66,7 +67,16 @@ public class ComputerCLIUI {
    */
   public void printComputerDetails(long id) {
 
-    ComputerDTO computerDTO = computerWebService.findById(id);
+    ComputerDTO computerDTO;
+
+    try {
+      computerDTO = computerWebService.findById(id);
+    } catch(NotFoundException e) {
+      System.out.printf("[Error] Failed to find a computer for id '%d'%n", id);
+      return;
+    }
+
+
 
     if (computerDTO == null) {
       System.out.printf("[Error] Failed to find a computer for id '%d'%n", id);
@@ -318,7 +328,17 @@ public class ComputerCLIUI {
    */
   public void printComputersWithPage(long pageNumber) {
 
+    if(pageNumber <= 0) {
+      System.out.println("[Error] Mate, just log off. Page numbers are positive integers.");
+      return;
+    }
+
     SearchWrapper<ComputerDTO> dtoWrapper = computerWebService.findAllPaged(pageNumber);
+
+    if (dtoWrapper.getCurrentPage() > dtoWrapper.getTotalPage()) {
+      System.out.printf("[Error] Oops. It seems you selected an invalid page, mate. Last page is %d.%n", dtoWrapper.getTotalPage());
+      return;
+    }
 
     System.out.printf("Displaying page %d of %d:%n", dtoWrapper.getCurrentPage(),
         dtoWrapper.getTotalPage());

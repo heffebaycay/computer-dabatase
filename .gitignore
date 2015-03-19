@@ -16,6 +16,7 @@ hs_err_pid*
 bin/
 /target/
 .idea/
+*.iml
 
 # Application config files
 computer-database-core/src/main/resources/config.properties

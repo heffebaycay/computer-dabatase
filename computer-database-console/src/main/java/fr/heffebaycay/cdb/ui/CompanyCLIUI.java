@@ -45,8 +45,18 @@ public class CompanyCLIUI {
    */
   public void printCompaniesWithPage(long pageNumber) {
 
+    if(pageNumber <= 0) {
+      System.out.println("[Error] Mate, don't trick me with bogus pages. It won't work.");
+      return;
+    }
+
     SearchWrapper<CompanyDTO> dtoWrapper = companyWebService.findAllPaged(pageNumber);
-    
+
+    if (dtoWrapper.getCurrentPage() > dtoWrapper.getTotalPage()) {
+      System.out.printf("[Error] Oops. It seems you selected an invalid page, mate. Last page is %d.%n", dtoWrapper.getTotalPage());
+      return;
+    }
+
     System.out.printf("Displaying page %d of %d:%n", dtoWrapper.getCurrentPage(), dtoWrapper.getTotalPage());
 
     for (CompanyDTO c : dtoWrapper.getResults()) {
